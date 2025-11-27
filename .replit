@@ -1,5 +1,6 @@
 language = "nodejs"
 run = "npm start"
+modules = ["nodejs-18"]
 
 [[ports]]
 localPort = 3000
@@ -8,3 +9,33 @@ externalPort = 3000
 [[ports]]
 localPort = 3001
 externalPort = 80
+
+[agent]
+expertMode = true
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Goat Bot"
+
+[[workflows.workflow]]
+name = "Goat Bot"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "node index.js"
+
+[workflows.workflow.metadata]
+outputType = "console"
+
+[nix]
+channel = "stable-25_05"
+packages = ["libuuid", "util-linux"]
