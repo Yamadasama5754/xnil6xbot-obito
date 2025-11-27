@@ -6,30 +6,20 @@ module.exports = {
 	config: {
 		name: "welcome",
 		version: "1.7",
-		author: "NTKhang",
+		author: "Yamada KJ",
 		category: "events"
 	},
 
 	langs: {
-		vi: {
-			session1: "sáng",
-			session2: "trưa",
-			session3: "chiều",
-			session4: "tối",
-			welcomeMessage: "Cảm ơn bạn đã mời tôi vào nhóm!\nPrefix bot: %1\nĐể xem danh sách lệnh hãy nhập: %1help",
-			multiple1: "bạn",
-			multiple2: "các bạn",
-			defaultWelcomeMessage: "Xin chào {userName}.\nChào mừng bạn đến với {boxName}.\nChúc bạn có buổi {session} vui vẻ!"
-		},
-		en: {
-			session1: "morning",
-			session2: "noon",
-			session3: "afternoon",
-			session4: "evening",
-			welcomeMessage: "Thank you for inviting me to the group!\nBot prefix: %1\nTo view the list of commands, please enter: %1help",
-			multiple1: "you",
-			multiple2: "you guys",
-			defaultWelcomeMessage: `Hello {userName}.\nWelcome {multiple} to the chat group: {boxName}\nHave a nice {session} 😊`
+		ar: {
+			session1: "الصباح",
+			session2: "الظهيرة",
+			session3: "بعد الظهر",
+			session4: "المساء",
+			welcomeMessage: "شكراً لدعوتك لي في المجموعة!\nبادئة البوت: %1\nلعرض قائمة الأوامر اكتب: %1help",
+			multiple1: "أنت",
+			multiple2: "أنتم",
+			defaultWelcomeMessage: "مرحباً {userName}.\nأهلاً وسهلاً {multiple} في المجموعة: {boxName}\nنتمنى لك {session} رائع 😊"
 		}
 	},
 
@@ -83,11 +73,6 @@ module.exports = {
 							id: user.userFbId
 						});
 					}
-					// {userName}:   name of new member
-					// {multiple}:
-					// {boxName}:    name of group
-					// {threadName}: name of group
-					// {session}:    session of day
 					if (userName.length == 0) return;
 					let { welcomeMessage = getLang("defaultWelcomeMessage") } =
 						threadData.data;
@@ -124,8 +109,9 @@ module.exports = {
 							.filter(({ status }) => status == "fulfilled")
 							.map(({ value }) => value);
 					}
+
+					form.mentions = welcomeMessage.match(/\{userNameTag\}/g) ? mentions : null;
 					message.send(form);
-					delete global.temp.welcomeEvent[threadID];
 				}, 1500);
 			};
 	}

@@ -2,18 +2,14 @@ module.exports = {
 	config: {
 		name: "checkwarn",
 		version: "1.3",
-		author: "NTKhang",
+		author: "Yamada KJ",
 		category: "events"
 	},
 
 	langs: {
-		vi: {
-			warn: "Thành viên %1 đã bị cảnh cáo đủ 3 lần trước đó và bị ban khỏi box chat\n- Name: %1\n- Uid: %2\n- Để gỡ ban vui lòng sử dụng lệnh \"%3warn unban <uid>\" (với uid là uid của người muốn gỡ ban)",
-			needPermission: "Bot cần quyền quản trị viên để kick thành viên bị ban"
-		},
-		en: {
-			warn: "Member %1 has been warned 3 times before and has been banned from the chat box\n- Name: %1\n- Uid: %2\n- To unban, please use the \"%3warn unban <uid>\" command (with uid is the uid of the person you want to unban)",
-			needPermission: "Bot needs administrator permission to kick banned members"
+		ar: {
+			warn: "تم تحذير العضو %1 3 مرات وتم حظره من المجموعة\n- الاسم: %1\n- المعرف: %2\n- لإزالة الحظر استخدم: \"%3warn unban <uid>\"",
+			needPermission: "البوت يحتاج صلاحيات مشرف لطرد العضو المحظور"
 		}
 	},
 

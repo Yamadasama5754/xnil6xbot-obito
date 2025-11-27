@@ -5,7 +5,7 @@ module.exports = {
 		name: "logsbot",
 		isBot: true,
 		version: "1.4",
-		author: "NTKhang",
+		author: "Yamada KJ",
 		envConfig: {
 			allow: true
 		},
@@ -13,17 +13,11 @@ module.exports = {
 	},
 
 	langs: {
-		vi: {
-			title: "====== Nhật ký bot ======",
-			added: "\n✅\nSự kiện: bot được thêm vào nhóm mới\n- Người thêm: %1",
-			kicked: "\n❌\nSự kiện: bot bị kick\n- Người kick: %1",
-			footer: "\n- User ID: %1\n- Nhóm: %2\n- ID nhóm: %3\n- Thời gian: %4"
-		},
-		en: {
-			title: "====== Bot logs ======",
-			added: "\n✅\nEvent: bot has been added to a new group\n- Added by: %1",
-			kicked: "\n❌\nEvent: bot has been kicked\n- Kicked by: %1",
-			footer: "\n- User ID: %1\n- Group: %2\n- Group ID: %3\n- Time: %4"
+		ar: {
+			title: "====== سجل البوت ======",
+			added: "\n✅\nالحدث: تم إضافة البوت إلى مجموعة جديدة\n- تمت الإضافة بواسطة: %1",
+			kicked: "\n❌\nالحدث: تم طرد البوت\n- تم الطرد بواسطة: %1",
+			footer: "\n- معرف المستخدم: %1\n- المجموعة: %2\n- معرف المجموعة: %3\n- الوقت: %4"
 		}
 	},
 

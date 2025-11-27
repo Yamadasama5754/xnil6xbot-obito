@@ -4,28 +4,19 @@ module.exports = {
 	config: {
 		name: "leave",
 		version: "1.4",
-		author: "NTKhang",
+		author: "Yamada KJ",
 		category: "events"
 	},
 
 	langs: {
-		vi: {
-			session1: "sáng",
-			session2: "trưa",
-			session3: "chiều",
-			session4: "tối",
-			leaveType1: "tự rời",
-			leaveType2: "bị kick",
-			defaultLeaveMessage: "{userName} đã {type} khỏi nhóm"
-		},
-		en: {
-			session1: "morning",
-			session2: "noon",
-			session3: "afternoon",
-			session4: "evening",
-			leaveType1: "left",
-			leaveType2: "was kicked from",
-			defaultLeaveMessage: "{userName} {type} the group"
+		ar: {
+			session1: "الصباح",
+			session2: "الظهيرة",
+			session3: "بعد الظهر",
+			session4: "المساء",
+			leaveType1: "غادر",
+			leaveType2: "تم طرده من",
+			defaultLeaveMessage: "{userName} {type} المجموعة"
 		}
 	},
 
@@ -43,13 +34,6 @@ module.exports = {
 
 				const threadName = threadData.threadName;
 				const userName = await usersData.getName(leftParticipantFbId);
-
-				// {userName}   : name of the user who left the group
-				// {type}       : type of the message (leave)
-				// {boxName}    : name of the box
-				// {threadName} : name of the box
-				// {time}       : time
-				// {session}    : session
 
 				let { leaveMessage = getLang("defaultLeaveMessage") } = threadData.data;
 				const form = {

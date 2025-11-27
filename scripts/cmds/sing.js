@@ -6,18 +6,18 @@ module.exports = {
   config: {
     name: "sing",
     version: "1.14",
-    aliases: ["song", "music", "play", "اغنية"],
-    author: "xnil6x",
+    aliases: ["song", "music", "play"],
+    author: "Yamada KJ",
     countDown: 5,
     role: 0,
     description: {
       en: "Download audio from YouTube",
-			ar: "تحميل صوت من يوتيوب"
+                        ar: "تحميل صوت من يوتيوب"
     },
     category: "media",
     guide: {
       en: "{pn} [<song name>|<song link>]: Use this command to download audio from YouTube.\n   Example:\n{pn} chipi chipi chapa chapa",
-			ar: "{pn} [<اسم الأغنية>|<رابط الأغنية>]: استخدم هذا الأمر لتحميل صوت من يوتيوب.\n   مثال:\n{pn} despacito"
+                        ar: "{pn} [<اسم الأغنية>|<رابط الأغنية>]: استخدم هذا الأمر لتحميل صوت من يوتيوب.\n   مثال:\n{pn} despacito"
     }
   },
   langs: {
@@ -34,8 +34,7 @@ module.exports = {
       duration: "⏱ Duration",
       channel: "📺 Channel"
     },
-		ar: { command: "أمر", error: "خطأ", success: "نجح", usage: "الاستخدام", invalid: "غير صالح" },
-    ar: {
+                ar: {
       error: "❌ حدث خطأ: %1",
       noResult: "⭕ لا توجد نتائج بحث تطابق الكلمة %1. يرجى المحاولة مرة أخرى.",
       choose: "🎶 اختر أغنية من القائمة أدناه بالرد برقمها أو اكتب أي نص للإلغاء.\n\n%1",
