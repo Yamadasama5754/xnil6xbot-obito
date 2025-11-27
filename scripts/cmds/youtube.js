@@ -76,17 +76,16 @@ module.exports.onStart = async function ({ api, event, args }) {
 
     api.unsendMessage(sentMessage.messageID);
 
-    await api.sendMessage(msg, event.threadID, (error, info) => {
+    api.sendMessage(msg, event.threadID, (error, info) => {
       if (error) return console.error(error);
 
       if (!global.GoatBot.onReply) global.GoatBot.onReply = new Map();
       global.GoatBot.onReply.set(info.messageID, {
+        commandName: "يوتيوب",
         author: event.senderID,
         type: "pick",
-        name: "يوتيوب",
         searchResults: searchResults,
-        downloadType: downloadType,
-        unsend: true
+        downloadType: downloadType
       });
     });
 
