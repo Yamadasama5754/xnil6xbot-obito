@@ -60,9 +60,6 @@ module.exports.onStart = async function ({ api, event, args }) {
       
       msg += `${videoIndex} ❀ العنوان: ${title}\n`;
       msg += `   📺 القناة: ${channel}\n\n`;
-      
-      video.videoUrl = `https://www.youtube.com/watch?v=${video.id.videoId}`;
-      video.thumbnail = video.snippet.thumbnails.default.url;
     }
 
     msg += '📥 | الرجاء الرد برقم المقطع الذي تود تنزيله.';
@@ -73,17 +70,19 @@ module.exports.onStart = async function ({ api, event, args }) {
       if (error) return console.error(error);
 
       if (!global.GoatBot.onReply) global.GoatBot.onReply = new Map();
+      
       global.GoatBot.onReply.set(info.messageID, {
         commandName: "يوتيوب",
-        type: "pick",
         searchResults: JSON.stringify(searchResults.map(v => ({
-          videoUrl: v.videoUrl,
+          videoUrl: `https://www.youtube.com/watch?v=${v.id.videoId}`,
           title: v.snippet.title,
           channel: v.snippet.channelTitle
         }))),
         downloadType: downloadType,
         authorID: event.senderID
       });
+
+      console.log(`✅ تم حفظ بيانات البحث: ${info.messageID}`);
     });
 
   } catch (error) {
@@ -92,16 +91,18 @@ module.exports.onStart = async function ({ api, event, args }) {
   }
 };
 
-module.exports.onReply = async function ({ api, event, reply, message }) {
-  if (!reply || !reply.commandName || reply.commandName !== "يوتيوب") return;
-
+module.exports.onReply = async function ({ api, event, Reply }) {
   try {
-    if (event.senderID !== reply.authorID) {
+    console.log("📝 تم استقبال رد:", Reply);
+
+    if (event.senderID !== Reply.authorID) {
       return api.sendMessage("⚠️ | هذا ليس لك.", event.threadID);
     }
 
-    const searchResults = JSON.parse(reply.searchResults);
+    const searchResults = JSON.parse(Reply.searchResults);
     const selectedIndex = parseInt(event.body.trim(), 10) - 1;
+
+    console.log(`📍 اختيار الفهرس: ${selectedIndex} من ${searchResults.length}`);
 
     if (isNaN(selectedIndex) || selectedIndex < 0 || selectedIndex >= searchResults.length) {
       return api.sendMessage("❌ | الرد غير صالح. يرجى الرد برقم صحيح.", event.threadID);
@@ -110,9 +111,9 @@ module.exports.onReply = async function ({ api, event, reply, message }) {
     const video = searchResults[selectedIndex];
     const videoUrl = video.videoUrl;
 
-    api.sendMessage(`⬇️ | جاري تحميل ${reply.downloadType === "فيديو" ? "الفيديو" : "الصوت"}، المرجو الانتظار...`, event.threadID);
+    api.sendMessage(`⬇️ | جاري تحميل ${Reply.downloadType === "فيديو" ? "الفيديو" : "الصوت"}، المرجو الانتظار...`, event.threadID);
 
-    if (reply.downloadType === "فيديو") {
+    if (Reply.downloadType === "فيديو") {
       await downloadYouTubeVideo(videoUrl, api, event, video);
     } else {
       await downloadYouTubeAudio(videoUrl, api, event, video);
