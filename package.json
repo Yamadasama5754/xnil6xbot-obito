@@ -10,6 +10,7 @@
 	"dependencies": {
 		"@distube/ytdl-core": "^4.13.3",
 		"@dongdev/fca-unofficial": "^1.0.0",
+		"@vitalets/google-translate-api": "^9.2.1",
 		"@xnil6x/fca-unofficial": "^1.0.7",
 		"1secmail-api": "^1.1.1",
 		"axios": "^1.4.0",
