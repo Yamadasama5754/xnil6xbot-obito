@@ -1,5 +1,3 @@
-const fs = require("fs");
-const path = require("path");
 const { getPrefix } = global.utils;
 const { commands, aliases } = global.GoatBot;
 
@@ -60,7 +58,6 @@ module.exports = {
     const { threadID } = event;
     const prefix = getPrefix(threadID);
     const commandName = args[0]?.toLowerCase();
-    const bannerPath = path.join(__dirname, "assets", "20250319_111041.png");
 
     if (commandName === 'c' && args[1]) {
       const categoryArg = args[1].toUpperCase();
@@ -123,19 +120,7 @@ module.exports = {
 
       replyMsg += "\n" + getLang("totalCommands").replace(/{total}/g, totalCommands);
 
-      try {
-        if (fs.existsSync(bannerPath)) {
-          return message.reply({
-            body: replyMsg,
-            attachment: fs.createReadStream(bannerPath)
-          });
-        } else {
-          return message.reply(replyMsg);
-        }
-      } catch (e) {
-        console.error("تعذر تحميل صورة المساعدة:", e);
-        return message.reply(replyMsg);
-      }
+      return message.reply(replyMsg);
     }
 
     let cmd = commands.get(commandName) || commands.get(aliases.get(commandName));
