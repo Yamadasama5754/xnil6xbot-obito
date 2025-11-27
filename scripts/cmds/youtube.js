@@ -13,7 +13,6 @@ module.exports.config = {
 };
 
 const youtubeApiKey = process.env.YOUTUBE_API_KEY || "AIzaSyC_CVzKGFtLAqxNdAZ_EyLbL0VRGJ-FaMU";
-const pendingSearches = new Map();
 
 module.exports.onStart = async function ({ api, event, args }) {
   if (args.length < 1) {
@@ -48,7 +47,7 @@ module.exports.onStart = async function ({ api, event, args }) {
       return api.sendMessage("⚠️ | لم يتم العثور على أي نتائج.", event.threadID);
     }
 
-    const searchResults = searchResponse.data.items;
+    const searchResults = searchResponse.data.items.slice(0, 4);
     let msg = `🎥 | تم العثور على المقاطع الأربعة التالية (${downloadType === "فيديو" ? "فيديو" : "صوت"}) :\n\n`;
 
     const numberSymbols = ['⓵', '⓶', '⓷', '⓸'];
@@ -64,7 +63,6 @@ module.exports.onStart = async function ({ api, event, args }) {
       
       video.videoUrl = `https://www.youtube.com/watch?v=${video.id.videoId}`;
       video.thumbnail = video.snippet.thumbnails.default.url;
-      video.downloadType = downloadType;
     }
 
     msg += '📥 | الرجاء الرد برقم المقطع الذي تود تنزيله.';
@@ -74,11 +72,17 @@ module.exports.onStart = async function ({ api, event, args }) {
     api.sendMessage(msg, event.threadID, (error, info) => {
       if (error) return console.error(error);
 
-      pendingSearches.set(info.messageID, {
-        searchResults: searchResults,
+      if (!global.GoatBot.onReply) global.GoatBot.onReply = new Map();
+      global.GoatBot.onReply.set(info.messageID, {
+        commandName: "يوتيوب",
+        type: "pick",
+        searchResults: JSON.stringify(searchResults.map(v => ({
+          videoUrl: v.videoUrl,
+          title: v.snippet.title,
+          channel: v.snippet.channelTitle
+        }))),
         downloadType: downloadType,
-        author: event.senderID,
-        threadID: event.threadID
+        authorID: event.senderID
       });
     });
 
@@ -91,39 +95,32 @@ module.exports.onStart = async function ({ api, event, args }) {
 module.exports.onReply = async function ({ api, event, reply }) {
   if (!reply || reply.type !== 'pick') return;
 
-  const messageId = reply.messageReply?.messageID || reply.messageID;
-  const data = pendingSearches.get(messageId);
-  if (!data) return;
-
-  const { searchResults, downloadType, author } = data;
-
-  if (event.senderID !== author) {
-    return api.sendMessage("⚠️ | هذا ليس لك.", event.threadID);
-  }
-
-  const selectedIndex = parseInt(event.body.trim(), 10) - 1;
-
-  if (isNaN(selectedIndex) || selectedIndex < 0 || selectedIndex >= searchResults.length) {
-    return api.sendMessage("❌ | الرد غير صالح. يرجى الرد برقم صحيح.", event.threadID);
-  }
-
-  const video = searchResults[selectedIndex];
-  const videoUrl = video.videoUrl;
-
   try {
-    api.sendMessage(`⬇️ | جاري تحميل ${downloadType === "فيديو" ? "الفيديو" : "الصوت"}، المرجو الانتظار...`, event.threadID);
+    if (event.senderID !== reply.authorID) {
+      return api.sendMessage("⚠️ | هذا ليس لك.", event.threadID);
+    }
 
-    if (downloadType === "فيديو") {
+    const searchResults = JSON.parse(reply.searchResults);
+    const selectedIndex = parseInt(event.body.trim(), 10) - 1;
+
+    if (isNaN(selectedIndex) || selectedIndex < 0 || selectedIndex >= searchResults.length) {
+      return api.sendMessage("❌ | الرد غير صالح. يرجى الرد برقم صحيح.", event.threadID);
+    }
+
+    const video = searchResults[selectedIndex];
+    const videoUrl = video.videoUrl;
+
+    api.sendMessage(`⬇️ | جاري تحميل ${reply.downloadType === "فيديو" ? "الفيديو" : "الصوت"}، المرجو الانتظار...`, event.threadID);
+
+    if (reply.downloadType === "فيديو") {
       await downloadYouTubeVideo(videoUrl, api, event, video);
     } else {
       await downloadYouTubeAudio(videoUrl, api, event, video);
     }
 
-    pendingSearches.delete(messageId);
-
   } catch (error) {
     console.error('[ERROR]', error);
-    api.sendMessage('🥱 ❀ حدث خطأ أثناء تحميل الملف.', event.threadID);
+    api.sendMessage('🥱 ❀ حدث خطأ أثناء معالجة الرد.', event.threadID);
   }
 };
 
@@ -153,7 +150,7 @@ async function downloadYouTubeVideo(url, api, event, videoInfo) {
     }
 
     const message = {
-      body: `━━━━━━━◈✿◈━━━━━━━\n✅ | تـم تـحـمـيـل الـفـيـديو:\n❀ الـعـنـوان : ${videoInfo.snippet.title}\n📺 الـقـنـاة : ${videoInfo.snippet.channelTitle}\n━━━━━━━◈✿◈━━━━━━━`,
+      body: `━━━━━━━◈✿◈━━━━━━━\n✅ | تـم تـحـمـيـل الـفـيـديو:\n❀ الـعـنـوان : ${videoInfo.title}\n📺 الـقـنـاة : ${videoInfo.channel}\n━━━━━━━◈✿◈━━━━━━━`,
       attachment: fs.createReadStream(tempPath)
     };
 
@@ -165,7 +162,7 @@ async function downloadYouTubeVideo(url, api, event, videoInfo) {
 
   } catch (error) {
     console.error('[ERROR] في تحميل الفيديو:', error);
-    throw error;
+    api.sendMessage('🥱 ❀ حدث خطأ أثناء تحميل الفيديو.', event.threadID);
   }
 }
 
@@ -195,7 +192,7 @@ async function downloadYouTubeAudio(url, api, event, videoInfo) {
     }
 
     const message = {
-      body: `━━━━━━━◈✿◈━━━━━━━\n✅ | تـم تـحـمـيـل الـصـوت:\n❀ الـعـنـوان : ${videoInfo.snippet.title}\n📺 الـقـنـاة : ${videoInfo.snippet.channelTitle}\n━━━━━━━◈✿◈━━━━━━━`,
+      body: `━━━━━━━◈✿◈━━━━━━━\n✅ | تـم تـحـمـيـل الـصـوت:\n❀ الـعـنـوان : ${videoInfo.title}\n📺 الـقـنـاة : ${videoInfo.channel}\n━━━━━━━◈✿◈━━━━━━━`,
       attachment: fs.createReadStream(tempPath)
     };
 
@@ -207,6 +204,6 @@ async function downloadYouTubeAudio(url, api, event, videoInfo) {
 
   } catch (error) {
     console.error('[ERROR] في تحميل الصوت:', error);
-    throw error;
+    api.sendMessage('🥱 ❀ حدث خطأ أثناء تحميل الصوت.', event.threadID);
   }
 }
