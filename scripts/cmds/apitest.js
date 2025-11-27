@@ -2,24 +2,31 @@ const axios = require("axios");
 
 module.exports = {
  config: {
- name: "apitest",
+ name: "اختبار_api",
+ aliases: ["apitest"],
  version: "1.0",
- author: "xnil6x",
+ author: "Yamada KJ",
  role: 4,
  usePrefix: false,
- description: "Test any public API via GET or POST",
- guide: "/apitest get <url> | /apitest post <url> <body>",
- category: "utility",
+ description: {
+   en: "Test any public API via GET or POST",
+   ar: "اختبار أي API عام عبر GET أو POST"
+ },
+ guide: {
+   en: "{pn} get <url> | {pn} post <url> <body>",
+   ar: "{pn} get <رابط> | {pn} post <رابط> <بيانات>"
+ },
+ category: "أدوات",
  cooldowns: 3
  },
 
  
-	langs: {
-		en: {},
-		ar: { command: "أمر", error: "خطأ", success: "نجح", usage: "الاستخدام", invalid: "غير صالح" }
-	},
+        langs: {
+                en: {},
+                ar: { command: "أمر", error: "خطأ", success: "نجح", usage: "الاستخدام", invalid: "غير صالح" }
+        },
 
-	onStart: async function ({ api, event, args }) {
+        onStart: async function ({ api, event, args }) {
  const method = args[0]?.toLowerCase();
  const url = args[1];
  const bodyInput = args.slice(2).join(" ");

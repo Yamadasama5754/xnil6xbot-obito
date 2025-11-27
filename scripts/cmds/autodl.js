@@ -8,13 +8,17 @@ const baseApiUrl = async () => {
 };
 
 const config = {
- name: "autodl",
+ name: "تحميل_تلقائي",
+ aliases: ["autodl"],
  version: "3.0",
- author: "xnil",
+ author: "Yamada KJ",
  credits: "Dipto & xnil6x",
- description: "Auto download videos/images from TikTok, YouTube, FB, IG and more.",
- category: "media",
- commandCategory: "media",
+ description: {
+   en: "Auto download videos/images from TikTok, YouTube, FB, IG and more.",
+   ar: "تحميل تلقائي للفيديوهات والصور من تيك توك، يوتيوب، فيسبوك، انستغرام والمزيد"
+ },
+ category: "ميديا",
+ commandCategory: "ميديا",
  usePrefix: true,
  prefix: true,
  dependencies: {

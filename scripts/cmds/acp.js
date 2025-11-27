@@ -2,20 +2,20 @@ const moment = require("moment-timezone");
 
 module.exports = {
   config: {
-    name: "accept",
-    aliases: ['acp', 'قبول'],
+    name: "قبول",
+    aliases: ['acp', 'accept'],
     version: "1.0",
-    author: "xnil6x",
+    author: "Yamada KJ",
     countDown: 8,
     role: 2,
     description: {
       en: "Manage friend requests stylishly",
-			ar: "إدارة طلبات الصداقة بأناقة"
+      ar: "إدارة طلبات الصداقة بأناقة"
     },
-    category: "Utility",
+    category: "أدوات",
     guide: {
       en: "{pn} [add|del] [number|all]",
-			ar: "{pn} [add|del] [رقم|جميع]"
+      ar: "{pn} [add|del] [رقم|جميع]"
     }
   },
 
@@ -30,7 +30,7 @@ module.exports = {
       noValid: "❌ No valid requests were processed.",
       noPending: "🌟 You have no pending friend requests!"
     },
-		ar: { command: "أمر", error: "خطأ", success: "نجح", usage: "الاستخدام", invalid: "غير صالح" },
+                ar: { command: "أمر", error: "خطأ", success: "نجح", usage: "الاستخدام", invalid: "غير صالح" },
     ar: {
       invalidCommand: "❌ أمر غير صحيح. الاستخدام: <add|del> <رقم|جميع>",
       cannotFind: "🚫 لم يتم العثور على الطلب #%1",

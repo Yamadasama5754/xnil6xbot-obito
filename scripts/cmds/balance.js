@@ -1,19 +1,18 @@
 module.exports = {
   config: {
-    name: "balance",
-    aliases: ["bal", "$", "cash", "رصيد"],
+    name: "رصيد",
+    aliases: ["bal", "$", "cash", "balance"],
     version: "3.2",
-    author: "xnil6x",
+    author: "Yamada KJ",
     countDown: 3,
     role: 0,
     description: {
       en: "💰 Premium Economy System with Stylish Display",
-			ar: "💰 نظام اقتصادي متميز بعرض أنيق"
+      ar: "💰 نظام اقتصادي متميز بعرض أنيق"
     },
-    category: "economy",
+    category: "اقتصاد",
     guide: {
-      en: "╔════✦ Usage Guide ✦════╗\n",
-			ar: "{pn}"
+      en: "╔════✦ Usage Guide ✦════╗\n"
         + "║ ➤ {pn} - Check your balance\n"
         + "║ ➤ {pn} @user - Check others\n"
         + "║ ➤ {pn} t @user amount - Transfer\n"
@@ -32,7 +31,7 @@ module.exports = {
     en: {
       invalidUsage: "Invalid Usage",
       usageGuide: "Use: {prefix},
-		ar: {}balance t @user amount",
+                ar: {}balance t @user amount",
       error: "Error",
       amountPositive: "Amount must be positive.",
       cantSendSelf: "You can't send money to yourself.",
