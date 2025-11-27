@@ -44,12 +44,12 @@ module.exports = {
           const gender1 = userInfo[one]?.gender;
           const gender2 = userInfo[two]?.gender;
 
-          // ترتيب الصورة: البنت (1) أولاً، ثم الولد (2)
+          // ترتيب الصورة: الرجل (2) أولاً، ثم البنت (1)
           let firstUser = one;
           let secondUser = two;
 
-          // إذا كان الأول ولد (2) والثاني بنت (1)، اعكسهم
-          if (gender1 === 2 && gender2 === 1) {
+          // إذا كان الأول بنت (1) والثاني ولد (2)، اعكسهم
+          if (gender1 === 1 && gender2 === 2) {
             firstUser = two;
             secondUser = one;
           }
