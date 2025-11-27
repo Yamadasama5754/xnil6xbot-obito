@@ -11,7 +11,7 @@ module.exports = {
 		description: {
 			vi: "Cấu hình rankup",
 			en: "Configure rankup",
-			ar: "Configure rankup - أمر البوت"},
+			ar: "أمر"},
 		category: "owner",
 		guide: {
 			vi: "   {pn} text <message>: Cấu hình tin nhắn khi thành viên thăng hạng trong box chat của bạn"

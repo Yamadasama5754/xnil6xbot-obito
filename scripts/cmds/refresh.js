@@ -8,7 +8,7 @@ module.exports = {
 		description: {
 			vi: "làm mới thông tin nhóm chat hoặc người dùng",
 			en: "refresh information of group chat or user",
-			ar: "refresh information of group chat or user - أمر البوت"},
+			ar: "أمر"},
 		category: "box chat",
 		guide: {
 			vi: "   {pn} [thread | group]: làm mới thông tin nhóm chat của bạn"

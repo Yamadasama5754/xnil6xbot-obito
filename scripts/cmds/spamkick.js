@@ -6,10 +6,10 @@ module.exports.config = {
   usePrefix: true,
   description: { 
       en: "Automatically kick a user who spams messages in a group chat",
-			ar: "Automatically kick a user who spams messages in a group chat - أمر البوت"},
+			ar: "أمر"},
   category: "group",
   guide: { en:"[on/off] or [settings]",
-			ar: "استخدم: {pn}"},
+			ar: "{pn}"},
   countDown: 5
 };
 module.exports.onChat = async ({ api, event, usersData, commandName }) => {

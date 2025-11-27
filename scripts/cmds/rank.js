@@ -28,7 +28,7 @@ module.exports = {
 		description: {
 			vi: "Xem level của bạn hoặc người được tag. Có thể tag nhiều người",
 			en: "View your level or the level of the tagged person. You can tag many people",
-			ar: "أمر"
+			ar: "عرض"
 		},
 		category: "rank",
 		guide: {
@@ -43,7 +43,7 @@ module.exports = {
 	
 	langs: {
 		en: {},
-		ar: {}
+		ar: { rankCard: "بطاقة المرتبة", level: "المستوى", exp: "الخبرة", rank: "المرتبة" }
 	},
 
 	onStart: async function ({ message, event, usersData, threadsData, commandName, envCommands, api }) {

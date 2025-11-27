@@ -10,7 +10,7 @@ module.exports = {
 		description: {
 			vi: "Quản lý người dùng trong hệ thống bot",
 			en: "Manage users in bot system",
-			ar: "Manage users in bot system - أمر البوت"},
+			ar: "النظام"},
 		category: "owner",
 		guide: {
 			vi: "   {pn} [find | -f | search | -s] <tên cần tìm>: tìm kiếm người dùng trong dữ liệu bot bằng tên"

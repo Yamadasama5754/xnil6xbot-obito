@@ -17,7 +17,7 @@ module.exports.config = {
     role: 0,
     description: {
         en: "Search for TikTok videos",
-			ar: "أمر",,
+			ar: "أمر"
 			ar: "Search for TikTok videos - أمر البوت"},
     category: "MEDIA",
     guide: {

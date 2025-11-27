@@ -12,7 +12,7 @@ module.exports = {
 		description: {
 			vi: "lọc thành viên nhóm theo số tin nhắn hoặc bị khóa acc",
 			en: "filter group members by number of messages or locked account",
-			ar: "filter group members by number of messages or locked account - أمر البوت"},
+			ar: "أمر"},
 		category: "box chat",
 		guide: {
 			vi: "   {pn} [<số tin nhắn> | die]",

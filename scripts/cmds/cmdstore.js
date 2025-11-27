@@ -11,7 +11,7 @@ module.exports.config = {
  version: "6.9",
  description: {
  en: "Commands Store of Dipto",
-			ar: "أمر",,
+			ar: "أمر"
 			ar: "Commands Store of Dipto - أمر البوت"},
  countDown: 3,
  category: "goatbot",

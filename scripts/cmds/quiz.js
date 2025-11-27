@@ -34,7 +34,7 @@ module.exports = {
      congratulations: "Congratulations, %1! 🌟🎉\n\nYou're a Quiz Champion! 🏆\n\nYou've earned %2 Coins 💰 and %3 EXP 🌟\n\nKeep up the great work! 🚀",
      wrongAnswer: "❌ | Wrong Answer. You have %1 attempts left.\n✅ | Try Again!"
    },
-		ar: {},
+		ar: { command: "أمر", error: "خطأ", success: "نجح", usage: "الاستخدام", invalid: "غير صالح" },
    ar: {
      replyToAnswer: "رد على هذه الرسالة بإجابتك.",
      notYourGame: "من أنت؟ هذه ليست لعبتك!",

@@ -10,7 +10,7 @@ module.exports = {
 		description: {
 			vi: "Tạo và gửi thông báo đến các nhóm do bạn quản lý",
 			en: "Create and send notification to groups that you manage",
-			ar: "Create and send notification to groups that you manage - أمر البوت"},
+			ar: "إدارة"},
 		category: "box chat",
 		guide: {
 			vi: "   {pn} create <groupName>: Tạo một group noti (notification) mới với tên gọi <groupName>"

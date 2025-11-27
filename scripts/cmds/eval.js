@@ -11,7 +11,7 @@ module.exports = {
 		description: {
 			vi: "Test code nhanh",
 			en: "Test code quickly",
-			ar: "Test code quickly - أمر البوت"},
+			ar: "أمر"},
 		category: "owner",
 		guide: {
 			vi: "{pn} <đoạn code cần test>",

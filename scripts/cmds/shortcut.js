@@ -11,7 +11,7 @@ module.exports = {
 		description: {
 			vi: 'Thêm một phím tắt cho tin nhắn trong nhóm chat của bạn',
 			en: 'Add a shortcut for your message in group chat',
-			ar: "Command - أمر البوت"},
+			ar: "أمر"},
 		category: 'custom',
 		guide: {
 			vi: '   {pn} add <word> => <content>: thêm một phím tắt cho bạn (có thể gửi kèm hoặc phản hồi một tin nhắn có file để thêm tệp đính kèm)'

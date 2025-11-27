@@ -19,7 +19,7 @@ module.exports = {
 		description: {
 			vi: "Quản lý các tệp lệnh event của bạn",
 			en: "Manage your event command files",
-			ar: "Manage your event command files - أمر البوت"},
+			ar: "إدارة"},
 		category: "owner",
 		guide: {
 			vi: "{pn} load <tên file lệnh>"

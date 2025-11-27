@@ -16,7 +16,7 @@ module.exports = {
  role: 0,
  description: {
  en: "Guess the flag name",
-			ar: "أمر",,
+			ar: "أمر"
 			ar: "Guess the flag name - أمر البوت"},
  category: "game",
  guide: {

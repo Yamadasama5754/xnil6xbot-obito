@@ -28,12 +28,12 @@ module.exports = {
 		description: {
 			vi: "đây là mô tả dài của lệnh",
 			en: "this is long description of command",
-			ar: "this is long description of command - أمر البوت"}, // Long description of command
+			ar: "أمر"}, // Long description of command
 		category: "categoryName", // Category of command
 		guide: {
 			vi: "đây là hướng dẫn sử dụng của lệnh",
 			en: "this is guide of command",
-			ar: "استخدم: {pn}"} // Guide of command
+			ar: "{pn}"} // Guide of command
 	},
 
 	langs: {

@@ -34,7 +34,7 @@ module.exports = {
 		description: {
 			vi: "Quản lý các tệp lệnh của bạn",
 			en: "Manage your command files",
-			ar: "Manage your command files - أمر البوت"},
+			ar: "إدارة"},
 		category: "owner",
 		guide: {
 			vi: "   {pn} load <tên file lệnh>"

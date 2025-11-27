@@ -9,7 +9,7 @@ module.exports = {
 		description: {
 			vi: "Tag thành viên theo nhóm",
 			en: "Tag members by group",
-			ar: "Tag members by group - أمر البوت"},
+			ar: "أمر"},
 		category: "info",
 		guide: {
 			vi: "   {pn} add <groupTagName> <@tags>: dùng để thêm nhóm tag mới hoặc thêm thành viên vào nhóm tag đã có"

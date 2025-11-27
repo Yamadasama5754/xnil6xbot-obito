@@ -29,7 +29,7 @@ module.exports = {
       noPrompt: "Please provide a prompt or message reply",
       error: "Sorry, there was an error processing your request."
     },
-		ar: {},
+		ar: { command: "أمر", error: "خطأ", success: "نجح", usage: "الاستخدام", invalid: "غير صالح" },
     ar: {
       noPrompt: "يرجى تقديم سؤال أو الرد على رسالة",
       error: "عذراً، حدث خطأ أثناء معالجة طلبك."

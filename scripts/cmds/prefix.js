@@ -27,7 +27,9 @@ module.exports = {
 			successGlobal: "✅ Global prefix changed successfully!\n🆕 New prefix: %1",
 			successThisThread: "✅ Group prefix updated!\n🆕 New prefix: %1"
 		},
-		ar: {}
+		ar: {
+		reset: "النظام", onlyAdmin: "النظام", confirmGlobal: "أمر", confirmThisThread: "أمر", successGlobal: "أمر", successThisThread: "أمر"
+	}
 	},
 
 	onStart: async function ({ message, role, args, commandName, event, threadsData, getLang }) {

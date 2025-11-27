@@ -8,7 +8,7 @@ module.exports = {
 		description: {
 			vi: "Gỡ tin nhắn của bot",
 			en: "Unsend bot's message",
-			ar: "Unsend bot's message - أمر البوت"},
+			ar: "أمر"},
 		category: "box chat",
 		guide: {
 			vi: "reply tin nhắn muốn gỡ của bot và gọi lệnh {pn}",

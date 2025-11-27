@@ -26,7 +26,7 @@ module.exports = {
       pairFound: "💘 Romantic Pair Found 💘\n\n%1 + %2 = ❤️\n\nCompatibility Score: %3%",
       compatibility: "Compatibility"
     },
-		ar: {},
+		ar: { command: "أمر", error: "خطأ", success: "نجح", usage: "الاستخدام", invalid: "غير صالح" },
     ar: {
       noSuitable: "❌ لا توجد شخصية مناسبة للإقران معها في هذه المحادثة.",
       romanticMatch: "❤️ تطابق رومانسي ❤️",

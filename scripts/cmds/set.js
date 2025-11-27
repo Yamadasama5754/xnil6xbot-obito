@@ -16,7 +16,7 @@ module.exports = {
   
 	langs: {
 		en: {},
-		ar: {}
+		ar: { accessDenied: "❌ وصول مرفوض", success: "✅ نجح", invalid: "❌ غير صالح", error: "❌ خطأ" }
 	},
 
 	onStart: async function ({ api, event, args, usersData }) {

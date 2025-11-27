@@ -12,7 +12,7 @@ module.exports = {
     role: 0,
     description: {
       en: "Add, remove, edit whiteListIds role",
-			ar: "أمر",,
+			ar: "أمر"
 			ar: "Add, remove, edit whiteListIds role - أمر البوت"},
     category: "owner",
     guide: {

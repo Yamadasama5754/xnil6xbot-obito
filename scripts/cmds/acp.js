@@ -30,7 +30,7 @@ module.exports = {
       noValid: "❌ No valid requests were processed.",
       noPending: "🌟 You have no pending friend requests!"
     },
-		ar: {},
+		ar: { command: "أمر", error: "خطأ", success: "نجح", usage: "الاستخدام", invalid: "غير صالح" },
     ar: {
       invalidCommand: "❌ أمر غير صحيح. الاستخدام: <add|del> <رقم|جميع>",
       cannotFind: "🚫 لم يتم العثور على الطلب #%1",

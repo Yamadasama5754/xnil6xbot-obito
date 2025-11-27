@@ -8,7 +8,7 @@ module.exports = {
 		description: {
 			vi: "Tag tất cả thành viên trong nhóm chat của bạn",
 			en: "Tag all members in your group chat",
-			ar: "Tag all members in your group chat - أمر البوت"},
+			ar: "أمر"},
 		category: "box chat",
 		guide: {
 			vi: "   {pn} [nội dung | để trống]",
@@ -20,8 +20,8 @@ module.exports = {
 
 	langs: {
 		en: {},
-		ar: {},
-		ar: {}
+		ar: { command: "أمر", error: "خطأ", success: "نجح", usage: "الاستخدام", invalid: "غير صالح" },
+		ar: { command: "أمر", error: "خطأ", success: "نجح", usage: "الاستخدام", invalid: "غير صالح" }
 	},
 
 	onStart: async function ({ message, event, args }) {

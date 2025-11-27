@@ -11,7 +11,7 @@ module.exports = {
 		description: {
 			vi: "Load lại config của bot",
 			en: "Reload config of bot",
-			ar: "Reload config of bot - أمر البوت"},
+			ar: "أمر"},
 		category: "owner",
 		guide: "{pn}"
 	},

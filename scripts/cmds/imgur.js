@@ -22,7 +22,7 @@ module.exports = {
   
 	langs: {
 		en: {},
-		ar: {}
+		ar: { command: "أمر", error: "خطأ", success: "نجح", usage: "الاستخدام", invalid: "غير صالح" }
 	},
 
 	onStart: async function ({ api, event, message }) {

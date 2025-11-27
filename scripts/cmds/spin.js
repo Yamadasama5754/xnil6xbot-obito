@@ -16,7 +16,7 @@ module.exports = {
  
 	langs: {
 		en: {},
-		ar: {}
+		ar: { topWinners: "🏆 أفضل الفائزين", noWinners: "❌ لا يوجد فائزون", usage: "❌ الاستخدام: /spin <مبلغ>", insufficient: "❌ رصيد غير كافٍ" }
 	},
 
 	onStart: async function ({ message, event, args, usersData }) {
