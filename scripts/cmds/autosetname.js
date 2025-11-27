@@ -14,7 +14,6 @@ module.exports = {
 		description: {
 			vi: "Tự đổi biệt danh cho thành viên mới vào nhóm chat",
 			en: "Auto change nickname of new member",
-			ar: "أمر",
 			ar: "Auto change nickname of new member - أمر البوت"},
 		category: "box chat",
 		guide: {

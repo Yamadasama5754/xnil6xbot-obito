@@ -8,7 +8,6 @@ module.exports = {
 		description: {
 			vi: "Thêm tên gọi khác cho 1 lệnh bất kỳ trong nhóm của bạn",
 			en: "Add an alias for any command in your group",
-			ar: "أمر",
 			ar: "Add an alias for any command in your group - أمر البوت"},
 		category: "config",
 		guide: {

@@ -16,7 +16,6 @@ const baseApiUrl = async () => {
     role: 0,
     description: {
       en: "Get song lyrics with their Images",
-			ar: "أمر",
 			ar: "Get song lyrics with their Images - أمر البوت"},
     category: "Song Lyrics",
     guide: {

@@ -8,14 +8,12 @@ module.exports = {
     role: 0,
     description: {
       en: "Bank system with wallet, bank, loan, etc.",
-			ar: "أمر",
-      ar: "نظام البنك مع المحفظة والقروض وغيرها"
+			ar: "نظام البنك مع المحفظة والقروض وغيرها"
     },
     category: "economy",
     guide: {
       en: "{pn} balance\n{pn} deposit <amount>\n{pn} withdraw <amount>\n{pn} loan\n{pn} preloan\n{pn} top",
-			ar: "{pn}",
-      ar: "{pn} balance - عرض الرصيد\n{pn} deposit <مبلغ> - إيداع\n{pn} withdraw <مبلغ> - سحب\n{pn} loan - قرض\n{pn} preloan - سداد القرض\n{pn} top - الترتيب"
+			ar: "{pn} balance - عرض الرصيد\n{pn} deposit <مبلغ> - إيداع\n{pn} withdraw <مبلغ> - سحب\n{pn} loan - قرض\n{pn} preloan - سداد القرض\n{pn} top - الترتيب"
     }
   },
 

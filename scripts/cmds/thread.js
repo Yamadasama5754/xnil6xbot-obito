@@ -10,7 +10,6 @@ module.exports = {
 		description: {
 			vi: "Quản lý các nhóm chat trong hệ thống bot",
 			en: "Manage group chat in bot system",
-			ar: "أمر",
 			ar: "Manage group chat in bot system - أمر البوت"},
 		category: "owner",
 		guide: {

@@ -10,7 +10,6 @@ module.exports = {
 		description: {
 			vi: "Khởi động lại bot",
 			en: "Restart bot",
-			ar: "أمر",
 			ar: "Restart bot - أمر البوت"},
 		category: "Owner",
 		guide: {

@@ -19,7 +19,6 @@ module.exports = {
 		description: {
 			vi: "xem ảnh mặt trăng vào đêm bạn chọn (dd/mm/yyyy)",
 			en: "view moon image on the night you choose (dd/mm/yyyy)",
-			ar: "أمر",
 			ar: "view moon image on the night you choose (dd/mm/yyyy) - أمر البوت"},
 		category: "image",
 		guide: {

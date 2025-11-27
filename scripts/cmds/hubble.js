@@ -19,7 +19,6 @@ module.exports = {
 		description: {
 			vi: "Xem ảnh từ Hubble",
 			en: "View Hubble images",
-			ar: "أمر",
 			ar: "View Hubble images - أمر البوت"},
 		category: "owner",
 		guide: {

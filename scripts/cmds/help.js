@@ -12,14 +12,12 @@ module.exports = {
     role: 0,
     description: {
       en: "View command information with enhanced interface",
-			ar: "أمر",
-      ar: "عرض معلومات الأوامر بواجهة محسنة"
+			ar: "عرض معلومات الأوامر بواجهة محسنة"
     },
     category: "info",
     guide: {
       en: "{pn} [command] - View command details\n{pn} all - View all commands\n{pn} c [category] - View commands in category",
-			ar: "{pn}",
-      ar: "{pn} [أمر] - عرض تفاصيل الأمر\n{pn} all - عرض جميع الأوامر\n{pn} c [فئة] - عرض أوامر الفئة"
+			ar: "{pn} [أمر] - عرض تفاصيل الأمر\n{pn} all - عرض جميع الأوامر\n{pn} c [فئة] - عرض أوامر الفئة"
     }
   },
 

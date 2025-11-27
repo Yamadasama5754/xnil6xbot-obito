@@ -10,7 +10,6 @@ module.exports = {
 		description: {
 			vi: "Bật tắt chức năng chống thành viên đổi thông tin box chat của bạn",
 			en: "Turn on/off anti change info box",
-			ar: "أمر",
 			ar: "Turn on/off anti change info box - أمر البوت"},
 		category: "box chat",
 		guide: {

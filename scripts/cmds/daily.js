@@ -10,7 +10,6 @@ module.exports = {
 		description: {
 			vi: "Nhận quà hàng ngày",
 			en: "Receive daily gift",
-			ar: "أمر",
 			ar: "استلام الهدية اليومية"
 		},
 		category: "game",

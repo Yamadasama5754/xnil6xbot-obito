@@ -8,8 +8,7 @@ module.exports = {
     role: 0,
     description: {
       en: "💰 Premium Economy System with Stylish Display",
-			ar: "أمر",
-      ar: "💰 نظام اقتصادي متميز بعرض أنيق"
+			ar: "💰 نظام اقتصادي متميز بعرض أنيق"
     },
     category: "economy",
     guide: {

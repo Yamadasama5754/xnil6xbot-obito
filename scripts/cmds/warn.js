@@ -10,7 +10,6 @@ module.exports = {
 		description: {
 			vi: "cảnh cáo thành viên trong nhóm, đủ 3 lần ban khỏi box",
 			en: "warn member in group, if they have 3 warns, they will be banned",
-			ar: "أمر",
 			ar: "تحذير عضو في المجموعة، إذا حصل على 3 تحذيرات سيتم حظره"
 		},
 		category: "box chat",

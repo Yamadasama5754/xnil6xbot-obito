@@ -8,7 +8,6 @@ module.exports = {
 		description: {
 			vi: "Tag tất cả thành viên trong nhóm chat của bạn",
 			en: "Tag all members in your group chat",
-			ar: "أمر",
 			ar: "Tag all members in your group chat - أمر البوت"},
 		category: "box chat",
 		guide: {

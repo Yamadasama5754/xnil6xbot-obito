@@ -12,7 +12,6 @@ module.exports = {
 		description: {
 			vi: "Bật/tắt thông báo level up",
 			en: "Turn on/off level up notification",
-			ar: "أمر",
 			ar: "Turn on/off level up notification - أمر البوت"},
 		category: "rank",
 		guide: {

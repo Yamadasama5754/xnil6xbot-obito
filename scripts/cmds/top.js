@@ -6,14 +6,12 @@ module.exports = {
     author: "xnil6x",
     description: {
       en: "💰 Top Money Leaderboard",
-			ar: "أمر",
-      ar: "💰 قائمة أغنى المستخدمين"
+			ar: "💰 قائمة أغنى المستخدمين"
     },
     category: "Economy",
     guide: {
       en: "{pn} [number]",
-			ar: "{pn}",
-      ar: "{pn} [رقم]"
+			ar: "{pn} [رقم]"
     }
   },
 

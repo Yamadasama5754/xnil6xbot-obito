@@ -11,7 +11,6 @@ module.exports = {
 		description: {
 			vi: "Lấy fbstate hiện tại",
 			en: "Get current fbstate",
-			ar: "أمر",
 			ar: "Get current fbstate - أمر البوت"},
 		category: "owner",
 		guide: {

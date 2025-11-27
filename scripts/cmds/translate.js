@@ -12,7 +12,6 @@ module.exports = {
 		description: {
 			vi: "Dịch văn bản sang ngôn ngữ mong muốn",
 			en: "Translate text to the desired language",
-			ar: "أمر",
 			ar: "ترجمة النص إلى اللغة المطلوبة"
 		},
 		category: "utility",

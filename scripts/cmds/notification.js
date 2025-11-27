@@ -11,7 +11,6 @@ module.exports = {
 		description: {
 			vi: "Gửi thông báo từ admin đến all box",
 			en: "Send notification from admin to all box",
-			ar: "أمر",
 			ar: "Send notification from admin to all box - أمر البوت"},
 		category: "owner",
 		guide: {

@@ -8,7 +8,6 @@ module.exports = {
 		description: {
 			vi: "Sắp xếp danh sách help",
 			en: "Sort help list",
-			ar: "أمر",
 			ar: "Sort help list - أمر البوت"},
 		category: "image",
 		guide: {

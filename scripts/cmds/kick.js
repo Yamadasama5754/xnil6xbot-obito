@@ -8,7 +8,6 @@ module.exports = {
 		description: {
 			vi: "Kick thành viên khỏi box chat",
 			en: "Kick member out of chat box",
-			ar: "أمر",
 			ar: "طرد عضو من المحادثة"
 		},
 		category: "box chat",

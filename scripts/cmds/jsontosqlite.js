@@ -11,7 +11,6 @@ module.exports = {
 		description: {
 			vi: "Đồng bộ dữ liệu từ json sang sqlite",
 			en: "Synchronize data from json to sqlite",
-			ar: "أمر",
 			ar: "Synchronize data from json to sqlite - أمر البوت"},
 		category: "owner",
 		guide: {

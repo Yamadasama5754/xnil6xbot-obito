@@ -9,7 +9,6 @@ module.exports = {
 		description: {
 			vi: "Tag thành viên theo nhóm",
 			en: "Tag members by group",
-			ar: "أمر",
 			ar: "Tag members by group - أمر البوت"},
 		category: "info",
 		guide: {

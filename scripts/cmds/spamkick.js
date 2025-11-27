@@ -6,11 +6,9 @@ module.exports.config = {
   usePrefix: true,
   description: { 
       en: "Automatically kick a user who spams messages in a group chat",
-			ar: "أمر",
 			ar: "Automatically kick a user who spams messages in a group chat - أمر البوت"},
   category: "group",
   guide: { en:"[on/off] or [settings]",
-			ar: "{pn}",
 			ar: "استخدم: {pn}"},
   countDown: 5
 };

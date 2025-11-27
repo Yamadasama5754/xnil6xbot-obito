@@ -9,14 +9,12 @@ module.exports = {
  role: 0,
  description: {
    en: "Stream media from URL",
-			ar: "أمر",
-   ar: "بث الوسائط من رابط"
+			ar: "بث الوسائط من رابط"
  },
  category: "utility",
  guide: {
    en: "{pn} <media_url>",
-			ar: "{pn}",
-   ar: "{pn} <رابط_الوسائط>"
+			ar: "{pn} <رابط_الوسائط>"
  }
  },
 

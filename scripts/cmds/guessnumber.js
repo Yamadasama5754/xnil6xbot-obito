@@ -29,7 +29,6 @@ module.exports = {
 		description: {
 			vi: "Game đoán số",
 			en: "Guess number game",
-			ar: "أمر",
 			ar: "Guess number game - أمر البوت"},
 		category: "game",
 		guide: {

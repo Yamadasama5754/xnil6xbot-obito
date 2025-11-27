@@ -11,7 +11,6 @@ module.exports = {
 		description: {
 			vi: "chơi game đuổi hình bắt chữ",
 			en: "play game catch the word",
-			ar: "أمر",
 			ar: "play game catch the word - أمر البوت"},
 		category: "game",
 		guide: {

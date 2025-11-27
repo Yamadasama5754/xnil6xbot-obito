@@ -18,13 +18,11 @@ module.exports = {
  category: "game",
  description: {
    en: "Quiz game with rewards",
-			ar: "أمر",
-   ar: "لعبة اختبار مع مكافآت"
+			ar: "لعبة اختبار مع مكافآت"
  },
  guide: {
    en: "{pn} \n{pn} bn \n{pn} en",
-			ar: "{pn}",
-   ar: "{pn} \n{pn} bn - بنغالي\n{pn} en - إنجليزي"
+			ar: "{pn} \n{pn} bn - بنغالي\n{pn} en - إنجليزي"
  },
  },
 

@@ -11,7 +11,6 @@ module.exports = {
 		description: {
 			vi: "Thêm thành viên vào box chat của bạn",
 			en: "Add user to box chat of you",
-			ar: "أمر",
 			ar: "Add user to box chat of you - أمر البوت"},
 		category: "box chat",
 		guide: {

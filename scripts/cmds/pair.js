@@ -10,14 +10,12 @@ module.exports = {
     role: 0,
     description: {
       en: "Create romantic pairing",
-			ar: "أمر",
-      ar: "إنشاء إقران رومانسي"
+			ar: "إنشاء إقران رومانسي"
     },
     category: "love",
     guide: {
       en: "{pn}",
-			ar: "{pn}",
-      ar: "{pn}"
+			ar: "{pn}"
     }
   },
 

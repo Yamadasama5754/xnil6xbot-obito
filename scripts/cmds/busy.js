@@ -11,7 +11,6 @@ module.exports = {
 		description: {
 			vi: "bật chế độ không làm phiền, khi bạn được tag bot sẽ thông báo",
 			en: "turn on do not disturb mode, when you are tagged bot will notify",
-			ar: "أمر",
 			ar: "turn on do not disturb mode, when you are tagged bot will notify - أمر البوت"},
 		category: "box chat",
 		guide: {

@@ -10,7 +10,6 @@ module.exports = {
     countDown: 20,
    description: {
       en: "Reply to a video",
-			ar: "أمر",
 			ar: "Reply to a video - أمر البوت"},
     category: "media",
     guide: {

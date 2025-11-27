@@ -11,7 +11,6 @@ module.exports = {
 		description: {
 			vi: "Cấu hình rankup",
 			en: "Configure rankup",
-			ar: "أمر",
 			ar: "Configure rankup - أمر البوت"},
 		category: "owner",
 		guide: {

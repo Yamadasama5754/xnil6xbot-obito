@@ -11,7 +11,6 @@ module.exports = {
 		description: {
 			uid: "Tạo ảnh từ văn bản của bạn",
 			en: "Create image from your text",
-			ar: "أمر",
 			ar: "Create image from your text - أمر البوت"},
 		category: "info",
 		guide: {

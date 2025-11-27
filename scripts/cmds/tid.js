@@ -8,13 +8,11 @@ module.exports = {
 		description: {
 			vi: "Xem id nhóm chat của bạn",
 			en: "View threadID of your group chat",
-			ar: "أمر",
 			ar: "عرض معرف المحادثة الجماعية"
 		},
 		category: "info",
 		guide: {
 			en: "{pn}",
-			ar: "{pn}",
 			ar: "{pn}"
 		}
 	},

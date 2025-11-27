@@ -13,16 +13,14 @@ module.exports = {
     author: "Dipto",
     description: {
       en: "Gemini AI assistant",
-			ar: "أمر",
-      ar: "مساعد Gemini الذكي"
+			ar: "مساعد Gemini الذكي"
     },
     countDown: 5,
     role: 0,
     category: "google",
     guide: {
       en: "{pn} message | photo reply",
-			ar: "{pn}",
-      ar: "{pn} رسالة | رد على صورة"
+			ar: "{pn} رسالة | رد على صورة"
     },
   },
 
