@@ -89,24 +89,21 @@ module.exports.onStart = async function ({ api, event, args, message }) {
       return message.reply("❌ | هذا الشخص مبان من المجموعة! لا يمكن إضافته.");
     }
 
-    // تحقق: هل الشخص موجود بالفعل في المجموعة؟
-    const alreadyInGroup = threadInfo.participantIDs.includes(targetID);
-    if (alreadyInGroup) {
-      return message.reply("ℹ️ | هذا الشخص موجود بالفعل في المجموعة.");
-    }
-
-    // محاولة الإضافة
+    // محاولة الإضافة (حتى لو كان الشخص موجود، ربما غادر وبنحاول نضيفه مرة أخرى)
     api.addUserToGroup(targetID, event.threadID, (err) => {
       if (err) {
         let errorMsg = "❌ | فشل إضافة الشخص.\n";
+        const errorStr = (err.message || "").toLowerCase();
 
         // تحليل نوع الخطأ
-        if (err.message?.includes("not admin") || err.message?.includes("not authorized") || err.message?.includes("permission")) {
+        if (errorStr.includes("not admin") || errorStr.includes("not authorized") || errorStr.includes("permission") || errorStr.includes("admin")) {
           errorMsg = "⚠️ | لازم البوت يصبح أدمن في المجموعة لإضافة أعضاء!";
-        } else if (err.message?.includes("already") || err.message?.includes("member")) {
+        } else if (errorStr.includes("already") || errorStr.includes("member")) {
           errorMsg = "ℹ️ | هذا الشخص موجود بالفعل في المجموعة.";
-        } else if (err.message?.includes("blocked")) {
-          errorMsg = "🔍 | هذا الشخص محظور أو قد حظر المجموعة.";
+        } else if (errorStr.includes("blocked") || errorStr.includes("block")) {
+          errorMsg = "🔍 | هذا الشخص محظور أو قد حظر المجموعة أو Facebook منع الإضافة.";
+        } else if (errorStr.includes("cannot add") || errorStr.includes("cannot invite")) {
+          errorMsg = "🔍 | Facebook منع إضافة هذا الشخص. قد يكون محظور أو غادر المجموعة ولا يمكن إضافته من جديد.";
         } else {
           errorMsg += `🔍 السبب: ${err.message || "خطأ غير معروف"}`;
         }
