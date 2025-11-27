@@ -9,8 +9,9 @@ module.exports = {
 		role: 0,
 		description: {
 			vi: "Bật tắt chức năng chống thành viên đổi thông tin box chat của bạn",
-			en: "Turn on/off anti change info box"
-		},
+			en: "Turn on/off anti change info box",
+			ar: "أمر",
+			ar: "Turn on/off anti change info box - أمر البوت"},
 		category: "box chat",
 		guide: {
 			vi: "   {pn} avt [on | off]: chống đổi avatar box chat"

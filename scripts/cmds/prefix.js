@@ -11,7 +11,8 @@ module.exports = {
 		description: "Change bot prefix in your group or globally",
 		category: "config",
 		guide: {
-			en: "{pn} <new prefix>: change prefix in this group\n"
+			en: "{pn} <new prefix>: change prefix in this group\n",
+			ar: "{pn}"
 				+ "{pn} <new prefix> -g: change global prefix (admin only)\n"
 				+ "{pn} reset: reset prefix to default"
 		}
@@ -25,7 +26,8 @@ module.exports = {
 			confirmThisThread: "🛠️ Group prefix change requested.\n🪄 React to confirm.\n📷 See image below.",
 			successGlobal: "✅ Global prefix changed successfully!\n🆕 New prefix: %1",
 			successThisThread: "✅ Group prefix updated!\n🆕 New prefix: %1"
-		}
+		},
+		ar: {}
 	},
 
 	onStart: async function ({ message, role, args, commandName, event, threadsData, getLang }) {

@@ -8,11 +8,13 @@ module.exports = {
     role: 0,
     description: {
       en: "🎰 Ultra-stylish slot machine with balanced odds",
+			ar: "أمر",
       ar: "🎰 ماكينة قمار أنيقة مع احتمالات متوازنة"
     },
     category: "game",
     guide: {
       en: "Use: {pn} [bet amount]",
+			ar: "{pn}",
       ar: "استخدم: {pn} [مبلغ الرهان]"
     }
   },
@@ -20,7 +22,8 @@ module.exports = {
   langs: {
     en: {
       invalidBet: "🔴 𝗘𝗥𝗥𝗢𝗥: Please enter a valid bet amount!",
-      insufficientFunds: "🔴 𝗜𝗡𝗦𝗨𝗙𝗙𝗜𝗖𝗜𝗘𝗡𝗧 𝗙𝗨𝗡𝗗𝗦: You need {amount} more to play!",
+      insufficientFunds: "🔴 𝗜𝗡𝗦𝗨𝗙𝗙𝗜𝗖𝗜𝗘𝗡𝗧 𝗙𝗨𝗡𝗗𝗦: You need {amount},
+		ar: {} more to play!",
       megaJackpot: "🔥 𝗠𝗘𝗚𝗔 𝗝𝗔𝗖𝗞𝗣𝗢𝗧! 𝗧𝗥𝗜𝗣𝗟𝗘 7️⃣!",
       maxWin: "💎 𝗠𝗔𝗫 𝗪𝗜𝗡",
       bonus: "🎆 𝗕𝗢𝗡𝗨𝗦: +3% to your total balance!",

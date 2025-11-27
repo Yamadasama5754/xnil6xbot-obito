@@ -8,11 +8,13 @@ module.exports = {
     role: 0,
     description: {
       en: "💰 Premium Economy System with Stylish Display",
+			ar: "أمر",
       ar: "💰 نظام اقتصادي متميز بعرض أنيق"
     },
     category: "economy",
     guide: {
-      en: "╔════✦ Usage Guide ✦════╗\n"
+      en: "╔════✦ Usage Guide ✦════╗\n",
+			ar: "{pn}"
         + "║ ➤ {pn} - Check your balance\n"
         + "║ ➤ {pn} @user - Check others\n"
         + "║ ➤ {pn} t @user amount - Transfer\n"
@@ -30,7 +32,8 @@ module.exports = {
   langs: {
     en: {
       invalidUsage: "Invalid Usage",
-      usageGuide: "Use: {prefix}balance t @user amount",
+      usageGuide: "Use: {prefix},
+		ar: {}balance t @user amount",
       error: "Error",
       amountPositive: "Amount must be positive.",
       cantSendSelf: "You can't send money to yourself.",

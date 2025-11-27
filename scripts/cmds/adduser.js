@@ -10,11 +10,14 @@ module.exports = {
 		role: 1,
 		description: {
 			vi: "Thêm thành viên vào box chat của bạn",
-			en: "Add user to box chat of you"
-		},
+			en: "Add user to box chat of you",
+			ar: "أمر",
+			ar: "Add user to box chat of you - أمر البوت"},
 		category: "box chat",
 		guide: {
-			en: "   {pn} [link profile | uid]"
+			en: "   {pn,
+			ar: ",
+			ar: "{pn}"استخدم: {pn}"} [link profile | uid]"
 		}
 	},
 

@@ -11,11 +11,14 @@ module.exports = {
 		role: 2,
 		description: {
 			en: "Check for and install updates for the chatbot.",
-			vi: "Kiểm tra và cài đặt phiên bản mới nhất của chatbot trên GitHub."
-		},
+			ar: "أمر",
+			vi: "Kiểm tra và cài đặt phiên bản mới nhất của chatbot trên GitHub.",
+			ar: "Check for and install updates for the chatbot. - أمر البوت"},
 		category: "owner",
 		guide: {
-			en: "   {pn}",
+			en: "   {pn,
+			ar: ",
+			ar: "{pn}"استخدم: {pn}"}",
 			vi: "   {pn}"
 		}
 	},

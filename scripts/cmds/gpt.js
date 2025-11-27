@@ -22,6 +22,7 @@ module.exports = {
 		description: {
 			vi: "GPT chat",
 			en: "GPT chat",
+			ar: "أمر",
 			ar: "محادثة GPT"
 		},
 		category: "box chat",

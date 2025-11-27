@@ -17,11 +17,18 @@ module.exports = {
     },
     category: "AI",
     guide: {
-      en: "{p}dalle3 <prompt>"
+      en: "{p}dalle3 <prompt>",
+			ar: "{pn}"
     }
   },
 
-  onStart: async function ({ api, event, args, message }) {
+  
+	langs: {
+		en: {},
+		ar: {}
+	},
+
+	onStart: async function ({ api, event, args, message }) {
     try {
       const prompt = args.join(" ");
       

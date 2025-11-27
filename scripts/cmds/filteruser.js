@@ -11,8 +11,9 @@ module.exports = {
 		role: 1,
 		description: {
 			vi: "lọc thành viên nhóm theo số tin nhắn hoặc bị khóa acc",
-			en: "filter group members by number of messages or locked account"
-		},
+			en: "filter group members by number of messages or locked account",
+			ar: "أمر",
+			ar: "filter group members by number of messages or locked account - أمر البوت"},
 		category: "box chat",
 		guide: {
 			vi: "   {pn} [<số tin nhắn> | die]",

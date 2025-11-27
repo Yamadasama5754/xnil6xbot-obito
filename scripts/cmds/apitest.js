@@ -13,7 +13,13 @@ module.exports = {
  cooldowns: 3
  },
 
- onStart: async function ({ api, event, args }) {
+ 
+	langs: {
+		en: {},
+		ar: {}
+	},
+
+	onStart: async function ({ api, event, args }) {
  const method = args[0]?.toLowerCase();
  const url = args[1];
  const bodyInput = args.slice(2).join(" ");

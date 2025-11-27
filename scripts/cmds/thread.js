@@ -9,8 +9,9 @@ module.exports = {
 		role: 0,
 		description: {
 			vi: "Quản lý các nhóm chat trong hệ thống bot",
-			en: "Manage group chat in bot system"
-		},
+			en: "Manage group chat in bot system",
+			ar: "أمر",
+			ar: "Manage group chat in bot system - أمر البوت"},
 		category: "owner",
 		guide: {
 			vi: "   {pn} [find | -f | search | -s] <tên cần tìm>: tìm kiếm nhóm chat trong dữ liệu bot bằng tên"

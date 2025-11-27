@@ -13,11 +13,18 @@ module.exports = {
  category: "AI",
  role: 2,
  guide: {
- en: "{p}niji <your creative prompt>"
+ en: "{p}niji <your creative prompt>",
+			ar: "{pn}"
  }
  },
 
- onStart: async function ({ api, event, args, message }) {
+ 
+	langs: {
+		en: {},
+		ar: {}
+	},
+
+	onStart: async function ({ api, event, args, message }) {
  try {
  const prompt = args.join(" ");
  if (!prompt) {

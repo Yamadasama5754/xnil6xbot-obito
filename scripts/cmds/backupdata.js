@@ -9,11 +9,14 @@ module.exports = {
 		role: 2,
 		description: {
 			vi: "Sao lưu dữ liệu của bot (threads, users, dashboard, globalData)",
-			en: "Backup data of bot (threads, users, dashboard, globalData)"
-		},
+			en: "Backup data of bot (threads, users, dashboard, globalData)",
+			ar: "أمر",
+			ar: "Backup data of bot (threads, users, dashboard, globalData) - أمر البوت"},
 		category: "owner",
 		guide: {
-			en: "   {pn}"
+			en: "   {pn,
+			ar: ",
+			ar: "{pn}"استخدم: {pn}"}"
 		}
 	},
 

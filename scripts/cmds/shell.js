@@ -17,7 +17,13 @@ module.exports = {
  }
  },
 
- onStart: async function ({ args, message }) {
+ 
+	langs: {
+		en: {},
+		ar: {}
+	},
+
+	onStart: async function ({ args, message }) {
  const command = args.join(" ");
 
  if (!command) {

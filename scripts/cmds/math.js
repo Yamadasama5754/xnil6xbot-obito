@@ -8,11 +8,18 @@ module.exports = {
  description: "Solve math and win money!",
  category: "game",
  guide: {
- en: "{p}math\n{p}math top"
+ en: "{p}math\n{p}math top",
+			ar: "{pn}"
  }
  },
 
- onStart: async function ({ message, event, args, usersData }) {
+ 
+	langs: {
+		en: {},
+		ar: {}
+	},
+
+	onStart: async function ({ message, event, args, usersData }) {
  const senderID = event.senderID;
 
  // ======= ✅ Leaderboard: /math top =======

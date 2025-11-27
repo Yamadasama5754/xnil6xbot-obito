@@ -11,11 +11,14 @@ module.exports.config = {
  version: "6.9",
  description: {
  en: "Commands Store of Dipto",
- },
+			ar: "أمر",,
+			ar: "Commands Store of Dipto - أمر البوت"},
  countDown: 3,
  category: "goatbot",
  guide: {
- en: "{pn} [command name | single character | page number]",
+ en: "{pn,
+			ar: ",
+			ar: "{pn}"استخدم: {pn}"} [command name | single character | page number]",
  },
 };
 module.exports.onStart = async function ({ api, event, args }) {

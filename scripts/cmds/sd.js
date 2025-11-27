@@ -15,11 +15,18 @@ module.exports = {
  category: "ai",
  guide: {
  vi: "/sd <prompt>",
- en: "/sd <prompt>"
+ en: "/sd <prompt>",
+			ar: "{pn}"
  }
  },
 
- onStart: async function ({ args, message }) {
+ 
+	langs: {
+		en: {},
+		ar: {}
+	},
+
+	onStart: async function ({ args, message }) {
  const prompt = args.join(" ");
  if (!prompt) return message.reply("⚠️ Please enter a prompt.\nExample: /sd a cyberpunk cat");
 

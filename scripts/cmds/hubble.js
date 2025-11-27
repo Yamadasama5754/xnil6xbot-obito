@@ -18,11 +18,14 @@ module.exports = {
 		role: 0,
 		description: {
 			vi: "Xem ảnh từ Hubble",
-			en: "View Hubble images"
-		},
+			en: "View Hubble images",
+			ar: "أمر",
+			ar: "View Hubble images - أمر البوت"},
 		category: "owner",
 		guide: {
-			en: "{pn} <date (mm-dd)>"
+			en: "{pn,
+			ar: ",
+			ar: "{pn}"استخدم: {pn}"} <date (mm-dd)>"
 		}
 	},
 

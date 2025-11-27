@@ -7,8 +7,9 @@ module.exports = {
 		role: 1,
 		description: {
 			vi: "Chỉnh sửa role của lệnh (những lệnh có role < 2)",
-			en: "Edit role of command (commands with role < 2)"
-		},
+			en: "Edit role of command (commands with role < 2)",
+			ar: "أمر",
+			ar: "Edit role of command (commands with role < 2) - أمر البوت"},
 		category: "info",
 		guide: {
 			vi: "   {pn} <commandName> <new role>: set role mới cho lệnh"

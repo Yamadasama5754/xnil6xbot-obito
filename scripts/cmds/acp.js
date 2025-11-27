@@ -10,11 +10,13 @@ module.exports = {
     role: 2,
     description: {
       en: "Manage friend requests stylishly",
+			ar: "أمر",
       ar: "إدارة طلبات الصداقة بأناقة"
     },
     category: "Utility",
     guide: {
       en: "{pn} [add|del] [number|all]",
+			ar: "{pn}",
       ar: "{pn} [add|del] [رقم|جميع]"
     }
   },
@@ -30,6 +32,7 @@ module.exports = {
       noValid: "❌ No valid requests were processed.",
       noPending: "🌟 You have no pending friend requests!"
     },
+		ar: {},
     ar: {
       invalidCommand: "❌ أمر غير صحيح. الاستخدام: <add|del> <رقم|جميع>",
       cannotFind: "🚫 لم يتم العثور على الطلب #%1",

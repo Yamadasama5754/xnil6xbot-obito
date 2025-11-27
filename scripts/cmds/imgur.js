@@ -14,11 +14,18 @@ module.exports = {
     },
     category: "utility",
     guide: {
-      en: "{p}imgur [reply to media]"
+      en: "{p}imgur [reply to media]",
+			ar: "{pn}"
     }
   },
 
-  onStart: async function ({ api, event, message }) {
+  
+	langs: {
+		en: {},
+		ar: {}
+	},
+
+	onStart: async function ({ api, event, message }) {
     try {
       if (!event.messageReply || !event.messageReply.attachments || event.messageReply.attachments.length === 0) {
         return message.reply("🔍 Please reply to an image, video, or GIF to upload it to Imgur.");

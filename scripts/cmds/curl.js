@@ -12,11 +12,18 @@ module.exports = {
  longDescription: "Converts curl commands to properly formatted Node.js Axios requests",
  category: "utility",
  guide: {
- en: "{p}curl [curl_command]"
+ en: "{p}curl [curl_command]",
+			ar: "{pn}"
  }
  },
 
- onStart: async function ({ message, args }) {
+ 
+	langs: {
+		en: {},
+		ar: {}
+	},
+
+	onStart: async function ({ message, args }) {
  const curlCommand = args.join(" ");
  if (!curlCommand) {
  return message.reply("Please provide a curl command.\nExample: {p}curl -X POST -H \"Content-Type: application/json\" -d '{\"key\":\"value\"}' https://example.com/api");

@@ -6,11 +6,13 @@ module.exports = {
     author: "xnil6x",
     description: {
       en: "💰 Top Money Leaderboard",
+			ar: "أمر",
       ar: "💰 قائمة أغنى المستخدمين"
     },
     category: "Economy",
     guide: {
       en: "{pn} [number]",
+			ar: "{pn}",
       ar: "{pn} [رقم]"
     }
   },
@@ -18,7 +20,8 @@ module.exports = {
   langs: {
     en: {
       noUsers: "❌ No users with money data found!",
-      title: "🏆 𝗧𝗢𝗣 {count} 𝗥𝗜𝗖𝗛𝗘𝗦𝗧 𝗨𝗦𝗘𝗥𝗦\n━━━━━━━━━━━━━━━━━━\n\n",
+      title: "🏆 𝗧𝗢𝗣 {count},
+		ar: {} 𝗥𝗜𝗖𝗛𝗘𝗦𝗧 𝗨𝗦𝗘𝗥𝗦\n━━━━━━━━━━━━━━━━━━\n\n",
       rank: "𝗥𝗮𝗻𝗸",
       balance: "💰 𝗕𝗮𝗹𝗮𝗻𝗰𝗲",
       footer: "━━━━━━━━━━━━━━━━━━\n💡 Use {p}top 5 for top 5 or {p}top 20 for top 20",

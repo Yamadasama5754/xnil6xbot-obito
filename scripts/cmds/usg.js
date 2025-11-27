@@ -9,7 +9,13 @@ module.exports = {
     category: "Utility"
   },
 
-  onStart: async function({ api, event }) {
+  
+	langs: {
+		en: {},
+		ar: {}
+	},
+
+	onStart: async function({ api, event }) {
     // No need
   },
 

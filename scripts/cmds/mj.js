@@ -16,11 +16,18 @@ module.exports = {
  },
  category: "image",
  guide: {
- en: "{pn} <prompt>"
+ en: "{pn} <prompt>",
+			ar: "{pn}"
  }
  },
 
- onStart: async function ({ message, args, event }) {
+ 
+	langs: {
+		en: {},
+		ar: {}
+	},
+
+	onStart: async function ({ message, args, event }) {
  const prompt = args.join(" ").trim();
  if (!prompt) return message.reply("⚠️ Please provide a prompt to generate an image.");
 

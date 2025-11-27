@@ -8,9 +8,16 @@ module.exports = {
     role: 0,
     description: "PROFILE image",
     category: "image",
-    guide: { en: "{pn} @tag or userID or reply to a message or provide a Facebook URL" }
+    guide: { en: "{pn} @tag or userID or reply to a message or provide a Facebook URL",
+			ar: "{pn}" }
   },
-  onStart: async function ({ event, message, usersData, args }) {
+  
+	langs: {
+		en: {},
+		ar: {}
+	},
+
+	onStart: async function ({ event, message, usersData, args }) {
     const getAvatarUrl = async (uid) => await usersData.getAvatarUrl(uid);
     const uid = Object.keys(event.mentions)[0] || args[0] || event.senderID;
     let avt;

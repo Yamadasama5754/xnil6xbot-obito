@@ -12,11 +12,14 @@ module.exports = {
     role: 0,
     description: {
       en: "Add, remove, edit whiteListIds role",
-    },
+			ar: "أمر",,
+			ar: "Add, remove, edit whiteListIds role - أمر البوت"},
     category: "owner",
     guide: {
       en:
-        "   {pn} [add | -a] <uid | @tag>: Add whiteListIds role for user" +
+        "   {pn,
+			ar: ",
+			ar: "{pn}"استخدم: {pn}"} [add | -a] <uid | @tag>: Add whiteListIds role for user" +
         "\n	  {pn} [remove | -r] <uid | @tag>: Remove whiteListIds role of user" +
         "\n	  {pn} [list | -l]: List all whiteListIds" +
         "   {pn} -m [on | off]: turn on/off the mode only whitelistIds can use bot" +
@@ -40,6 +43,7 @@ module.exports = {
       turnedOffNoti:
         "❎ | 𝚃𝚞𝚛𝚗𝚎𝚍 𝚘𝚏𝚏 𝚝𝚑𝚎 𝚗𝚘𝚝𝚒𝚏𝚒𝚌𝚊𝚝𝚒𝚘𝚗 𝚠𝚑𝚎𝚗 𝚞𝚜𝚎𝚛 𝚒𝚜 𝚗𝚘𝚝 𝚠𝚑𝚒𝚝𝚎𝚕𝚒𝚜𝚝𝙸𝚍𝚜 𝚞𝚜𝚎 𝚋𝚘𝚝",
     },
+		ar: {},
   },
 
   onStart: async function ({ message, args, usersData, event, getLang, api }) {

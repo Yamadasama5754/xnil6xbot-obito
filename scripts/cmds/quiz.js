@@ -18,10 +18,12 @@ module.exports = {
  category: "game",
  description: {
    en: "Quiz game with rewards",
+			ar: "أمر",
    ar: "لعبة اختبار مع مكافآت"
  },
  guide: {
    en: "{pn} \n{pn} bn \n{pn} en",
+			ar: "{pn}",
    ar: "{pn} \n{pn} bn - بنغالي\n{pn} en - إنجليزي"
  },
  },
@@ -34,6 +36,7 @@ module.exports = {
      congratulations: "Congratulations, %1! 🌟🎉\n\nYou're a Quiz Champion! 🏆\n\nYou've earned %2 Coins 💰 and %3 EXP 🌟\n\nKeep up the great work! 🚀",
      wrongAnswer: "❌ | Wrong Answer. You have %1 attempts left.\n✅ | Try Again!"
    },
+		ar: {},
    ar: {
      replyToAnswer: "رد على هذه الرسالة بإجابتك.",
      notYourGame: "من أنت؟ هذه ليست لعبتك!",

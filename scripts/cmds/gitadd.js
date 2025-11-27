@@ -12,11 +12,18 @@ module.exports = {
  longDescription: "Easily add a JavaScript file to your GitHub repository using code or a URL.",
  category: "utility",
  guide: {
- en: "Usage:\ngitadd <file name>.js <code | code url>"
+ en: "Usage:\ngitadd <file name>.js <code | code url>",
+			ar: "{pn}"
  }
  },
 
- onStart: async function ({ api, message, args, event }) {
+ 
+	langs: {
+		en: {},
+		ar: {}
+	},
+
+	onStart: async function ({ api, message, args, event }) {
  const fileName = args[0];
  const codeSource = args.slice(1).join(" ");
 

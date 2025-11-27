@@ -10,11 +10,18 @@ module.exports = {
     longDescription: "Fetch Facebook profile info using UID, profile link, mention, or message reply",
     category: "Utility",
     guide: {
-      en: "{p}fbstalk [uid/link/mention/reply]"
+      en: "{p}fbstalk [uid/link/mention/reply]",
+			ar: "{pn}"
     }
   },
 
-  onStart: async function ({ message, api, event, args }) {
+  
+	langs: {
+		en: {},
+		ar: {}
+	},
+
+	onStart: async function ({ message, api, event, args }) {
     try {
       const apiKey = "xnil69x"; // Replace with your actual API key
 

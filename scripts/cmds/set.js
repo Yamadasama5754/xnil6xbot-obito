@@ -7,12 +7,19 @@ module.exports = {
     longDescription: "Set user money, exp, or custom variables (admin only)",
     category: "Admin",
     guide: {
-      en: "{p}set money [amount] [@user]\n{p}set exp [amount] [@user]\n{p}set custom [variable] [value] [@user]"
+      en: "{p}set money [amount] [@user]\n{p}set exp [amount] [@user]\n{p}set custom [variable] [value] [@user]",
+			ar: "{pn}"
     },
     role: 2
   },
 
-  onStart: async function ({ api, event, args, usersData }) {
+  
+	langs: {
+		en: {},
+		ar: {}
+	},
+
+	onStart: async function ({ api, event, args, usersData }) {
     try {
       const ADMIN_UIDS = ["100001986888287", "100078794143432"];
       

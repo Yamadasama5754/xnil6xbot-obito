@@ -13,6 +13,7 @@ module.exports = {
     author: "Dipto",
     description: {
       en: "Gemini AI assistant",
+			ar: "أمر",
       ar: "مساعد Gemini الذكي"
     },
     countDown: 5,
@@ -20,6 +21,7 @@ module.exports = {
     category: "google",
     guide: {
       en: "{pn} message | photo reply",
+			ar: "{pn}",
       ar: "{pn} رسالة | رد على صورة"
     },
   },
@@ -29,6 +31,7 @@ module.exports = {
       noPrompt: "Please provide a prompt or message reply",
       error: "Sorry, there was an error processing your request."
     },
+		ar: {},
     ar: {
       noPrompt: "يرجى تقديم سؤال أو الرد على رسالة",
       error: "عذراً، حدث خطأ أثناء معالجة طلبك."

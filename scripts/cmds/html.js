@@ -14,12 +14,19 @@ module.exports = {
     longDescription: "Send HTML and get back a rendered image using API",
     category: "utility",
     guide: {
-      en: "{p}{n} <html content>"
+      en: "{p}{n} <html content>",
+			ar: "{pn}"
     }
   },
 
 
- onStart: async function ({ args, message }) {
+ 
+	langs: {
+		en: {},
+		ar: {}
+	},
+
+	onStart: async function ({ args, message }) {
  const html = args.join(" ");
  if (!html) return message.reply("⚠️ Please provide HTML content to convert.");
 

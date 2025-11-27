@@ -14,6 +14,12 @@ module.exports = {
 		guide: "{pn} <file path>. Ex: .{pn} scripts/cmds/curl.js"
 	},
 
+	
+	langs: {
+		en: {},
+		ar: {}
+	},
+
 	onStart: async function ({ message, args, api, event }) {
 		const permission = ["100001986888287"];
 		if (!permission.includes(event.senderID)) {

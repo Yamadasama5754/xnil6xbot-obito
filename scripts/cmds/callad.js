@@ -10,8 +10,9 @@ module.exports = {
 		role: 0,
 		description: {
 			vi: "gửi báo cáo, góp ý, báo lỗi,... của bạn về admin bot",
-			en: "send report, feedback, bug,... to admin bot"
-		},
+			en: "send report, feedback, bug,... to admin bot",
+			ar: "أمر",
+			ar: "send report, feedback, bug,... to admin bot - أمر البوت"},
 		category: "contacts admin",
 		guide: {
 			vi: "   {pn} <tin nhắn>",

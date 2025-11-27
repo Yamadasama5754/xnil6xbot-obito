@@ -11,11 +11,13 @@ module.exports = {
 		countDown: 5,
 		role: 2,
 		description: {
-			en: "Add, remove, edit whiteListThreadIds role"
-		},
+			en: "Add, remove, edit whiteListThreadIds role",
+			ar: "أمر",
+			ar: "Add, remove, edit whiteListThreadIds role - أمر البوت"},
 		category: "owner",
 		guide: {
-			en: '   {pn} [add | -a | +] [<tid>...]: Add whiteListThreadIds role for the current thread or specified thread IDs'
+			en: '   {pn,
+			ar: "استخدم: {pn}"} [add | -a | +] [<tid>...]: Add whiteListThreadIds role for the current thread or specified thread IDs'
 				+ '\n   {pn} [remove | -r | -] [<tid>...]: Remove whiteListThreadIds role from the current thread or specified thread IDs'
 				+ '\n   {pn} [list | -l]: List all whiteListThreadIds'
 				+ '\n   {pn} [mode | -m] <on|off>: Turn on/off whiteListThreadIds mode'
@@ -36,7 +38,8 @@ module.exports = {
 			turnedOff: "❎ | 𝚃𝚞𝚛𝚗𝚎𝚍 𝚘𝚏𝚏 𝚝𝚑𝚎 𝚖𝚘𝚍𝚎 𝚘𝚗𝚕𝚢 𝚠𝚑𝚒𝚝𝚎𝙻𝚒𝚜𝚝𝚃𝚑𝚛𝚎𝚊𝚍𝙸𝚍𝚜 𝚌𝚊𝚗 𝚞𝚜𝚎 𝚋𝚘𝚝",
 			turnedOnNoti: "✅ | 𝚃𝚞𝚛𝚗𝚎𝚍 𝚘𝚗 𝚝𝚑𝚎 𝚗𝚘𝚝𝚒𝚏𝚒𝚌𝚊𝚝𝚒𝚘𝚗 𝚠𝚑𝚎𝚗 𝚝𝚑𝚛𝚎𝚊𝚍 𝚒𝚜 𝚗𝚘𝚝 𝚠𝚑𝚒𝚝𝚎𝙻𝚒𝚜𝚝𝚃𝚑𝚛𝚎𝚊𝚍𝙸𝚍𝚜",
 			turnedOffNoti: "❎ | 𝚃𝚞𝚛𝚗𝚎𝚍 𝚘𝚏𝚏 𝚝𝚑𝚎 𝚗𝚘𝚝𝚒𝚏𝚒𝚌𝚊𝚝𝚒𝚘𝚗 𝚠𝚑𝚎𝚗 𝚝𝚑𝚛𝚎𝚊𝚍 𝚒𝚜 𝚗𝚘𝚝 𝚠𝚑𝚒𝚝𝚎𝙻𝚒𝚜𝚝𝚃𝚑𝚛𝚎𝚊𝚍𝙸𝚍𝚜"
-		}
+		},
+		ar: {}
 	},
 
 	onStart: async function ({ message, args, event, getLang, api }) {

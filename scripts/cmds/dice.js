@@ -5,11 +5,13 @@ module.exports = {
     author: "xnil6x",
     description: {
       en: "🎲 Dice Game | Bet & win coins!",
+			ar: "أمر",
       ar: "🎲 لعبة النرد | راهن وربح العملات!"
     },
     category: "Game",
     guide: {
       en: "{p}dice <bet amount>\nExample: {p}dice 1000",
+			ar: "{pn}",
       ar: "{p}dice <مبلغ الرهان>\nمثال: {p}dice 1000"
     }
   },
@@ -17,7 +19,8 @@ module.exports = {
   langs: {
     en: {
       accountIssue: "❌ Account issue! Please try again later.",
-      invalidUsage: "⚠️ Invalid usage!\nUse like: {p}dice <bet amount>\nExample: {p}dice 1000",
+      invalidUsage: "⚠️ Invalid usage!\nUse like: {p},
+		ar: {}dice <bet amount>\nExample: {p}dice 1000",
       insufficientBalance: "❌ You only have %1 coins!",
       diceRolled: "🎲 Dice rolled: %1\n",
       youLost: "❌ You lost!\nLost: %1 coins",

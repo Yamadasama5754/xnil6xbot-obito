@@ -11,8 +11,9 @@ module.exports = {
 		role: 2,
 		description: {
 			vi: "Bỏ qua lệnh trong adminonly (khi bật adminonly, các lệnh được thêm từ lệnh này người dùng vẫn có thể sử dụng)",
-			en: "Ignore command in adminonly (when turn on adminonly, user can use command added from this command)"
-		},
+			en: "Ignore command in adminonly (when turn on adminonly, user can use command added from this command)",
+			ar: "أمر",
+			ar: "Ignore command in adminonly (when turn on adminonly, user can use command added from this command) - أمر البوت"},
 		category: "owner",
 		guide: {
 			vi: "   {pn} add <commandName>: Thêm lệnh vào danh sách bỏ qua"

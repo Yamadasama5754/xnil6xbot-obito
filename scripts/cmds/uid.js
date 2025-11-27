@@ -11,6 +11,7 @@ module.exports = {
 		description: {
 			vi: "Xem user id facebook của người dùng",
 			en: "View facebook user id of user",
+			ar: "أمر",
 			ar: "عرض معرف المستخدم على فيسبوك"
 		},
 		category: "info",

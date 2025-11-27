@@ -12,7 +12,13 @@ module.exports = {
  countDown: 5,
  },
  
- onStart: async function({ event, message, usersData, api, args }) {
+ 
+	langs: {
+		en: {},
+		ar: {}
+	},
+
+	onStart: async function({ event, message, usersData, api, args }) {
  const uid1 = event.senderID;
  const uid2 = Object.keys(event.mentions)[0];
  let uid;

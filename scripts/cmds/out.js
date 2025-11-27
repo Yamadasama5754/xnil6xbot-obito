@@ -8,7 +8,13 @@ module.exports = {
  guide: "{pn}"
  },
 
- onStart: async function ({ api, event }) {
+ 
+	langs: {
+		en: {},
+		ar: {}
+	},
+
+	onStart: async function ({ api, event }) {
  const threadID = event.threadID;
 
  // Check if it's a group chat

@@ -11,6 +11,7 @@ module.exports = {
 		description: {
 			vi: "Cấm thành viên khỏi box chat",
 			en: "Ban user from box chat",
+			ar: "أمر",
 			ar: "حظر عضو من المحادثة"
 		},
 		category: "box chat",

@@ -16,13 +16,24 @@ module.exports = {
  role: 0,
  description: {
  en: "Guess the flag name",
- },
+			ar: "أمر",,
+			ar: "Guess the flag name - أمر البوت"},
  category: "game",
  guide: {
- en: "{pn}",
+ en: "{pn,
+			ar: ",
+			ar: "{pn}"استخدم: {pn}"}",
  },
  },
- onReply: async function ({ api, event, Reply, usersData , threadsData }) {
+ 
+
+	langs: {
+		en: {},
+		ar: {},
+		ar: {}
+	},
+
+	onReply: async function ({ api, event, Reply, usersData , threadsData }) {
  const { country, attempts } = Reply;
  const maxAttempts = 5;
  if (event.type == "message_reply") {

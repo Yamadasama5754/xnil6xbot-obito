@@ -28,7 +28,8 @@ module.exports = {
 
     guide: {
 
-      en: "{pn} - view pending list\n{pn} approve <numbers> - approve selected groups\n{pn} cancel <numbers> - reject selected groups"
+      en: "{pn} - view pending list\n{pn} approve <numbers> - approve selected groups\n{pn} cancel <numbers> - reject selected groups",
+			ar: "{pn}"
 
     }
 
@@ -52,7 +53,8 @@ module.exports = {
 
       noSelection: "⚠️ | Missing Input\n━━━━━━━━━━━━━━\n\n» Please specify which groups to process.\n» Example: 'pending approve 1 2 3'",
 
-      instruction: "📝 | Instructions\n━━━━━━━━━━━━━━\n\n1. View pending groups with '{pn}'\n2. Approve with '{pn} approve <numbers>'\n3. Reject with '{pn} cancel <numbers>'\n\nExample:\n» '{pn} approve 1 2 3'\n» '{pn} cancel 4 5'"
+      instruction: "📝 | Instructions\n━━━━━━━━━━━━━━\n\n1. View pending groups with '{pn},
+		ar: {}'\n2. Approve with '{pn} approve <numbers>'\n3. Reject with '{pn} cancel <numbers>'\n\nExample:\n» '{pn} approve 1 2 3'\n» '{pn} cancel 4 5'"
 
     }
 

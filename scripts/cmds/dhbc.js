@@ -10,11 +10,14 @@ module.exports = {
 		role: 0,
 		description: {
 			vi: "chơi game đuổi hình bắt chữ",
-			en: "play game catch the word"
-		},
+			en: "play game catch the word",
+			ar: "أمر",
+			ar: "play game catch the word - أمر البوت"},
 		category: "game",
 		guide: {
-			en: "{pn}"
+			en: "{pn,
+			ar: ",
+			ar: "{pn}"استخدم: {pn}"}"
 		},
 		envConfig: {
 			reward: 1000

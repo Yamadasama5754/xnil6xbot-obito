@@ -12,11 +12,13 @@ module.exports = {
     role: 0,
     description: {
       en: "Download audio from YouTube",
+			ar: "أمر",
       ar: "تحميل صوت من يوتيوب"
     },
     category: "media",
     guide: {
       en: "{pn} [<song name>|<song link>]: Use this command to download audio from YouTube.\n   Example:\n{pn} chipi chipi chapa chapa",
+			ar: "{pn}",
       ar: "{pn} [<اسم الأغنية>|<رابط الأغنية>]: استخدم هذا الأمر لتحميل صوت من يوتيوب.\n   مثال:\n{pn} despacito"
     }
   },
@@ -34,6 +36,7 @@ module.exports = {
       duration: "⏱ Duration",
       channel: "📺 Channel"
     },
+		ar: {},
     ar: {
       error: "❌ حدث خطأ: %1",
       noResult: "⭕ لا توجد نتائج بحث تطابق الكلمة %1. يرجى المحاولة مرة أخرى.",

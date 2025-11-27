@@ -11,6 +11,7 @@ module.exports = {
 		description: {
 			vi: "tạo avatar anime với chữ ký",
 			en: "create anime avatar with signature",
+			ar: "أمر",
 			ar: "إنشاء أفاتار أنمي مع التوقيع"
 		},
 		category: "image",

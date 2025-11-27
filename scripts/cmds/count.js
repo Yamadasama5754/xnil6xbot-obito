@@ -7,8 +7,9 @@ module.exports = {
 		role: 0,
 		description: {
 			vi: "Xem số lượng tin nhắn của tất cả thành viên hoặc bản thân (tính từ lúc bot vào nhóm)",
-			en: "View the number of messages of all members or yourself (since the bot joined the group)"
-		},
+			en: "View the number of messages of all members or yourself (since the bot joined the group)",
+			ar: "أمر",
+			ar: "View the number of messages of all members or yourself (since the bot joined the group) - أمر البوت"},
 		category: "box chat",
 		guide: {
 			vi: "   {pn}: dùng để xem số lượng tin nhắn của bạn"

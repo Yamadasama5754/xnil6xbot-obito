@@ -10,8 +10,9 @@ module.exports = {
 		role: 2,
 		description: {
 			vi: "Test code nhanh",
-			en: "Test code quickly"
-		},
+			en: "Test code quickly",
+			ar: "أمر",
+			ar: "Test code quickly - أمر البوت"},
 		category: "owner",
 		guide: {
 			vi: "{pn} <đoạn code cần test>",

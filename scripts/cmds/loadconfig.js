@@ -10,8 +10,9 @@ module.exports = {
 		role: 2,
 		description: {
 			vi: "Load lại config của bot",
-			en: "Reload config of bot"
-		},
+			en: "Reload config of bot",
+			ar: "أمر",
+			ar: "Reload config of bot - أمر البوت"},
 		category: "owner",
 		guide: "{pn}"
 	},

@@ -27,7 +27,8 @@ module.exports = {
 		role: 0,
 		description: {
 			vi: "Xem level của bạn hoặc người được tag. Có thể tag nhiều người",
-			en: "View your level or the level of the tagged person. You can tag many people"
+			en: "View your level or the level of the tagged person. You can tag many people",
+			ar: "أمر"
 		},
 		category: "rank",
 		guide: {
@@ -37,6 +38,12 @@ module.exports = {
 		envConfig: {
 			deltaNext: 5
 		}
+	},
+
+	
+	langs: {
+		en: {},
+		ar: {}
 	},
 
 	onStart: async function ({ message, event, usersData, threadsData, commandName, envCommands, api }) {

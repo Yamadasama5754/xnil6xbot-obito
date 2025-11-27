@@ -12,8 +12,9 @@ module.exports = {
 		role: 2,
 		description: {
 			vi: "bật/tắt chế độ chỉ admin mới có thể sử dụng bot",
-			en: "turn on/off only admin can use bot"
-		},
+			en: "turn on/off only admin can use bot",
+			ar: "أمر",
+			ar: "turn on/off only admin can use bot - أمر البوت"},
 		category: "owner",
 		guide: {
 			vi: "   {pn} [on | off]: bật/tắt chế độ chỉ admin mới có thể sử dụng bot"

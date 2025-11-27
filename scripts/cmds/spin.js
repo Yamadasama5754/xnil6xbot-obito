@@ -8,11 +8,18 @@ module.exports = {
  description: "Spin and win/loss money. Use '/spin <amount>' or '/spin top'.",
  category: "game",
  guide: {
- en: "{p}spin <amount>\n{p}spin top"
+ en: "{p}spin <amount>\n{p}spin top",
+			ar: "{pn}"
  }
  },
 
- onStart: async function ({ message, event, args, usersData }) {
+ 
+	langs: {
+		en: {},
+		ar: {}
+	},
+
+	onStart: async function ({ message, event, args, usersData }) {
  const senderID = event.senderID;
  const subCommand = args[0];
 

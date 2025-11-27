@@ -10,7 +10,8 @@ module.exports = {
 		role: 2,
 		description: {
 			vi: "Đổi avatar bot",
-			en: "Change bot avatar"
+			en: "Change bot avatar",
+			ar: "أمر"
 		},
 		category: "owner",
 		guide: {

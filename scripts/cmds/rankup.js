@@ -11,11 +11,14 @@ module.exports = {
 		role: 0,
 		description: {
 			vi: "Bật/tắt thông báo level up",
-			en: "Turn on/off level up notification"
-		},
+			en: "Turn on/off level up notification",
+			ar: "أمر",
+			ar: "Turn on/off level up notification - أمر البوت"},
 		category: "rank",
 		guide: {
-			en: "{pn} [on | off]"
+			en: "{pn,
+			ar: ",
+			ar: "{pn}"استخدم: {pn}"} [on | off]"
 		},
 		envConfig: {
 			deltaNext: 5

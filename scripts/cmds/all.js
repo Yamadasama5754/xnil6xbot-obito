@@ -7,13 +7,22 @@ module.exports = {
 		role: 1,
 		description: {
 			vi: "Tag tất cả thành viên trong nhóm chat của bạn",
-			en: "Tag all members in your group chat"
-		},
+			en: "Tag all members in your group chat",
+			ar: "أمر",
+			ar: "Tag all members in your group chat - أمر البوت"},
 		category: "box chat",
 		guide: {
 			vi: "   {pn} [nội dung | để trống]",
 			en: "   {pn} [content | empty]"
 		}
+	},
+
+	
+
+	langs: {
+		en: {},
+		ar: {},
+		ar: {}
 	},
 
 	onStart: async function ({ message, event, args }) {

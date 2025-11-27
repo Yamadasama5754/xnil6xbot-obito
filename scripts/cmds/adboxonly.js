@@ -8,8 +8,9 @@ module.exports = {
 		role: 1,
 		description: {
 			vi: "bật/tắt chế độ chỉ quản trị của viên nhóm mới có thể sử dụng bot",
-			en: "turn on/off only admin box can use bot"
-		},
+			en: "turn on/off only admin box can use bot",
+			ar: "أمر",
+			ar: "turn on/off only admin box can use bot - أمر البوت"},
 		category: "box chat",
 		guide: {
 			vi: "   {pn} [on | off]: bật/tắt chế độ chỉ quản trị viên nhóm mới có thể sử dụng bot"

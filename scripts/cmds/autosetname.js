@@ -13,8 +13,9 @@ module.exports = {
 		role: 1,
 		description: {
 			vi: "Tự đổi biệt danh cho thành viên mới vào nhóm chat",
-			en: "Auto change nickname of new member"
-		},
+			en: "Auto change nickname of new member",
+			ar: "أمر",
+			ar: "Auto change nickname of new member - أمر البوت"},
 		category: "box chat",
 		guide: {
 			vi: '   {pn} set <nickname>: dùng để cài đặt cấu hình để tự đổi biệt danh, với các shortcut có sẵn:'

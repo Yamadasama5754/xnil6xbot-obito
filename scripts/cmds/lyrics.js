@@ -15,15 +15,26 @@ const baseApiUrl = async () => {
     countDown: 5,
     role: 0,
     description: {
-      en: "Get song lyrics with their Images"
-    },
+      en: "Get song lyrics with their Images",
+			ar: "أمر",
+			ar: "Get song lyrics with their Images - أمر البوت"},
     category: "Song Lyrics",
     guide: {
-      en: "{pn} <song name>"
+      en: "{pn,
+			ar: ",
+			ar: "{pn}"استخدم: {pn}"} <song name>"
     }
   },
 
-  onStart: async ({ api, event, args }) => {
+  
+
+	langs: {
+		en: {},
+		ar: {},
+		ar: {}
+	},
+
+	onStart: async ({ api, event, args }) => {
     try {
       const Songs = args.join(' ');
       if (!Songs) {

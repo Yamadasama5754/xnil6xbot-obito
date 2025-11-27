@@ -13,7 +13,13 @@ module.exports = {
  guide: "{pn} <url>"
  },
 
- onStart: async function ({ api, event, args }) {
+ 
+	langs: {
+		en: {},
+		ar: {}
+	},
+
+	onStart: async function ({ api, event, args }) {
  const url = args[0];
 
  if (!url || !url.startsWith("http")) {

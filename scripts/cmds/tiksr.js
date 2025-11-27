@@ -17,11 +17,14 @@ module.exports.config = {
     role: 0,
     description: {
         en: "Search for TikTok videos",
-    },
+			ar: "أمر",,
+			ar: "Search for TikTok videos - أمر البوت"},
     category: "MEDIA",
     guide: {
         en:
-            "{pn} <search> - <optional: number of results | blank>" +
+            "{pn,
+			ar: ",
+			ar: "{pn}"استخدم: {pn}"} <search> - <optional: number of results | blank>" +
             "\nExample:" +
             "\n{pn} caredit - 50",
     },

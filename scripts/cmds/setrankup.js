@@ -10,8 +10,9 @@ module.exports = {
 		role: 0,
 		description: {
 			vi: "Cấu hình rankup",
-			en: "Configure rankup"
-		},
+			en: "Configure rankup",
+			ar: "أمر",
+			ar: "Configure rankup - أمر البوت"},
 		category: "owner",
 		guide: {
 			vi: "   {pn} text <message>: Cấu hình tin nhắn khi thành viên thăng hạng trong box chat của bạn"

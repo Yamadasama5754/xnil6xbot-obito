@@ -10,11 +10,13 @@ module.exports = {
     role: 0,
     description: {
       en: "Create romantic pairing",
+			ar: "أمر",
       ar: "إنشاء إقران رومانسي"
     },
     category: "love",
     guide: {
       en: "{pn}",
+			ar: "{pn}",
       ar: "{pn}"
     }
   },
@@ -26,6 +28,7 @@ module.exports = {
       pairFound: "💘 Romantic Pair Found 💘\n\n%1 + %2 = ❤️\n\nCompatibility Score: %3%",
       compatibility: "Compatibility"
     },
+		ar: {},
     ar: {
       noSuitable: "❌ لا توجد شخصية مناسبة للإقران معها في هذه المحادثة.",
       romanticMatch: "❤️ تطابق رومانسي ❤️",

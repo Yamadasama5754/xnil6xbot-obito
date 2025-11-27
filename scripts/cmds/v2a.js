@@ -9,15 +9,26 @@ module.exports = {
     author: "dipto",
     countDown: 20,
    description: {
-      en: "Reply to a video"
-     },
+      en: "Reply to a video",
+			ar: "أمر",
+			ar: "Reply to a video - أمر البوت"},
     category: "media",
     guide: {
-      en: "{p}{n}"
+      en: "{p,
+			ar: ",
+			ar: "{pn}"استخدم: {pn}"}{n}"
     }
 
   },
-  onStart: async function ({ api, event, args, message }) {
+  
+
+	langs: {
+		en: {},
+		ar: {},
+		ar: {}
+	},
+
+	onStart: async function ({ api, event, args, message }) {
     try {
       if (!event.messageReply || !event.messageReply.attachments || event.messageReply.attachments.length === 0) {
         message.reply("Please reply to a video message to convert it to audio.");

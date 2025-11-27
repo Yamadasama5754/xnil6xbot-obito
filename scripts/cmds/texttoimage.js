@@ -10,8 +10,9 @@ module.exports = {
 		role: 0,
 		description: {
 			uid: "Tạo ảnh từ văn bản của bạn",
-			en: "Create image from your text"
-		},
+			en: "Create image from your text",
+			ar: "أمر",
+			ar: "Create image from your text - أمر البوت"},
 		category: "info",
 		guide: {
 			vi: "   {pn} <prompt>: tạo ảnh từ văn bản của bạn"

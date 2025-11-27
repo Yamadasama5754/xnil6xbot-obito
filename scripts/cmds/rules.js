@@ -9,8 +9,9 @@ module.exports = {
 		role: 0,
 		description: {
 			vi: "Tạo/xem/thêm/sửa/đổi vị trí/xóa nội quy nhóm của bạn",
-			en: "Create/view/add/edit/change position/delete group rules of you"
-		},
+			en: "Create/view/add/edit/change position/delete group rules of you",
+			ar: "أمر",
+			ar: "Create/view/add/edit/change position/delete group rules of you - أمر البوت"},
 		category: "box chat",
 		guide: {
 			vi: "   {pn} [add | -a] <nội quy muốn thêm>: thêm nội quy cho nhóm."

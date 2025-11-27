@@ -7,11 +7,18 @@ module.exports = {
  longDescription: "Guaranteed smooth spinning experience with automatic fail-safes",
  category: "Game",
  guide: {
- en: "{p}wheel <amount>"
+ en: "{p}wheel <amount>",
+			ar: "{pn}"
  }
  },
 
- onStart: async function ({ api, event, args, usersData }) {
+ 
+	langs: {
+		en: {},
+		ar: {}
+	},
+
+	onStart: async function ({ api, event, args, usersData }) {
  const { senderID, threadID } = event;
  let betAmount = 0;
 

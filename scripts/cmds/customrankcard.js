@@ -13,8 +13,9 @@ module.exports = {
 		role: 0,
 		description: {
 			vi: "Thiết kế thẻ rank theo ý bạn",
-			en: "Design rank card by your own"
-		},
+			en: "Design rank card by your own",
+			ar: "أمر",
+			ar: "Design rank card by your own - أمر البوت"},
 		category: "rank",
 		guide: {
 			vi: {

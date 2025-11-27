@@ -12,6 +12,7 @@ module.exports = {
 		description: {
 			vi: "Thêm, xóa, sửa quyền admin",
 			en: "Add, remove, edit admin role",
+			ar: "أمر",
 			ar: "إضافة، حذف، تعديل صلاحيات المشرف"
 		},
 		category: "box chat",

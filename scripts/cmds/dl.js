@@ -9,18 +9,21 @@ module.exports = {
  role: 0,
  description: {
    en: "Stream media from URL",
+			ar: "أمر",
    ar: "بث الوسائط من رابط"
  },
  category: "utility",
  guide: {
    en: "{pn} <media_url>",
+			ar: "{pn}",
    ar: "{pn} <رابط_الوسائط>"
  }
  },
 
  langs: {
    en: {
-     invalidUrl: "❌ Please provide a valid media URL.\nExample: {pn} https://example.com/image.jpg",
+     invalidUrl: "❌ Please provide a valid media URL.\nExample: {pn},
+		ar: {} https://example.com/image.jpg",
      unsupportedType: "❌ Unsupported media type. Only direct image or video links are allowed.",
      streaming: "🔗 Streaming: {url}",
      failed: "❌ Failed to stream media. The link may be invalid or blocked."

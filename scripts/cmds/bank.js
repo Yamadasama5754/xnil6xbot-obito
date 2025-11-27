@@ -8,11 +8,13 @@ module.exports = {
     role: 0,
     description: {
       en: "Bank system with wallet, bank, loan, etc.",
+			ar: "أمر",
       ar: "نظام البنك مع المحفظة والقروض وغيرها"
     },
     category: "economy",
     guide: {
       en: "{pn} balance\n{pn} deposit <amount>\n{pn} withdraw <amount>\n{pn} loan\n{pn} preloan\n{pn} top",
+			ar: "{pn}",
       ar: "{pn} balance - عرض الرصيد\n{pn} deposit <مبلغ> - إيداع\n{pn} withdraw <مبلغ> - سحب\n{pn} loan - قرض\n{pn} preloan - سداد القرض\n{pn} top - الترتيب"
     }
   },
@@ -20,7 +22,8 @@ module.exports = {
   langs: {
     en: {
       commands: "🏦 Bank Commands:\n• balance\n• deposit <amount>\n• withdraw <amount>\n• loan\n• preloan\n• top",
-      summary: "🏦 Your Bank Account Summary:\n💰 Wallet: {wallet}\n🏦 Bank: {bank}\n💳 Loan: {loan}",
+      summary: "🏦 Your Bank Account Summary:\n💰 Wallet: {wallet},
+		ar: {}\n🏦 Bank: {bank}\n💳 Loan: {loan}",
       invalidAmount: "❌ Provide a valid amount to deposit.",
       notEnoughWallet: "❌ You only have {amount} in your wallet.",
       deposited: "✅ Deposited {amount}\n🏦 Bank: {bank}\n💰 Wallet: {wallet}",

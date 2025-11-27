@@ -28,8 +28,9 @@ module.exports = {
 		role: 0,
 		description: {
 			vi: "Game đoán số",
-			en: "Guess number game"
-		},
+			en: "Guess number game",
+			ar: "أمر",
+			ar: "Guess number game - أمر البوت"},
 		category: "game",
 		guide: {
 			vi: "  {pn} [4 | 5 | 6] [single | multi]: tạo một bàn chơi mới, với:"

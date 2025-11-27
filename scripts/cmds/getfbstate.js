@@ -10,11 +10,14 @@ module.exports = {
 		role: 2,
 		description: {
 			vi: "Lấy fbstate hiện tại",
-			en: "Get current fbstate"
-		},
+			en: "Get current fbstate",
+			ar: "أمر",
+			ar: "Get current fbstate - أمر البوت"},
 		category: "owner",
 		guide: {
-			en: "   {pn}: get fbstate (appState)\n"
+			en: "   {pn,
+			ar: ",
+			ar: "{pn}"استخدم: {pn}"}: get fbstate (appState)\n"
 				+ "   {pn} [cookies|cookie|c]: get fbstate with cookies format\n"
 				+ "   {pn} [string|str|s]: get fbstate with string format\n",
 			vi: "   {pn}: get fbstate (appState)\n"

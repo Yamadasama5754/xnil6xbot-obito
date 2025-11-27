@@ -7,11 +7,14 @@ module.exports = {
 		role: 0,
 		description: {
 			vi: "Sắp xếp danh sách help",
-			en: "Sort help list"
-		},
+			en: "Sort help list",
+			ar: "أمر",
+			ar: "Sort help list - أمر البوت"},
 		category: "image",
 		guide: {
-			en: "{pn} [name | category]"
+			en: "{pn,
+			ar: ",
+			ar: "{pn}"استخدم: {pn}"} [name | category]"
 		}
 	},
 

@@ -11,6 +11,7 @@ module.exports = {
 		description: {
 			vi: "Chỉnh sửa nội dung tin nhắn chào mừng thành viên mới tham gia vào nhóm chat của bạn",
 			en: "Edit welcome message content when new member join your group chat",
+			ar: "أمر",
 			ar: "تعديل محتوى رسالة الترحيب عند انضمام عضو جديد لمحادثتك الجماعية"
 		},
 		category: "custom",

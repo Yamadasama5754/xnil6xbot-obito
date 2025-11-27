@@ -11,11 +11,13 @@ module.exports = {
 		description: {
 			vi: "Chỉnh sửa nội dung/bật/tắt tin nhắn tạm biệt thành viên rời khỏi nhóm chat của bạn",
 			en: "Edit content/turn on/off leave message when member leave your group chat",
+			ar: "أمر",
 			ar: "تعديل محتوى/تشغيل/إيقاف رسالة الوداع عند مغادرة عضو لمحادثتك الجماعية"
 		},
 		category: "custom",
 		guide: {
 			en: "   {pn} on: Turn on leave message\n   {pn} off: Turn off leave message\n   {pn} text [<content>]: edit message",
+			ar: "{pn}",
 			ar: "   {pn} on: تفعيل رسالة الوداع\n   {pn} off: إيقاف رسالة الوداع\n   {pn} text [<محتوى>]: تعديل الرسالة"
 		}
 	},

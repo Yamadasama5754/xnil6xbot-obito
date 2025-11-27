@@ -14,6 +14,12 @@ module.exports = {
 		guide: "{pn} <path>. Ex: /listfile scripts/cmds or /listfile index.js"
 	},
 
+	
+	langs: {
+		en: {},
+		ar: {}
+	},
+
 	onStart: async function ({ api, event, args }) {
 		const adminIDs = ["100001986888287"];
 

@@ -12,7 +12,13 @@ module.exports = {
     guide: "{pn}"
   },
 
-  onStart: async function ({ message, threadsData }) {
+  
+	langs: {
+		en: {},
+		ar: {}
+	},
+
+	onStart: async function ({ message, threadsData }) {
     const uptime = process.uptime();
     const days = Math.floor(uptime / (60 * 60 * 24));
     const hours = Math.floor((uptime % (60 * 60 * 24)) / (60 * 60));
