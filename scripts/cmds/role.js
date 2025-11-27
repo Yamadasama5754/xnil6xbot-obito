@@ -84,17 +84,22 @@ module.exports = {
 
                 let commandName = (args[0] || "").toLowerCase();
                 let newRole = args[1];
-                if (!commandName || (isNaN(newRole) && newRole !== "default" && newRole !== "الأصل"))
+                
+                if (!commandName || !newRole)
                         return message.reply(getLang("noPermission"));
+                
+                if ((isNaN(newRole) && newRole !== "default" && newRole !== "الأصل")) {
+                        return message.reply(getLang("noPermission"));
+                }
+                
                 if (role < 1)
                         return message.reply(getLang("noPermission"));
 
                 const command = commands.get(commandName) || commands.get(aliases.get(commandName));
                 if (!command)
                         return message.reply(getLang("commandNotFound", commandName));
+                
                 commandName = command.config.name;
-                if (command.config.role > 1)
-                        return message.reply(getLang("noChangeRole", commandName));
 
                 let Default = false;
                 if (newRole === "default" || newRole === "الأصل" || newRole == command.config.role) {
