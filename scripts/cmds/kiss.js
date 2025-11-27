@@ -23,7 +23,7 @@ module.exports = {
       const mention = Object.keys(event.mentions);
       
       // التحقق من الرد على الرسالة
-      if (event.type === "message_reply") {
+      if (event.messageReply && event.messageReply.senderID) {
         one = event.senderID;
         two = event.messageReply.senderID;
       } else if (mention.length == 0) {
