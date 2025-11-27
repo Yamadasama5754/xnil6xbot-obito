@@ -10,14 +10,17 @@ module.exports = {
 		role: 0,
 		description: {
 			vi: "tạo avatar anime với chữ ký",
-			en: "create anime avatar with signature"
+			en: "create anime avatar with signature",
+			ar: "إنشاء أفاتار أنمي مع التوقيع"
 		},
 		category: "image",
 		guide: {
 			vi: "   {p}{n} <mã số nhân vật hoặc tên nhân vật> | <chữ nền> | <chữ ký> | <tên màu tiếng anh hoặc mã màu nền (hex color)>"
 				+ "\n   {p}{n} help: xem cách dùng lệnh",
 			en: "   {p}{n} <character id or character name> | <background text> | <signature> | <background color name or hex color>"
-				+ "\n   {p}{n} help: view how to use this command"
+				+ "\n   {p}{n} help: view how to use this command",
+			ar: "   {p}{n} <معرّف الشخصية أو اسم الشخصية> | <نص الخلفية> | <التوقيع> | <اسم اللون الإنجليزي أو رمز اللون السادس عشر>"
+				+ "\n   {p}{n} help: اعرض كيفية استخدام هذا الأمر"
 		}
 	},
 
@@ -39,6 +42,15 @@ module.exports = {
 			success: "✅ Your avatar\nCharacter: %1\nID: %2\nBackground text: %3\nSignature: %4\nColor: %5",
 			defaultColor: "default",
 			error: "An error occurred\n%1: %2"
+		},
+		ar: {
+			initImage: "جاري تهيئة الصورة، يرجى الانتظار...",
+			invalidCharacter: "حالياً هناك %1 شخصية فقط على النظام، يرجى إدخال معرف شخصية أقل",
+			notFoundCharacter: "لم يتم العثور على شخصية تحمل اسم %1 في قائمة الشخصيات",
+			errorGetCharacter: "حدث خطأ أثناء الحصول على بيانات الشخصية:\n%1: %2",
+			success: "✅ أفاتارك\nالشخصية: %1\nالمعرف: %2\nنص الخلفية: %3\nالتوقيع: %4\nاللون: %5",
+			defaultColor: "الافتراضي",
+			error: "حدث خطأ\n%1: %2"
 		}
 	},
 

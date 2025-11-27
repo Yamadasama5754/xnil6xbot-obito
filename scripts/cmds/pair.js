@@ -8,11 +8,33 @@ module.exports = {
     name: "pair",
     author: "xnil",
     role: 0,
-    shortDescription: "Create romantic pairing",
+    description: {
+      en: "Create romantic pairing",
+      ar: "إنشاء إقران رومانسي"
+    },
     category: "love",
-    guide: "{pn}"
+    guide: {
+      en: "{pn}",
+      ar: "{pn}"
+    }
   },
-  onStart: async function ({ api, event, usersData }) {
+
+  langs: {
+    en: {
+      noSuitable: "❌ No suitable person to pair with in this chat.",
+      romanticMatch: "❤️ Romantic Match ❤️",
+      pairFound: "💘 Romantic Pair Found 💘\n\n%1 + %2 = ❤️\n\nCompatibility Score: %3%",
+      compatibility: "Compatibility"
+    },
+    ar: {
+      noSuitable: "❌ لا توجد شخصية مناسبة للإقران معها في هذه المحادثة.",
+      romanticMatch: "❤️ تطابق رومانسي ❤️",
+      pairFound: "💘 تم العثور على إقران رومانسي 💘\n\n%1 + %2 = ❤️\n\nمستوى التوافق: %3%",
+      compatibility: "التوافق"
+    }
+  },
+
+  onStart: async function ({ api, event, usersData, getLang }) {
     try {
       const id1 = event.senderID;
       const name1 = await usersData.getName(id1);
@@ -22,11 +44,10 @@ module.exports = {
       const botID = api.getCurrentUserID();
       const senderGender = all.find(u => u.id === id1)?.gender || "unknown";
 
-      // Filter opposite gender only
       let candidates = all.filter(u => u.id !== id1 && u.id !== botID && u.gender && u.gender !== senderGender);
 
       if (candidates.length === 0) {
-        return api.sendMessage("❌ No suitable person to pair with in this chat.", event.threadID);
+        return api.sendMessage(getLang("noSuitable"), event.threadID);
       }
 
       const chosen = candidates[Math.floor(Math.random() * candidates.length)];
@@ -57,7 +78,7 @@ module.exports = {
         ctx.font = "bold 60px Arial";
         ctx.fillStyle = "#ffffff";
         ctx.textAlign = "center";
-        ctx.fillText("❤️ Romantic Match ❤️", canvas.width / 2, 80);
+        ctx.fillText(getLang("romanticMatch"), canvas.width / 2, 80);
       };
 
       createRomanticBackground();
@@ -102,13 +123,13 @@ module.exports = {
 
       const score = Math.floor(Math.random() * 41) + 60;
       ctx.font = "bold 40px Arial";
-      ctx.fillText(`Compatibility: ${score}%`, canvas.width / 2, 500);
+      ctx.fillText(`${getLang("compatibility")}: ${score}%`, canvas.width / 2, 500);
 
       const resultPath = path.join(tempDir, `result_${Date.now()}.png`);
       await fs.writeFile(resultPath, canvas.toBuffer());
 
       await api.sendMessage({
-        body: `💘 Romantic Pair Found 💘\n\n${name1} + ${name2} = ❤️\n\nCompatibility Score: ${score}%`,
+        body: getLang("pairFound", name1, name2, score),
         mentions: [
           { tag: name1, id: id1 },
           { tag: name2, id: id2 }
@@ -116,14 +137,13 @@ module.exports = {
         attachment: fs.createReadStream(resultPath)
       }, event.threadID);
 
-      // Clean up
       await fs.remove(avatar1Path);
       await fs.remove(avatar2Path);
       await fs.remove(resultPath);
 
     } catch (error) {
       console.error(error);
-      api.sendMessage("❌ Failed to create pairing image.", event.threadID);
+      api.sendMessage("❌ خطأ: " + error.message, event.threadID);
     }
   }
 };

@@ -3,20 +3,46 @@ const moment = require("moment-timezone");
 module.exports = {
   config: {
     name: "accept",
-    aliases: ['acp'],
+    aliases: ['acp', 'قبول'],
     version: "1.0",
     author: "xnil6x",
     countDown: 8,
     role: 2,
-    shortDescription: "Manage friend requests stylishly",
-    longDescription: "Accept or reject friend requests with a sleek interface",
+    description: {
+      en: "Manage friend requests stylishly",
+      ar: "إدارة طلبات الصداقة بأناقة"
+    },
     category: "Utility",
     guide: {
-      en: "{pn} [add|del] [number|all]"
+      en: "{pn} [add|del] [number|all]",
+      ar: "{pn} [add|del] [رقم|جميع]"
     }
   },
 
-  onReply: async function ({ message, Reply, event, api, commandName }) {
+  langs: {
+    en: {
+      invalidCommand: "❌ Invalid command. Usage: <add|del> <number|all>",
+      cannotFind: "🚫 Can't find request #%1",
+      acceptedFailed: "accepted",
+      rejectedFailed: "rejected",
+      successfully: "✨ Successfully %1 %2 request(s):\n%3\n\n",
+      failedProcess: "⚠️ Failed to process %1 request(s):\n%2",
+      noValid: "❌ No valid requests were processed.",
+      noPending: "🌟 You have no pending friend requests!"
+    },
+    ar: {
+      invalidCommand: "❌ أمر غير صحيح. الاستخدام: <add|del> <رقم|جميع>",
+      cannotFind: "🚫 لم يتم العثور على الطلب #%1",
+      acceptedFailed: "قبول",
+      rejectedFailed: "رفض",
+      successfully: "✨ تم بنجاح %1 %2 طلب(طلبات):\n%3\n\n",
+      failedProcess: "⚠️ فشل في معالجة %1 طلب(طلبات):\n%2",
+      noValid: "❌ لم يتم معالجة أي طلبات صالحة.",
+      noPending: "🌟 ليس لديك أي طلبات صداقة معلقة!"
+    }
+  },
+
+  onReply: async function ({ message, Reply, event, api, commandName, getLang }) {
     const { author, listRequest, messageID } = Reply;
     if (author !== event.senderID) return;
     const args = event.body.trim().toLowerCase().split(/\s+/);
@@ -49,12 +75,12 @@ module.exports = {
       form.doc_id = "4108254489275063";
     }
     else {
-      return api.sendMessage("❌ Invalid command. Usage: <add|del> <number|all>", event.threadID, event.messageID);
+      return api.sendMessage(getLang("invalidCommand"), event.threadID, event.messageID);
     }
 
     let targetIDs = args.slice(1);
 
-    if (args[1] === "all") {
+    if (args[1] === "all" || args[1] === "جميع") {
       targetIDs = Array.from({ length: listRequest.length }, (_, i) => i + 1);
     }
 
@@ -64,7 +90,7 @@ module.exports = {
     for (const stt of targetIDs) {
       const user = listRequest[parseInt(stt) - 1];
       if (!user) {
-        failed.push(`🚫 Can't find request #${stt}`);
+        failed.push(getLang("cannotFind", stt));
         continue;
       }
       form.variables.input.friend_requester_id = user.node.id;
@@ -87,23 +113,24 @@ module.exports = {
 
     let replyMsg = "";
     if (success.length > 0) {
-      replyMsg += `✨ Successfully ${args[0] === 'add' ? 'accepted' : 'rejected'} ${success.length} request(s):\n${success.join("\n")}\n\n`;
+      const actionText = args[0] === 'add' ? getLang("acceptedFailed") : getLang("rejectedFailed");
+      replyMsg += getLang("successfully", actionText, success.length, success.join("\n"));
     }
     if (failed.length > 0) {
-      replyMsg += `⚠️ Failed to process ${failed.length} request(s):\n${failed.join("\n")}`;
+      replyMsg += getLang("failedProcess", failed.length, failed.join("\n"));
     }
 
     if (replyMsg) {
       api.sendMessage(replyMsg, event.threadID, event.messageID);
     } else {
       api.unsendMessage(messageID);
-      api.sendMessage("❌ No valid requests were processed.", event.threadID);
+      api.sendMessage(getLang("noValid"), event.threadID);
     }
 
     api.unsendMessage(messageID);
   },
 
-  onStart: async function ({ event, api, commandName }) {
+  onStart: async function ({ event, api, commandName, getLang }) {
     try {
       const form = {
         av: api.getCurrentUserID(),
@@ -117,39 +144,26 @@ module.exports = {
       const listRequest = JSON.parse(response).data.viewer.friending_possibilities.edges;
       
       if (!listRequest || listRequest.length === 0) {
-        return api.sendMessage("🌟 You have no pending friend requests!", event.threadID);
+        return api.sendMessage(getLang("noPending"), event.threadID);
       }
 
-      let msg = "📩 Pending Friend Requests:\n\n";
+      let msg = "📩 طلبات صداقة معلقة (Pending Friend Requests):\n\n";
       listRequest.forEach((user, index) => {
         msg += `🔹 ${index + 1}. ${user.node.name}\n`;
-        msg += `   🆔: ${user.node.id}\n`;
-        msg += `   🔗: ${user.node.url.replace("www.facebook", "fb")}\n`;
-        msg += `   ⏰: ${moment(user.time * 1009).tz("Asia/Manila").format("DD/MM/YYYY HH:mm:ss")}\n\n`;
       });
 
-      msg += "💡 Reply with:\n"
-           + "• 'add <number>' to accept a request\n"
-           + "• 'del <number>' to reject a request\n"
-           + "• 'add all' to accept all\n"
-           + "• 'del all' to reject all\n\n"
-           + "⏳ This menu will auto-delete in 2 minutes";
+      msg += `\n.acp add <رقم> أو .acp add all - لقبول الطلبات\n.acp del <رقم> أو .acp del all - لرفض الطلبات`;
 
-      api.sendMessage(msg, event.threadID, (e, info) => {
+      api.sendMessage(msg, event.threadID, (err, info) => {
         global.GoatBot.onReply.set(info.messageID, {
-          commandName,
+          author: event.senderID,
           messageID: info.messageID,
           listRequest,
-          author: event.senderID,
-          unsendTimeout: setTimeout(() => {
-            api.unsendMessage(info.messageID);
-          }, 2 * 60 * 1000) // 2 minutes
+          unsendTimeout: setTimeout(() => api.unsendMessage(info.messageID), 60000)
         });
-      }, event.messageID);
-
-    } catch (error) {
-      console.error(error);
-      api.sendMessage("❌ An error occurred while fetching friend requests.", event.threadID);
+      });
+    } catch (e) {
+      api.sendMessage("❌ حدث خطأ: " + e.message, event.threadID);
     }
   }
 };
