@@ -34,24 +34,13 @@ module.exports = {
           return message.reply("المرجو عمل منشن للشخص الذي تريد تقبيله أو الرد على رسالته");
         }
 
-        // الحصول على معلومات الجنس
+        // ضع الشخص الثاني (المرد عليه) أولاً دائماً
+        const firstUser = two;
+        const secondUser = one;
+
         api.getUserInfo([one, two], async (err, userInfo) => {
           if (err) {
             return message.reply("❌ حدث خطأ في الحصول على معلومات المستخدمين");
-          }
-
-          // تحديد الجنس (من id.js: 1 = فتاة بنت، 2 = ولد ذكر)
-          const gender1 = userInfo[one]?.gender;
-          const gender2 = userInfo[two]?.gender;
-
-          // ترتيب الصورة: الرجل (2) أولاً، ثم البنت (1)
-          let firstUser = one;
-          let secondUser = two;
-
-          // إذا كان الأول بنت (1) والثاني ولد (2)، اعكسهم
-          if (gender1 === 1 && gender2 === 2) {
-            firstUser = two;
-            secondUser = one;
           }
 
           const avatarURL1 = await usersData.getAvatarUrl(firstUser);
