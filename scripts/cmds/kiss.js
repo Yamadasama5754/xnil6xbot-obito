@@ -40,7 +40,7 @@ module.exports = {
             return message.reply("❌ حدث خطأ في الحصول على معلومات المستخدمين");
           }
 
-          // تحديد الجنس
+          // تحديد الجنس (من id.js: 1 = فتاة بنت، 2 = ولد ذكر)
           const gender1 = userInfo[one]?.gender;
           const gender2 = userInfo[two]?.gender;
 
@@ -48,8 +48,8 @@ module.exports = {
           let firstUser = one;
           let secondUser = two;
 
+          // إذا كان الأول ولد (2) والثاني بنت (1)، اعكسهم
           if (gender1 === 2 && gender2 === 1) {
-            // إذا الأول ولد والثاني بنت، اعكسهم
             firstUser = two;
             secondUser = one;
           }
