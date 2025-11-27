@@ -4,7 +4,7 @@ const fs = require("fs");
 module.exports = {
   config: {
     name: "بارد",
-    version: "1.0",
+    version: "1.1",
     author: "rehat--",
     countDown: 5,
     role: 0,
@@ -27,59 +27,41 @@ module.exports = {
 
     if (prompt.toLowerCase() === "clear") {
       this.clearHistory();
-      const clear = await axios.get(`https://project-bard.onrender.com/api/bard?query=clear&uid=${uid}`);
-      message.reply(clear.data.message);
+      message.reply(" ✅ | تم مسح السجل");
       return;
     }
 
+    // تحليل الصور باستخدام Gemini
     if (event.type === "message_reply" && event.messageReply.attachments && event.messageReply.attachments[0].type === "photo") {
-      const photo = encodeURIComponent(event.messageReply.attachments[0].url);
-      const query = args.join(" ");
-      const url = `https://turtle-apis.onrender.com/api/gemini/img?prompt=${encodeURIComponent(query)}&url=${photo}`;
-      const response = await axios.get(url);
-      message.reply(response.data.answer);
-      return;
+      try {
+        const photo = encodeURIComponent(event.messageReply.attachments[0].url);
+        const query = args.join(" ") || "وصف الصورة";
+        const url = `https://turtle-apis.onrender.com/api/gemini/img?prompt=${encodeURIComponent(query)}&url=${photo}`;
+        const response = await axios.get(url, { timeout: 10000 });
+        message.reply(response.data.answer || response.data.result || " ✅ تم معالجة الصورة");
+        return;
+      } catch (error) {
+        console.error("[BARD] Image error:", error.message);
+        message.reply(' ❌ | خطأ في معالجة الصورة');
+        return;
+      }
     }
 
-    const apiUrl = `https://project-bard.onrender.com/api/bard?query=${encodeURIComponent(prompt)}&uid=${uid}`;
+    // الرد على الأسئلة باستخدام Gemini
     try {
-      const response = await axios.get(apiUrl);
-      const result = response.data;
+      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=AIzaSyDn36rL2l0oxyS6_h6OqtHn_LK4CVk3u_0`;
+      
+      const response = await axios.post(apiUrl, {
+        contents: [{
+          parts: [{
+            text: prompt
+          }]
+        }]
+      }, { timeout: 15000 });
 
-      let content = result.message;
-      let imageUrls = result.imageUrls;
+      let content = response.data?.candidates?.[0]?.content?.parts?.[0]?.text || " ❌ | لم يتم الحصول على إجابة";
 
-      let replyOptions = {
-        body: content,
-      };
-
-      if (Array.isArray(imageUrls) && imageUrls.length > 0) {
-        const imageStreams = [];
-
-        if (!fs.existsSync(`${__dirname}/cache`)) {
-          fs.mkdirSync(`${__dirname}/cache`);
-        }
-
-        for (let i = 0; i < imageUrls.length; i++) {
-          const imageUrl = imageUrls[i];
-          const imagePath = `${__dirname}/cache/image` + (i + 1) + ".png";
-
-          try {
-            const imageResponse = await axios.get(imageUrl, {
-              responseType: "arraybuffer",
-            });
-            fs.writeFileSync(imagePath, imageResponse.data);
-            imageStreams.push(fs.createReadStream(imagePath));
-          } catch (error) {
-            console.error(" ❌ |حدث خطأ أثناء تنزيل الصورة وحفظها:", error);
-            message.reply(' ❌ |حدث خطأ.');
-          }
-        }
-
-        replyOptions.attachment = imageStreams;
-      }
-
-      message.reply(replyOptions, (err, info) => {
+      message.reply(content, (err, info) => {
         if (!err) {
           global.GoatBot.onReply.set(info.messageID, {
             commandName,
@@ -89,50 +71,32 @@ module.exports = {
         }
       });
     } catch (error) {
-      message.reply(' ❌ |حدث خطأ.');
-      console.error(error.message);
+      console.error("[BARD] Error:", error.message);
+      message.reply(' ❌ | حدث خطأ في الرد. حاول مرة أخرى.');
     }
   },
 
   onReply: async function ({ message, event, Reply, args }) {
     const prompt = args.join(" ");
-    let { author, commandName, messageID } = Reply;
+    let { author, commandName } = Reply;
+    
     if (event.senderID !== author) return;
+    if (!prompt) return;
 
     try {
-      const apiUrl = `https://project-bard.onrender.com/api/bard?query=${encodeURIComponent(prompt)}&uid=${author}`;
-      const response = await axios.get(apiUrl);
+      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=AIzaSyDn36rL2l0oxyS6_h6OqtHn_LK4CVk3u_0`;
+      
+      const response = await axios.post(apiUrl, {
+        contents: [{
+          parts: [{
+            text: prompt
+          }]
+        }]
+      }, { timeout: 15000 });
 
-      let content = response.data.message;
-      let replyOptions = {
-        body: content,
-      };
+      let content = response.data?.candidates?.[0]?.content?.parts?.[0]?.text || " ❌ | لم يتم الحصول على إجابة";
 
-      const imageUrls = response.data.imageUrls;
-      if (Array.isArray(imageUrls) && imageUrls.length > 0) {
-        const imageStreams = [];
-
-        if (!fs.existsSync(`${__dirname}/cache`)) {
-          fs.mkdirSync(`${__dirname}/cache`);
-        }
-        for (let i = 0; i < imageUrls.length; i++) {
-          const imageUrl = imageUrls[i];
-          const imagePath = `${__dirname}/cache/image` + (i + 1) + ".png";
-
-          try {
-            const imageResponse = await axios.get(imageUrl, {
-              responseType: "arraybuffer",
-            });
-            fs.writeFileSync(imagePath, imageResponse.data);
-            imageStreams.push(fs.createReadStream(imagePath));
-          } catch (error) {
-            console.error("Error occurred while downloading and saving the image:", error);
-            message.reply(' ❌ |حدث خطأ.');
-          }
-        }
-        replyOptions.attachment = imageStreams;
-      }
-      message.reply(replyOptions, (err, info) => {
+      message.reply(content, (err, info) => {
         if (!err) {
           global.GoatBot.onReply.set(info.messageID, {
             commandName,
@@ -142,8 +106,8 @@ module.exports = {
         }
       });
     } catch (error) {
-      console.error(error.message);
-      message.reply(" ❌ |حدث خطأ.");
+      console.error("[BARD] Reply error:", error.message);
+      message.reply(" ❌ | حدث خطأ في الرد.");
     }
   },
 };
