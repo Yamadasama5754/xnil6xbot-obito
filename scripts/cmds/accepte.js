@@ -131,6 +131,7 @@ module.exports = {
 
       api.sendMessage(msg, event.threadID, (err, info) => {
         global.GoatBot.onReply.set(info.messageID, {
+          commandName: "قبول",
           author: event.senderID,
           messageID: info.messageID,
           listRequest,

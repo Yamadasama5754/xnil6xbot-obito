@@ -3,20 +3,20 @@ const axios = require('axios');
 module.exports = {
   config: {
     name: "imgur",
-    aliases: ["img", "uploadimg", "رفع", "إمجور"],
+    aliases: ["img", "uploadimg", "رفع"],
     version: "1.1",
     author: "xnil6x",
     cooldowns: 5,
     role: 0,
-    description: "رفع الصور والفيديوهات والصور المتحركة إلى Imgur بسهولة",
+    description: "رفع الصور والفيديوهات على Imgur",
     category: "الأدوات",
-    guide: "{pn}: رد على صورة أو فيديو لرفعه"
+    guide: "{pn}: رد على صورة لرفعها"
   },
 
 	onStart: async function ({ api, event, message }) {
     try {
       if (!event.messageReply || !event.messageReply.attachments || event.messageReply.attachments.length === 0) {
-        return message.reply("🔍 يرجى الرد على صورة أو فيديو أو صورة متحركة لرفعها على Imgur");
+        return message.reply("🔍 يرجى الرد على صورة أو فيديو لرفعها على Imgur");
       }
 
       const attachment = event.messageReply.attachments[0];
