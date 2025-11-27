@@ -20,30 +20,27 @@ global.client.makeRankCard = makeRankCard;
 
 module.exports = {
 	config: {
-		name: "rank",
+		name: "المرتبة",
+		aliases: ["rank", "مستوى", "رتبة"],
 		version: "1.7",
-		author: "NTKhang",
+		author: "Yamada KJ",
 		countDown: 5,
 		role: 0,
-		description: {
-			vi: "Xem level của bạn hoặc người được tag. Có thể tag nhiều người",
-			en: "View your level or the level of the tagged person. You can tag many people",
-			ar: "عرض"
-		},
-		category: "rank",
-		guide: {
-			vi: "   {pn} [để trống | @tags]",
-			en: "   {pn} [empty | @tags]"
-		},
+		description: "عرض مستواك أو مستوى الشخص المُشار إليه. يمكنك إشارة عدة أشخاص",
+		category: "المرتبة",
+		guide: "{pn} [فارغ | @إشارات]",
 		envConfig: {
 			deltaNext: 5
 		}
 	},
 
-	
 	langs: {
-		en: {},
-		ar: { rankCard: "بطاقة المرتبة", level: "المستوى", exp: "الخبرة", rank: "المرتبة" }
+		ar: {
+			rankCard: "بطاقة المرتبة",
+			level: "المستوى",
+			exp: "الخبرة",
+			rank: "المرتبة"
+		}
 	},
 
 	onStart: async function ({ message, event, usersData, threadsData, commandName, envCommands, api }) {
@@ -139,71 +136,6 @@ async function makeRankCard(userID, usersData, threadsData, threadID, deltaNext,
 
 
 class RankCard {
-	/**
-	 * Create a new RankCard
-	 * @param {Object} options - Options for the RankCard: 
-	 * @param {String} options.main_color - The main color of the card
-	 * @param {String} options.sub_color - The sub color of the card
-	 * @param {Number} options.alpha_subcard - The alpha of the sub card
-	 * @param {String} options.exp_color - The color of the exp bar
-	 * @param {String} options.expNextLevel_color - The color of the expNextLevel bar
-	 * @param {String} options.text_color - The color of the text
-	 * @param {String} options.name_color - The color of the name
-	 * @param {String} options.level_color - The color of the level
-	 * @param {String} options.rank_color - The color of the rank
-	 * @param {String} options.line_color - The color of the line
-	 * @param {String} options.exp_text_color - The color of the exp text
-	 * @param {Number} options.exp - The exp of the user
-	 * @param {Number} options.expNextLevel - The expNextLevel of the user
-	 * @param {String} options.name - The name of the user
-	 * @param {Number} options.level - The level of the user
-	 * @param {Number} options.rank - The rank of the user
-	 * @param {String} options.avatar - The avatar of the user
-	 * @param {Number} options.widthCard - The width of the card
-	 * @param {Number} options.heightCard - The height of the card
-	 * @param {String} options.fontName - The font name of the card
-	 * @param {String} options.textSize - The value will be added to the font size of all text, default is 0
-	 * 
-	 * @example 
-	 * const fs = require("fs-extra");
-	 * const card = new RankCard()
-	 * 	.setWidthCard(2000)
-	 * 	.setHeightCard(500)
-	 * 	.setMainColor("#474747")
-	 * 	.setSubColor("rgba(255, 255, 255, 0.5)")
-	 * 	.setAlphaSubCard(0.9)
-	 * 	.setExpColor("#e1e1e1")
-	 * 	.setExpBarColor("#3f3f3f")
-	 * 	.setTextColor("#000000");
-	 * 
-	 * rank.buildCard()
-	 * 	.then(buffer => {
-	 * 		fs.writeFileSync("rank.png", buffer);	
-	 * 	})
-	 * 	.catch(err => {
-	 * 		console.log(err);
-	 * 	});
-	 * 
-	 * // or
-	 * const card = new RankCard({
-	 * 	widthCard: 2000,
-	 * 	heightCard: 500,
-	 * 	main_color: "#474747",
-	 * 	sub_color: "rgba(255, 255, 255, 0.5)",
-	 * 	alpha_subcard: 0.9,
-	 * 	exp_color: "#e1e1e1",
-	 * 	expNextLevel_color: "#3f3f3f",
-	 * 	text_color: "#000000"
-	 * });
-	 * 
-	 * rank.buildCard()
-	 * 	.then(buffer => {
-	 * 		fs.writeFileSync("rank.png", buffer);
-	 * 	})
-	 * 	.catch(err => {
-	 * 		console.log(err);
-	 * 	});
-	 */
 	constructor(options) {
 		this.widthCard = 2000;
 		this.heightCard = 500;
@@ -220,14 +152,6 @@ class RankCard {
 			this[key] = options[key];
 	}
 
-	/**
-	 * @param {string} path
-	 * @param {string} name 
-	 * @description Register a new font
-	 * @returns {RankCard}
-	 * @example
-	 * 	.registerFont("path/to/font.ttf", "FontName");
-	 */
 	registerFont(path, name) {
 		Canvas.registerFont(path, {
 			family: name
@@ -235,29 +159,11 @@ class RankCard {
 		return this;
 	}
 
-	/**
-	 * @param {string} fontName
-	 * @description Set the font name
-	 * @returns {RankCard}
-	 * @example
-	 * 	.setFontName("BeVietnamPro-SemiBold");
-	 * 	.setFontName("BeVietnamPro-Bold");
-	 * 	.setFontName("Arial");
-	 * 	.setFontName("Arial Italic");
-	 */
 	setFontName(fontName) {
 		this.fontName = fontName;
 		return this;
 	}
 
-	/**
-	 * @param {size} size
-	 * @description increase the size of all the text by {size} units
-	 * @returns {RankCard}
-	 * @example
-	 * 	.increaseTextSize(10);
-	 * 	.increaseTextSize(20);
-	 */
 	increaseTextSize(size) {
 		if (isNaN(size))
 			throw new Error("Size must be a number");
@@ -267,14 +173,6 @@ class RankCard {
 		return this;
 	}
 
-	/**
-	 * @param {number} size
-	 * @description decrease the size of all the text by {size} units
-	 * @returns {RankCard}
-	 * @example
-	 * 	.decreaseTextSize(10);
-	 * 	.decreaseTextSize(20);
-	 */
 	decreaseTextSize(size) {
 		if (isNaN(size))
 			throw new Error("Size must be a number");
@@ -284,13 +182,6 @@ class RankCard {
 		return this;
 	}
 
-	/**
-	 * @param {number} widthCard
-	 * @description Width of the card
-	 * @returns {RankCard}
-	 * @example 
-	 * 	.setWidthCard(2000);
-	 */
 	setWidthCard(widthCard) {
 		if (isNaN(widthCard))
 			throw new Error("Width card must be a number");
@@ -300,13 +191,6 @@ class RankCard {
 		return this;
 	}
 
-	/**
-	 * @param {number} heightCard
-	 * @description Height of the card
-	 * @returns {RankCard}
-	 * @example 
-	 * 	.setHeightCard(500);
-	 */
 	setHeightCard(heightCard) {
 		if (isNaN(heightCard))
 			throw new Error("Height card must be a number");
@@ -316,17 +200,6 @@ class RankCard {
 		return this;
 	}
 
-	/**
-	 * @param {number} alpha_subcard
-	 * @description Alpha of the sub card is a number between 0 and 1
-	 * @returns {RankCard}
-	 * @example 
-	 * .setAlphaSubCard(0.5)
-	 * 0.5 = 50% opacity
-	 * 0.9 = 90% opacity
-	 * 1 = 100% opacity
-	 * 0 = 0% opacity
-	 */
 	setAlphaSubCard(alpha_subcard) {
 		if (isNaN(alpha_subcard))
 			throw new Error("Alpha subcard must be a number");
@@ -336,16 +209,6 @@ class RankCard {
 		return this;
 	}
 
-	/**
-	 * @param {string|string[]} main_color
-	 * @description Color of the main card (background) is a string or array that can be a `hex color`, `rgb`, `rgba`, `image url`. If it's an array it will be a `gradient` color
-	 * @returns {RankCard}
-	 * @example
-	 * 	.setMainColor("#474747");
-	 * 	.setMainColor("rgb(255, 255, 255)");
-	 * 	.setMainColor("rgba(255, 255, 255, 0.5)");
-	 * 	.setMainColor("https://example.com/image.png");
-	 */
 	setMainColor(main_color) {
 		if (typeof main_color !== "string" && !Array.isArray(main_color))
 			throw new Error("Main color must be a string or array");
@@ -354,16 +217,6 @@ class RankCard {
 		return this;
 	}
 
-	/**
-	 * @param {string|string[]} sub_color
-	 * @description Color of the sub card is a string or array that can be a `hex color`, `rgb`, `rgba`, `image url`. If it's an array it will be a `gradient` color
-	 * @returns {RankCard}
-	 * @example
-	 * 	.setSubColor("rgba(255, 255, 255, 0.5)")
-	 * 	.setSubColor("#474747")
-	 * 	.setSubColor("rgb(255, 255, 255)")
-	 * 	.setSubColor("https://example.com/image.png")
-	 */
 	setSubColor(sub_color) {
 		if (typeof sub_color !== "string" && !Array.isArray(sub_color))
 			throw new Error("Sub color must be a string or array");
@@ -372,15 +225,6 @@ class RankCard {
 		return this;
 	}
 
-	/**
-	 * @param {string|string[]} exp_color
-	 * @description Color of the exp bar is a string or array that can be a `hex color`, `rgb` or `rgba`. If it's an array it will be a `gradient` color
-	 * @returns {RankCard}
-	 * @example
-	 * 	.setExpColor("#474747")
-	 * 	.setExpColor("rgb(255, 255, 255)")
-	 * 	.setExpColor("rgba(255, 255, 255, 0.5)")
-	 */
 	setExpColor(exp_color) {
 		if (typeof exp_color !== "string" && !Array.isArray(exp_color))
 			throw new Error("Exp color must be a string or array");
@@ -389,15 +233,6 @@ class RankCard {
 		return this;
 	}
 
-	/**
-	 * @param {string|string[]} expNextLevel_color
-	 * @description Color of the exp bar next level is a string or array that can be a `hex color`, `rgb` or `rgba`. If it's an array it will be a `gradient` color
-	 * @returns {RankCard}
-	 * @example
-	 * 	.setExpBarColor("#474747")
-	 * 	.setExpBarColor("rgb(255, 255, 255)")
-	 * 	.setExpBarColor("rgba(255, 255, 255, 0.5)")
-	 */
 	setExpBarColor(expNextLevel_color) {
 		if (typeof expNextLevel_color !== "string" && !Array.isArray(expNextLevel_color))
 			throw new Error("Exp next level color must be a string");
@@ -406,15 +241,6 @@ class RankCard {
 		return this;
 	}
 
-	/**
-	 * @param {string|string[]} text_color
-	 * @description Color of the all text is a string or array that can be a `hex color`, `rgb` or `rgba`. If it's an array it will be a `gradient` color
-	 * @returns {RankCard}
-	 * @example
-	 * 	.setTextColor("#474747")
-	 * 	.setTextColor("rgb(255, 255, 255)")
-	 * 	.setTextColor("rgba(255, 255, 255, 0.5)")
-	 */
 	setTextColor(text_color) {
 		if (typeof text_color !== "string" && !Array.isArray(text_color))
 			throw new Error("Text color must be a string or an array of string");
@@ -423,17 +249,6 @@ class RankCard {
 		return this;
 	}
 
-	/**
-	 * @param {string|string[]} name_color
-	 * @description Color of the name is a string or array that can be a `hex color`, `rgb` or `rgba`. If it's an array it will be a `gradient` color
-	 * @returns {RankCard}
-	 * @example
-	 * 	.setNameColor("#474747")
-	 * 	.setNameColor("rgb(255, 255, 255)")
-	 * 	.setNameColor("rgba(255, 255, 255, 0.5)")
-	 * 	.setNameColor(["#474747", "#474747"])
-	 * 	.setNameColor(['rgb(133, 255, 189)', 'rgb(255, 251, 125)'])
-	 */
 	setNameColor(name_color) {
 		if (typeof name_color !== "string" && !Array.isArray(name_color))
 			throw new Error("Name color must be a string or an array of string");
@@ -442,17 +257,6 @@ class RankCard {
 		return this;
 	}
 
-	/**
-	 * @param {string|string[]} level_color
-	 * @description Color of the level text is a string or array that can be a `hex color`, `rgb` or `rgba`. If it's an array it will be a `gradient` color
-	 * @returns {RankCard}
-	 * @example
-	 * 	.setLevelColor("#474747")
-	 * 	.setLevelColor("rgb(255, 255, 255)")
-	 * 	.setLevelColor("rgba(255, 255, 255, 0.5)")
-	 * 	.setLevelColor(["#474747", "#474747"])
-	 * 	.setLevelColor(['rgb(133, 255, 189)', 'rgb(255, 251, 125)'])
-	 */
 	setLevelColor(level_color) {
 		if (typeof level_color !== "string" && !Array.isArray(level_color))
 			throw new Error("Level color must be a string or an array of string");
@@ -461,18 +265,6 @@ class RankCard {
 		return this;
 	}
 
-	/**
-	 * @param {string|string[]} exp_text_color
-	 * @description Color of the exp text is a string or array that can be a `hex color`, `rgb` or `rgba`. If it's an array it will be a `gradient` color
-	 * @returns {RankCard}
-	 * @example
-	 * 	.setExpTextColor("#474747")
-	 * 	.setExpTextColor("rgb(255, 255, 255)")
-	 * 	.setExpTextColor("rgba(255, 255, 255, 0.5)")
-	 * 	.setExpTextColor(["#474747", "#474747"])
-	 * 	.setExpTextColor(['rgb(133, 255, 189)', 'rgb(255, 251, 125)'])
-	 * 
-	 */
 	setExpTextColor(exp_text_color) {
 		if (typeof exp_text_color !== "string" && !Array.isArray(exp_text_color))
 			throw new Error("Exp text color must be a string or an array of string");
@@ -481,11 +273,6 @@ class RankCard {
 		return this;
 	}
 
-	/**
-	 * @param {string|string[]} rank_color
-	 * @description Color of the rank is a string or array that can be a `hex color`, `rgb` or `rgba`. If it's an array it will be a `gradient` color
-	 * @returns {RankCard}
-	 */
 	setRankColor(rank_color) {
 		if (typeof rank_color !== "string" && !Array.isArray(rank_color))
 			throw new Error("Rank color must be a string or an array of string");
@@ -494,19 +281,6 @@ class RankCard {
 		return this;
 	}
 
-
-	/**
-	 * @param {string|string[]} line_color
-	 * @description Color of the line is a string or array that can be a `hex color`, `rgb`, `rgba` or url of image. If it's an array it will be a `gradient` color
-	 * @returns {RankCard}
-	 * @example 
-	 * 	.setLineColor("#474747")
-	 * 	.setLineColor("rgb(255, 255, 255)")
-	 * 	.setLineColor("rgba(255, 255, 255, 0.5)")
-	 * 	.setLineColor(['#00DBDE', '#FC00FF'])
-	 * 	.setLineColor(['rgb(133, 255, 189)', 'rgb(255, 251, 125)'])
-	 * 	.setLineColor(['rgba(133, 255, 189, 0.5)', 'rgba(255, 251, 125, 0.5)'])
-	 */
 	setLineColor(line_color) {
 		if (typeof line_color !== "string" && !Array.isArray(line_color))
 			throw new Error("Line color must be a string or an array of string");
@@ -514,63 +288,31 @@ class RankCard {
 		return this;
 	}
 
-	/**
-	 * @param {number} exp
-	 * @description Exp of the user
-	 * @returns {RankCard}
-	 */
 	setExp(exp) {
 		this.exp = exp;
 		return this;
 	}
 
-	/**
-	 * @param {number} expNextLevel
-	 * @description Exp next level of the user
-	 * @returns {RankCard}
-	 */
 	setExpNextLevel(expNextLevel) {
 		this.expNextLevel = expNextLevel;
 		return this;
 	}
 
-	/**
-	 * @param {number} level
-	 * @description Level of the user
-	 * @returns {RankCard}
-	 */
 	setLevel(level) {
 		this.level = level;
 		return this;
 	}
 
-	/**
-	 * @param {string} rank
-	 * @description Rank of the user
-	 * @returns {RankCard}
-	 * @example
-	 * 	.setRank("#1/100")
-	 */
 	setRank(rank) {
 		this.rank = rank;
 		return this;
 	}
 
-	/**
-	 * @param {string} name
-	 * @description Name of the user
-	 * @returns {RankCard}
-	 */
 	setName(name) {
 		this.name = name;
 		return this;
 	}
 
-	/**
-	 * @param {string} avatar
-	 * @description url or path of the avatar
-	 * @returns {RankCard}
-	 */
 	setAvatar(avatar) {
 		this.avatar = avatar;
 		return this;
@@ -599,380 +341,294 @@ class RankCard {
 			name,
 			level,
 			rank,
-			avatar
+			avatar,
+			fontName,
+			textSize
 		} = this;
-
-		widthCard = Number(widthCard);
-		heightCard = Number(heightCard);
+		const marginRatio = percentage(widthCard);
+		const heightCardRatio = percentage(heightCard);
 
 		const canvas = Canvas.createCanvas(widthCard, heightCard);
 		const ctx = canvas.getContext("2d");
 
-		/*
-			+-----------------------+
-			|     DRAW SUBCARD      |	
-			+-----------------------+
-		*/
+		const radius = 30;
+		ctx.beginPath();
+		ctx.moveTo(radius, 0);
+		ctx.lineTo(widthCard - radius, 0);
+		ctx.quadraticCurveTo(widthCard, 0, widthCard, radius);
+		ctx.lineTo(widthCard, heightCard - radius);
+		ctx.quadraticCurveTo(widthCard, heightCard, widthCard - radius, heightCard);
+		ctx.lineTo(radius, heightCard);
+		ctx.quadraticCurveTo(0, heightCard, 0, heightCard - radius);
+		ctx.lineTo(0, radius);
+		ctx.quadraticCurveTo(0, 0, radius, 0);
+		ctx.closePath();
+		ctx.clip();
 
-		const alignRim = 3 * percentage(widthCard);
-		const Alpha = parseFloat(alpha_subcard || 0);
+		if (Array.isArray(main_color)) {
+			const gradient = ctx.createLinearGradient(0, 0, widthCard, 0);
+			const step = 1 / (main_color.length - 1);
+			main_color.forEach((color, index) => {
+				gradient.addColorStop(index * step, color);
+			});
+			ctx.fillStyle = gradient;
+			ctx.fillRect(0, 0, widthCard, heightCard);
+		}
+		else if (main_color.startsWith("http")) {
+			const image = await Canvas.loadImage(main_color);
+			ctx.drawImage(image, 0, 0, widthCard, heightCard);
+		}
+		else {
+			ctx.fillStyle = main_color;
+			ctx.fillRect(0, 0, widthCard, heightCard);
+		}
 
-		ctx.globalAlpha = Alpha;
-		await checkColorOrImageAndDraw(alignRim, alignRim, widthCard - alignRim * 2, heightCard - alignRim * 2, ctx, sub_color, 20, alpha_subcard);
+		ctx.globalAlpha = alpha_subcard;
+		const margin = 2.5 * marginRatio;
+		const widthSubCard = widthCard - margin * 2;
+		const heightSubCard = heightCard - margin * 2;
+		const xSubCard = margin;
+		const ySubCard = margin;
+		const radiusSubCard = 30;
+
+		ctx.beginPath();
+		ctx.moveTo(xSubCard + radiusSubCard, ySubCard);
+		ctx.lineTo(xSubCard + widthSubCard - radiusSubCard, ySubCard);
+		ctx.quadraticCurveTo(xSubCard + widthSubCard, ySubCard, xSubCard + widthSubCard, ySubCard + radiusSubCard);
+		ctx.lineTo(xSubCard + widthSubCard, ySubCard + heightSubCard - radiusSubCard);
+		ctx.quadraticCurveTo(xSubCard + widthSubCard, ySubCard + heightSubCard, xSubCard + widthSubCard - radiusSubCard, ySubCard + heightSubCard);
+		ctx.lineTo(xSubCard + radiusSubCard, ySubCard + heightSubCard);
+		ctx.quadraticCurveTo(xSubCard, ySubCard + heightSubCard, xSubCard, ySubCard + heightSubCard - radiusSubCard);
+		ctx.lineTo(xSubCard, ySubCard + radiusSubCard);
+		ctx.quadraticCurveTo(xSubCard, ySubCard, xSubCard + radiusSubCard, ySubCard);
+		ctx.closePath();
+		ctx.save();
+		ctx.clip();
+
+		if (Array.isArray(sub_color)) {
+			const gradient = ctx.createLinearGradient(0, 0, widthCard, 0);
+			const step = 1 / (sub_color.length - 1);
+			sub_color.forEach((color, index) => {
+				gradient.addColorStop(index * step, color);
+			});
+			ctx.fillStyle = gradient;
+			ctx.fillRect(xSubCard, ySubCard, widthSubCard, heightSubCard);
+		}
+		else if (sub_color.startsWith("http")) {
+			const image = await Canvas.loadImage(sub_color);
+			ctx.drawImage(image, xSubCard, ySubCard, widthSubCard, heightSubCard);
+		}
+		else {
+			ctx.fillStyle = sub_color;
+			ctx.fillRect(xSubCard, ySubCard, widthSubCard, heightSubCard);
+		}
+
+		ctx.restore();
 		ctx.globalAlpha = 1;
 
-		ctx.globalCompositeOperation = "destination-out";
+		const widthAvatar = 75 * heightCardRatio;
+		const heightAvatar = widthAvatar;
+		const marginAvatar = 5 * marginRatio;
+		const xAvatar = marginAvatar;
+		const yAvatar = heightCard / 2 - heightAvatar / 2;
 
-		const xyAvatar = heightCard / 2;
-		const resizeAvatar = 60 * percentage(heightCard);
+		if (avatar) {
+			ctx.save();
+			ctx.beginPath();
+			ctx.arc(xAvatar + widthAvatar / 2, yAvatar + heightAvatar / 2, widthAvatar / 2, 0, Math.PI * 2, true);
+			ctx.closePath();
+			ctx.clip();
+			const avatarImage = await Canvas.loadImage(avatar);
+			ctx.drawImage(avatarImage, xAvatar, yAvatar, widthAvatar, heightAvatar);
+			ctx.restore();
+		}
 
-		// Kẽ đường ngang ở giữa
-		// Draw a horizontal line in the middle
-		const widthLineBetween = 58 * percentage(widthCard);
-		const heightLineBetween = 2 * percentage(heightCard);
-
-		const angleLineCenter = 40;
-		const edge = heightCard / 2 * Math.tan(angleLineCenter * Math.PI / 180);
+		const lineX = xAvatar + widthAvatar + marginAvatar;
+		const lineY = ySubCard + 20 * heightCardRatio;
+		const lineHeight = heightSubCard - 40 * heightCardRatio;
+		const lineWidth = 2;
 
 		if (line_color) {
-			if (!isUrl(line_color)) {
-				ctx.fillStyle = ctx.strokeStyle = checkGradientColor(ctx,
-					Array.isArray(line_color) ? line_color : [line_color],
-					xyAvatar - resizeAvatar / 2 - heightLineBetween,
-					0,
-					xyAvatar + resizeAvatar / 2 + widthLineBetween + edge,
-					0
-				);
-				ctx.globalCompositeOperation = "source-over";
+			ctx.beginPath();
+			ctx.moveTo(lineX, lineY);
+			ctx.lineTo(lineX, lineY + lineHeight);
+			if (Array.isArray(line_color)) {
+				const gradient = ctx.createLinearGradient(0, lineY, 0, lineY + lineHeight);
+				const step = 1 / (line_color.length - 1);
+				line_color.forEach((color, index) => {
+					gradient.addColorStop(index * step, color);
+				});
+				ctx.strokeStyle = gradient;
 			}
-			else {
-				ctx.save();
-				const img = Canvas.loadImage(line_color);
-				ctx.globalCompositeOperation = "source-over";
-
-				ctx.beginPath();
-				ctx.arc(xyAvatar, xyAvatar, resizeAvatar / 2 + heightLineBetween, 0, 2 * Math.PI);
-				ctx.fill();
-
-				ctx.rect(xyAvatar + resizeAvatar / 2, heightCard / 2 - heightLineBetween / 2, widthLineBetween, heightLineBetween);
-				ctx.fill();
-
-				ctx.translate(xyAvatar + resizeAvatar / 2 + widthLineBetween + edge, 0);
-				ctx.rotate(angleLineCenter * Math.PI / 180);
-				ctx.rect(0, 0, heightLineBetween, 1000);
-				ctx.fill();
-				ctx.rotate(-angleLineCenter * Math.PI / 180);
-				ctx.translate(-xyAvatar - resizeAvatar / 2 - widthLineBetween - edge, 0);
-
-				ctx.clip();
-				ctx.drawImage(await img, 0, 0, widthCard, heightCard);
-				ctx.restore();
+			else if (line_color.startsWith("http")) {
+				const pattern = await Canvas.loadImage(line_color);
+				ctx.strokeStyle = ctx.createPattern(pattern, "repeat");
 			}
-		}
-		ctx.beginPath();
-		if (!isUrl(line_color))
-			ctx.rect(xyAvatar + resizeAvatar / 2, heightCard / 2 - heightLineBetween / 2, widthLineBetween, heightLineBetween);
-		ctx.fill();
-
-		// Kẽ đường chéo ở cuối
-		// Draw a slant at the end
-		ctx.beginPath();
-		if (!isUrl(line_color)) {
-			ctx.moveTo(xyAvatar + resizeAvatar / 2 + widthLineBetween + edge, 0);
-			ctx.lineTo(xyAvatar + resizeAvatar / 2 + widthLineBetween - edge, heightCard);
-			ctx.lineWidth = heightLineBetween;
+			else
+				ctx.strokeStyle = line_color;
+			ctx.lineWidth = lineWidth;
 			ctx.stroke();
 		}
 
-		// Xóa nền vị trí đặt avatar
-		// Remove background of avatar placement
+		const marginTextArea = 3 * marginRatio;
+		const xTextArea = lineX + marginTextArea;
+		const widthTextArea = widthSubCard - xTextArea;
+
+		const sizeTextName = 60 + textSize;
+		ctx.font = `${sizeTextName}px ${fontName}`;
+		const yTextName = ySubCard + 33 * heightCardRatio + sizeTextName;
+		if (name_color) {
+			if (Array.isArray(name_color)) {
+				const gradient = ctx.createLinearGradient(xTextArea, 0, xTextArea + widthTextArea, 0);
+				const step = 1 / (name_color.length - 1);
+				name_color.forEach((color, index) => {
+					gradient.addColorStop(index * step, color);
+				});
+				ctx.fillStyle = gradient;
+			}
+			else
+				ctx.fillStyle = name_color;
+		}
+		else
+			ctx.fillStyle = text_color;
+		ctx.fillText(name, xTextArea, yTextName);
+
+		const sizeTextLevelRank = 45 + textSize;
+		ctx.font = `${sizeTextLevelRank}px ${fontName}`;
+
+		const yTextLevelRank = yTextName + sizeTextLevelRank + 10 * heightCardRatio;
+		const textLevel = `المستوى ${level}`;
+		if (level_color) {
+			if (Array.isArray(level_color)) {
+				const gradient = ctx.createLinearGradient(xTextArea, 0, xTextArea + widthTextArea, 0);
+				const step = 1 / (level_color.length - 1);
+				level_color.forEach((color, index) => {
+					gradient.addColorStop(index * step, color);
+				});
+				ctx.fillStyle = gradient;
+			}
+			else
+				ctx.fillStyle = level_color;
+		}
+		else
+			ctx.fillStyle = text_color;
+		ctx.fillText(textLevel, xTextArea, yTextLevelRank);
+
+		const marginTextRank = 3 * marginRatio;
+		const textRank = `المرتبة ${rank}`;
+		const widthTextRank = ctx.measureText(textRank).width;
+		const xTextRank = widthCard - marginTextRank - widthTextRank - margin;
+		if (rank_color) {
+			if (Array.isArray(rank_color)) {
+				const gradient = ctx.createLinearGradient(xTextRank, 0, xTextRank + widthTextRank, 0);
+				const step = 1 / (rank_color.length - 1);
+				rank_color.forEach((color, index) => {
+					gradient.addColorStop(index * step, color);
+				});
+				ctx.fillStyle = gradient;
+			}
+			else
+				ctx.fillStyle = rank_color;
+		}
+		else
+			ctx.fillStyle = text_color;
+		ctx.fillText(textRank, xTextRank, yTextLevelRank);
+
+		const heightExpBar = 30 * heightCardRatio;
+		const widthExpBar = widthSubCard - xTextArea - marginTextRank - margin;
+		const xExpBar = xTextArea;
+		const yExpBar = yTextLevelRank + 15 * heightCardRatio;
+		const radiusExpBar = 10 * heightCardRatio;
+
 		ctx.beginPath();
-		if (!isUrl(line_color))
-			ctx.arc(xyAvatar, xyAvatar, resizeAvatar / 2 + heightLineBetween, 0, 2 * Math.PI);
-		ctx.fill();
-		ctx.globalCompositeOperation = "destination-out";
+		ctx.moveTo(xExpBar + radiusExpBar, yExpBar);
+		ctx.lineTo(xExpBar + widthExpBar - radiusExpBar, yExpBar);
+		ctx.quadraticCurveTo(xExpBar + widthExpBar, yExpBar, xExpBar + widthExpBar, yExpBar + radiusExpBar);
+		ctx.lineTo(xExpBar + widthExpBar, yExpBar + heightExpBar - radiusExpBar);
+		ctx.quadraticCurveTo(xExpBar + widthExpBar, yExpBar + heightExpBar, xExpBar + widthExpBar - radiusExpBar, yExpBar + heightExpBar);
+		ctx.lineTo(xExpBar + radiusExpBar, yExpBar + heightExpBar);
+		ctx.quadraticCurveTo(xExpBar, yExpBar + heightExpBar, xExpBar, yExpBar + heightExpBar - radiusExpBar);
+		ctx.lineTo(xExpBar, yExpBar + radiusExpBar);
+		ctx.quadraticCurveTo(xExpBar, yExpBar, xExpBar + radiusExpBar, yExpBar);
+		ctx.closePath();
+		ctx.save();
+		ctx.clip();
 
-		// Xóa xung quanh sub card
-		// Remove around sub card
-		ctx.fillRect(0, 0, widthCard, alignRim);
-		ctx.fillRect(0, heightCard - alignRim, widthCard, alignRim);
-
-		// Xóa nền tại vị trí đặt thanh Exp
-		// Remove the background at the location where the Exp bar is located
-		const radius = 6 * percentage(heightCard);
-		const xStartExp = (25 + 1.5) * percentage(widthCard),
-			yStartExp = 67 * percentage(heightCard),
-			widthExp = 40.5 * percentage(widthCard),
-			heightExp = radius * 2;
-		ctx.globalCompositeOperation = "source-over";
-		centerImage(ctx, await Canvas.loadImage(avatar), xyAvatar, xyAvatar, resizeAvatar, resizeAvatar);
-
-		// Vẽ thanh Exp
-		// Draw Exp bar
-		if (!isUrl(expNextLevel_color)) {
-			ctx.beginPath();
-			ctx.fillStyle = checkGradientColor(ctx, expNextLevel_color, xStartExp, yStartExp, xStartExp + widthExp, yStartExp);
-			ctx.arc(xStartExp, yStartExp + radius, radius, 1.5 * Math.PI, 0.5 * Math.PI, true);
-			ctx.fill();
-			ctx.fillRect(xStartExp, yStartExp, widthExp, heightExp);
-			ctx.arc(xStartExp + widthExp, yStartExp + radius, radius, 1.5 * Math.PI, 0.5 * Math.PI, false);
-			ctx.fill();
+		if (Array.isArray(expNextLevel_color)) {
+			const gradient = ctx.createLinearGradient(xExpBar, 0, xExpBar + widthExpBar, 0);
+			const step = 1 / (expNextLevel_color.length - 1);
+			expNextLevel_color.forEach((color, index) => {
+				gradient.addColorStop(index * step, color);
+			});
+			ctx.fillStyle = gradient;
+		}
+		else if (expNextLevel_color.startsWith("http")) {
+			const image = await Canvas.loadImage(expNextLevel_color);
+			ctx.drawImage(image, xExpBar, yExpBar, widthExpBar, heightExpBar);
 		}
 		else {
-			ctx.save();
-			ctx.beginPath();
-
-			ctx.moveTo(xStartExp, yStartExp);
-			ctx.lineTo(xStartExp + widthExp, yStartExp);
-			ctx.arcTo(xStartExp + widthExp + radius, yStartExp, xStartExp + widthExp + radius, yStartExp + radius, radius);
-			ctx.lineTo(xStartExp + widthExp + radius, yStartExp + heightExp - radius);
-			ctx.arcTo(xStartExp + widthExp + radius, yStartExp + heightExp, xStartExp + widthExp, yStartExp + heightExp, radius);
-			ctx.lineTo(xStartExp, yStartExp + heightExp);
-			ctx.arcTo(xStartExp, yStartExp + heightExp, xStartExp - radius, yStartExp + heightExp - radius, radius);
-			ctx.lineTo(xStartExp - radius, yStartExp + radius);
-			ctx.arcTo(xStartExp, yStartExp, xStartExp, yStartExp, radius);
-
-			ctx.closePath();
-			ctx.clip();
-
-			ctx.drawImage(await Canvas.loadImage(expNextLevel_color), xStartExp, yStartExp, widthExp + radius, heightExp);
-			ctx.restore();
+			ctx.fillStyle = expNextLevel_color;
 		}
+		ctx.fillRect(xExpBar, yExpBar, widthExpBar, heightExpBar);
 
+		const widthExp = widthExpBar * (exp / expNextLevel);
 
-		// Exp hiện tại
-		// Current Exp
-		const widthExpCurrent = (100 / expNextLevel * exp) * percentage(widthExp);
-		if (!isUrl(exp_color)) {
-			ctx.fillStyle = checkGradientColor(ctx, exp_color, xStartExp, yStartExp, xStartExp + widthExp, yStartExp);
-			ctx.beginPath();
-			ctx.arc(xStartExp, yStartExp + radius, radius, 1.5 * Math.PI, 0.5 * Math.PI, true);
-			ctx.fill();
-
-			ctx.fillRect(xStartExp, yStartExp, widthExpCurrent, heightExp);
-
-			ctx.beginPath();
-			ctx.arc(xStartExp + widthExpCurrent - 1, yStartExp + radius, radius, 1.5 * Math.PI, 0.5 * Math.PI);
-			ctx.fill();
+		if (Array.isArray(exp_color)) {
+			const gradient = ctx.createLinearGradient(xExpBar, 0, xExpBar + widthExpBar, 0);
+			const step = 1 / (exp_color.length - 1);
+			exp_color.forEach((color, index) => {
+				gradient.addColorStop(index * step, color);
+			});
+			ctx.fillStyle = gradient;
+		}
+		else if (exp_color.startsWith("http")) {
+			const image = await Canvas.loadImage(exp_color);
+			ctx.drawImage(image, xExpBar, yExpBar, widthExp, heightExpBar);
 		}
 		else {
-			const imgExp = await Canvas.loadImage(exp_color);
-			ctx.save();
-			ctx.beginPath();
-			ctx.moveTo(xStartExp, yStartExp);
-			ctx.lineTo(xStartExp + widthExpCurrent, yStartExp);
-			ctx.arc(xStartExp + widthExpCurrent, yStartExp + radius, radius, 1.5 * Math.PI, 0.5 * Math.PI, false);
-			ctx.lineTo(xStartExp + widthExpCurrent + radius, yStartExp + heightExp - radius);
-			ctx.arcTo(xStartExp + widthExpCurrent + radius, yStartExp + heightExp, xStartExp + widthExpCurrent, yStartExp + heightExp, radius);
-			ctx.lineTo(xStartExp, yStartExp + heightExp);
-			ctx.arc(xStartExp, yStartExp + radius, radius, 1.5 * Math.PI, 0.5 * Math.PI, true);
-			ctx.lineTo(xStartExp - radius, yStartExp + radius);
-			ctx.arc(xStartExp, yStartExp + radius, radius, 1.5 * Math.PI, 0.5 * Math.PI, true);
-			ctx.closePath();
-			ctx.clip();
-			ctx.drawImage(imgExp, xStartExp - radius, yStartExp, widthExp + radius * 2, heightExp);
-			ctx.restore();
+			ctx.fillStyle = exp_color;
 		}
+		ctx.fillRect(xExpBar, yExpBar, widthExp, heightExpBar);
+		ctx.restore();
 
-		const maxSizeFont_Name = 4 * percentage(widthCard) + this.textSize;
-		const maxSizeFont_Exp = 2 * percentage(widthCard) + this.textSize;
-		const maxSizeFont_Level = 3.25 * percentage(widthCard) + this.textSize;
-		const maxSizeFont_Rank = 4 * percentage(widthCard) + this.textSize;
-
-		ctx.textAlign = "end";
-
-		// Vẽ chữ Rank
-		// Draw rank text
-		ctx.font = autoSizeFont(18.4 * percentage(widthCard), maxSizeFont_Rank, rank, ctx, this.fontName);
-		const metricsRank = ctx.measureText(rank);
-		ctx.fillStyle = checkGradientColor(ctx, rank_color || text_color,
-			94 * percentage(widthCard) - metricsRank.width,
-			76 * percentage(heightCard) + metricsRank.emHeightDescent,
-			94 * percentage(widthCard),
-			76 * percentage(heightCard) - metricsRank.actualBoundingBoxAscent
-		);
-		ctx.fillText(rank, 94 * percentage(widthCard), 76 * percentage(heightCard));
-
-		// Draw Level text
-		const textLevel = `Lv ${level}`;
-		ctx.font = autoSizeFont(9.8 * percentage(widthCard), maxSizeFont_Level, textLevel, ctx, this.fontName);
-		const metricsLevel = ctx.measureText(textLevel);
-		const xStartLevel = 94 * percentage(widthCard);
-		const yStartLevel = 32 * percentage(heightCard);
-		ctx.fillStyle = checkGradientColor(ctx, level_color || text_color,
-			xStartLevel - ctx.measureText(textLevel).width,
-			yStartLevel + metricsLevel.emHeightDescent,
-			xStartLevel,
-			yStartLevel - metricsLevel.actualBoundingBoxAscent
-		);
-		ctx.fillText(textLevel, xStartLevel, yStartLevel);
-		ctx.font = autoSizeFont(52.1 * percentage(widthCard), maxSizeFont_Name, name, ctx, this.fontName);
-		ctx.textAlign = "center";
-
-		// Draw Name
-		const metricsName = ctx.measureText(name);
-		ctx.fillStyle = checkGradientColor(ctx, name_color || text_color,
-			47.5 * percentage(widthCard) - metricsName.width / 2,
-			40 * percentage(heightCard) + metricsName.emHeightDescent,
-			47.5 * percentage(widthCard) + metricsName.width / 2,
-			40 * percentage(heightCard) - metricsName.actualBoundingBoxAscent
-		);
-		ctx.fillText(name, 47.5 * percentage(widthCard), 40 * percentage(heightCard));
-
-		// Draw Exp text
-		const textExp = `Exp ${exp}/${expNextLevel}`;
-		ctx.font = autoSizeFont(49 * percentage(widthCard), maxSizeFont_Exp, textExp, ctx, this.fontName);
-		const metricsExp = ctx.measureText(textExp);
-		ctx.fillStyle = checkGradientColor(ctx, exp_text_color || text_color,
-			47.5 * percentage(widthCard) - metricsExp.width / 2,
-			61.4 * percentage(heightCard) + metricsExp.emHeightDescent,
-			47.5 * percentage(widthCard) + metricsExp.width / 2,
-			61.4 * percentage(heightCard) - metricsExp.actualBoundingBoxAscent
-		);
-		ctx.fillText(textExp, 47.5 * percentage(widthCard), 61.4 * percentage(heightCard));
-
-
-		/*
-			+------------------------------------+
-			|     DRAW MAINCARD (BACKGROUND)     |	
-			+------------------------------------+
-		*/
-		ctx.globalCompositeOperation = "destination-over";
-		if (main_color.match?.(/^https?:\/\//) || Buffer.isBuffer(main_color)) {
-			ctx.beginPath();
-			ctx.moveTo(radius, 0);
-			ctx.lineTo(widthCard - radius, 0);
-			ctx.quadraticCurveTo(widthCard, 0, widthCard, radius);
-			ctx.lineTo(widthCard, heightCard - radius);
-			ctx.quadraticCurveTo(widthCard, heightCard, widthCard - radius, heightCard);
-			ctx.lineTo(radius, heightCard);
-			ctx.quadraticCurveTo(0, heightCard, 0, heightCard - radius);
-			ctx.lineTo(0, radius);
-			ctx.quadraticCurveTo(0, 0, radius, 0);
-			ctx.closePath();
-			ctx.clip();
-			ctx.drawImage(await Canvas.loadImage(main_color), 0, 0, widthCard, heightCard);
+		const sizeTextExp = 30 + textSize;
+		ctx.font = `${sizeTextExp}px ${fontName}`;
+		const textExp = `${exp}/${expNextLevel}`;
+		const widthTextExp = ctx.measureText(textExp).width;
+		const xTextExp = xExpBar + widthExpBar / 2 - widthTextExp / 2;
+		const yTextExp = yExpBar + heightExpBar / 2 + sizeTextExp / 2 - 5;
+		if (exp_text_color) {
+			if (Array.isArray(exp_text_color)) {
+				const gradient = ctx.createLinearGradient(xTextExp, 0, xTextExp + widthTextExp, 0);
+				const step = 1 / (exp_text_color.length - 1);
+				exp_text_color.forEach((color, index) => {
+					gradient.addColorStop(index * step, color);
+				});
+				ctx.fillStyle = gradient;
+			}
+			else
+				ctx.fillStyle = exp_text_color;
 		}
-		else {
-			ctx.fillStyle = checkGradientColor(ctx, main_color, 0, 0, widthCard, heightCard);
-			drawSquareRounded(ctx, 0, 0, widthCard, heightCard, radius, main_color);
-		}
-		// return canvas.toBuffer();
-		// return stream
+		else
+			ctx.fillStyle = text_color;
+		ctx.fillText(textExp, xTextExp, yTextExp);
+
 		return canvas.createPNGStream();
 	}
 }
 
-async function checkColorOrImageAndDraw(xStart, yStart, width, height, ctx, colorOrImage, r) {
-	if (!colorOrImage.match?.(/^https?:\/\//)) {
-		if (Array.isArray(colorOrImage)) {
-			const gradient = ctx.createLinearGradient(xStart, yStart, xStart + width, yStart + height);
-			colorOrImage.forEach((color, index) => {
-				gradient.addColorStop(index / (colorOrImage.length - 1), color);
-			});
-			ctx.fillStyle = gradient;
-		}
-		drawSquareRounded(ctx, xStart, yStart, width, height, r, colorOrImage);
-	}
-	else {
-		const imageLoad = await Canvas.loadImage(colorOrImage);
-		ctx.save();
-		roundedImage(xStart, yStart, width, height, r, ctx);
-		ctx.clip();
-		ctx.drawImage(imageLoad, xStart, yStart, width, height);
-		ctx.restore();
-	}
-}
 
-function drawSquareRounded(ctx, x, y, w, h, r, color, defaultGlobalCompositeOperation, notChangeColor) {
-	ctx.save();
-	if (defaultGlobalCompositeOperation)
-		ctx.globalCompositeOperation = "source-over";
-	if (w < 2 * r)
-		r = w / 2;
-	if (h < 2 * r)
-		r = h / 2;
-	ctx.beginPath();
-	ctx.moveTo(x + r, y);
-	ctx.arcTo(x + w, y, x + w, y + h, r);
-	ctx.arcTo(x + w, y + h, x, y + h, r);
-	ctx.arcTo(x, y + h, x, y, r);
-	ctx.arcTo(x, y, x + w, y, r);
-	ctx.closePath();
-	if (!notChangeColor)
-		ctx.fillStyle = color;
-	ctx.fill();
-	ctx.restore();
-}
-
-function roundedImage(x, y, width, height, radius, ctx) {
-	ctx.beginPath();
-	ctx.moveTo(x + radius, y);
-	ctx.lineTo(x + width - radius, y);
-	ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-	ctx.lineTo(x + width, y + height - radius);
-	ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-	ctx.lineTo(x + radius, y + height);
-	ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
-	ctx.lineTo(x, y + radius);
-	ctx.quadraticCurveTo(x, y, x + radius, y);
-	ctx.closePath();
-}
-
-function centerImage(ctx, img, xCenter, yCenter, w, h) {
-	const x = xCenter - w / 2;
-	const y = yCenter - h / 2;
-	ctx.save();
-	ctx.beginPath();
-	ctx.arc(xCenter, yCenter, w / 2, 0, 2 * Math.PI);
-	ctx.clip();
-	ctx.closePath();
-	ctx.drawImage(img, x, y, w, h);
-	ctx.restore();
-}
-
-function autoSizeFont(maxWidthText, maxSizeFont, text, ctx, fontName) {
-	let sizeFont = 0;
-	// eslint-disable-next-line no-constant-condition
-	while (true) {
-		sizeFont += 1;
-		ctx.font = sizeFont + "px " + fontName;
-		const widthText = ctx.measureText(text).width;
-		if (widthText > maxWidthText || sizeFont > maxSizeFont) break;
-	}
-	return sizeFont + "px " + fontName;
-}
-
-function checkGradientColor(ctx, color, x1, y1, x2, y2) {
+function checkFormatColor(color, checkUrl = true) {
+	const regexHex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
+	const regexRgb = /^rgb\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*\)$/;
+	const regexRgba = /^rgba\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d(\.\d+)?\s*\)$/;
+	const isUrl = checkUrl && ((typeof color == "string" && color.startsWith("http")) || color.startsWith("data:image"));
 	if (Array.isArray(color)) {
-		const gradient = ctx.createLinearGradient(x1, y1, x2, y2);
-		color.forEach((c, index) => {
-			gradient.addColorStop(index / (color.length - 1), c);
-		});
-		return gradient;
+		for (const c of color) {
+			if (!regexHex.test(c) && !regexRgb.test(c) && !regexRgba.test(c) && !isUrl)
+				throw new Error(`Invalid color format: ${c}`);
+		}
 	}
-	else {
-		return color;
-	}
-}
-
-function isUrl(string) {
-	try {
-		new URL(string);
-		return true;
-	}
-	catch (err) {
-		return false;
-	}
-}
-
-function checkFormatColor(color, enableUrl = true) {
-	if (
-		!/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(color) &&
-		!/^rgb\((\d{1,3}), (\d{1,3}), (\d{1,3})\)$/.test(color) &&
-		!/^rgba\((\d{1,3}), (\d{1,3}), (\d{1,3}), (\d{1,3})\)$/.test(color) &&
-		(enableUrl ? !isUrl(color) : true) &&
-		!Array.isArray(color)
-	)
-		throw new Error(`The color format must be a hex, rgb, rgba ${enableUrl ? ", url image" : ""} or an array of colors`);
+	else if (!regexHex.test(color) && !regexRgb.test(color) && !regexRgba.test(color) && !isUrl)
+		throw new Error(`Invalid color format: ${color}`);
 }

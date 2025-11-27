@@ -3,70 +3,53 @@ const { config } = global.GoatBot;
 const { client } = global;
 
 module.exports = {
-        config: {
-                name: "للمشرف_فقط",
-                aliases: ["adonly", "onlyad", "onlyadmin", "adminonly"],
-                version: "1.5",
-                author: "Yamada KJ",
-                countDown: 5,
-                role: 2,
-                description: {
-                        vi: "bật/tắt chế độ chỉ admin mới có thể sử dụng bot",
-                        en: "turn on/off only admin can use bot",
-                        ar: "تشغيل/إيقاف وضع السماح للمشرف فقط باستخدام البوت"
-                },
-                category: "المالك",
-                guide: {
-                        vi: "   {pn} [on | off]: bật/tắt chế độ chỉ admin mới có thể sử dụng bot"
-                                + "\n   {pn} noti [on | off]: bật/tắt thông báo khi người dùng không phải là admin sử dụng bot",
-                        en: "   {pn} [on | off]: turn on/off the mode only admin can use bot"
-                                + "\n   {pn} noti [on | off]: turn on/off the notification when user is not admin use bot",
-                        ar: "   {pn} [on | off]: تشغيل/إيقاف وضع السماح للمشرف فقط باستخدام البوت"
-                                + "\n   {pn} noti [on | off]: تشغيل/إيقاف الإشعار عندما يستخدم غير المشرف البوت"
-                }
-        },
+	config: {
+		name: "للمشرف_فقط",
+		aliases: ["adonly", "onlyad", "onlyadmin", "adminonly"],
+		version: "1.5",
+		author: "Yamada KJ",
+		countDown: 5,
+		role: 2,
+		description: "تشغيل/إيقاف وضع السماح للمشرف فقط باستخدام البوت",
+		category: "المالك",
+		guide: "{pn} [on | off]: تشغيل/إيقاف وضع السماح للمشرف فقط باستخدام البوت\n{pn} noti [on | off]: تشغيل/إيقاف الإشعار عندما يستخدم غير المشرف البوت"
+	},
 
-        langs: {
-                vi: {
-                        turnedOn: "Đã bật chế độ chỉ admin mới có thể sử dụng bot",
-                        turnedOff: "Đã tắt chế độ chỉ admin mới có thể sử dụng bot",
-                        turnedOnNoti: "Đã bật thông báo khi người dùng không phải là admin sử dụng bot",
-                        turnedOffNoti: "Đã tắt thông báo khi người dùng không phải là admin sử dụng bot"
-                },
-                en: {
-                        turnedOn: "Turned on the mode only admin can use bot",
-                        turnedOff: "Turned off the mode only admin can use bot",
-                        turnedOnNoti: "Turned on the notification when user is not admin use bot",
-                        turnedOffNoti: "Turned off the notification when user is not admin use bot"
-                }
-        },
+	langs: {
+		ar: {
+			turnedOn: "✅ تم تشغيل وضع السماح للمشرف فقط باستخدام البوت",
+			turnedOff: "❌ تم إيقاف وضع السماح للمشرف فقط باستخدام البوت",
+			turnedOnNoti: "🔔 تم تشغيل الإشعار عندما يستخدم غير المشرف البوت",
+			turnedOffNoti: "🔕 تم إيقاف الإشعار عندما يستخدم غير المشرف البوت"
+		}
+	},
 
-        onStart: function ({ args, message, getLang }) {
-                let isSetNoti = false;
-                let value;
-                let indexGetVal = 0;
+	onStart: function ({ args, message, getLang }) {
+		let isSetNoti = false;
+		let value;
+		let indexGetVal = 0;
 
-                if (args[0] == "noti") {
-                        isSetNoti = true;
-                        indexGetVal = 1;
-                }
+		if (args[0] == "noti") {
+			isSetNoti = true;
+			indexGetVal = 1;
+		}
 
-                if (args[indexGetVal] == "on")
-                        value = true;
-                else if (args[indexGetVal] == "off")
-                        value = false;
-                else
-                        return message.SyntaxError();
+		if (args[indexGetVal] == "on")
+			value = true;
+		else if (args[indexGetVal] == "off")
+			value = false;
+		else
+			return message.SyntaxError();
 
-                if (isSetNoti) {
-                        config.hideNotiMessage.adminOnly = !value;
-                        message.reply(getLang(value ? "turnedOnNoti" : "turnedOffNoti"));
-                }
-                else {
-                        config.adminOnly.enable = value;
-                        message.reply(getLang(value ? "turnedOn" : "turnedOff"));
-                }
+		if (isSetNoti) {
+			config.hideNotiMessage.adminOnly = !value;
+			message.reply(getLang(value ? "turnedOnNoti" : "turnedOffNoti"));
+		}
+		else {
+			config.adminOnly.enable = value;
+			message.reply(getLang(value ? "turnedOn" : "turnedOff"));
+		}
 
-                fs.writeFileSync(client.dirConfig, JSON.stringify(config, null, 2));
-        }
+		fs.writeFileSync(client.dirConfig, JSON.stringify(config, null, 2));
+	}
 };

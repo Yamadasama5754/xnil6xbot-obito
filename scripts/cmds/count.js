@@ -1,43 +1,25 @@
 module.exports = {
 	config: {
-		name: "count",
+		name: "عدد_الرسائل",
+		aliases: ["count", "احصاء"],
 		version: "1.3",
-		author: "NTKhang",
+		author: "Yamada KJ",
 		countDown: 5,
 		role: 0,
-		description: {
-			vi: "Xem số lượng tin nhắn của tất cả thành viên hoặc bản thân (tính từ lúc bot vào nhóm)",
-			en: "View the number of messages of all members or yourself (since the bot joined the group)",
-			ar: "عرض"},
-		category: "box chat",
-		guide: {
-			vi: "   {pn}: dùng để xem số lượng tin nhắn của bạn"
-				+ "\n   {pn} @tag: dùng để xem số lượng tin nhắn của những người được tag"
-				+ "\n   {pn} all: dùng để xem số lượng tin nhắn của tất cả thành viên",
-			en: "   {pn}: used to view the number of messages of you"
-				+ "\n   {pn} @tag: used to view the number of messages of those tagged"
-				+ "\n   {pn} all: used to view the number of messages of all members"
-		}
+		description: "عرض عدد رسائل جميع الأعضاء أو رسائلك (منذ انضمام البوت للمجموعة)",
+		category: "المحادثة",
+		guide: "{pn}: لعرض عدد رسائلك\n{pn} @إشارة: لعرض عدد رسائل الأشخاص المُشار إليهم\n{pn} all: لعرض عدد رسائل جميع الأعضاء"
 	},
 
 	langs: {
-		vi: {
-			count: "Số tin nhắn của các thành viên:",
-			endMessage: "Những người không có tên trong danh sách là chưa gửi tin nhắn nào.",
-			page: "Trang [%1/%2]",
-			reply: "Phản hồi tin nhắn này kèm số trang để xem tiếp",
-			result: "%1 hạng %2 với %3 tin nhắn",
-			yourResult: "Bạn đứng hạng %1 và đã gửi %2 tin nhắn trong nhóm này",
-			invalidPage: "Số trang không hợp lệ"
-		},
-		en: {
-			count: "Number of messages of members:",
-			endMessage: "Those who do not have a name in the list have not sent any messages.",
-			page: "Page [%1/%2]",
-			reply: "Reply to this message with the page number to view more",
-			result: "%1 rank %2 with %3 messages",
-			yourResult: "You are ranked %1 and have sent %2 messages in this group",
-			invalidPage: "Invalid page number"
+		ar: {
+			count: "عدد رسائل الأعضاء:",
+			endMessage: "من ليس لديه اسم في القائمة لم يرسل أي رسائل.",
+			page: "صفحة [%1/%2]",
+			reply: "رد على هذه الرسالة برقم الصفحة لعرض المزيد",
+			result: "%1 في المرتبة %2 بـ %3 رسالة",
+			yourResult: "أنت في المرتبة %1 وأرسلت %2 رسالة في هذه المجموعة",
+			invalidPage: "رقم صفحة غير صالح"
 		}
 	},
 
@@ -50,7 +32,7 @@ module.exports = {
 		for (const user of members) {
 			if (!usersInGroup.includes(user.userID))
 				continue;
-			const charac = "️️️️️️️️️️️️️️️️️"; // This character is banned from facebook chat (it is not an empty string)
+			const charac = "️️️️️️️️️️️️️️️️️";
 			arraySort.push({
 				name: user.name.includes(charac) ? `Uid: ${user.userID}` : user.name,
 				count: user.count,
@@ -62,7 +44,7 @@ module.exports = {
 		arraySort.map(item => item.stt = stt++);
 
 		if (args[0]) {
-			if (args[0].toLowerCase() == "all") {
+			if (args[0].toLowerCase() == "all" || args[0] == "الكل") {
 				let msg = getLang("count");
 				const endMessage = getLang("endMessage");
 				for (const item of arraySort) {
@@ -161,5 +143,4 @@ module.exports = {
 			findMember.count += 1;
 		await threadsData.set(threadID, members, "members");
 	}
-
 };

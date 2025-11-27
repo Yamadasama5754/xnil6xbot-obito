@@ -4,17 +4,27 @@ const baseApiUrl = async () => {
 };
 
 module.exports.config = {
-    name: "bby",
-    aliases: ["baby", "bbe", "babe"],
+    name: "دردشة",
+    aliases: ["baby", "bby", "بوت", "حبيبي"],
     version: "6.9.0",
-    author: "dipto",
+    author: "Yamada KJ",
     countDown: 0,
     role: 0,
-    description: "better then all sim simi",
-    category: "chat",
-    guide: {
-        en: "{pn} [anyMessage] OR\nteach [YourMessage] - [Reply1], [Reply2], [Reply3]... OR\nteach [react] [YourMessage] - [react1], [react2], [react3]... OR\nremove [YourMessage] OR\nrm [YourMessage] - [indexNumber] OR\nmsg [YourMessage] OR\nlist OR \nall OR\nedit [YourMessage] - [NeeMessage]",
-			ar: "{pn}"
+    description: "دردشة ذكية مع البوت",
+    category: "دردشة",
+    guide: "{pn} [رسالة] أو\nteach [رسالتك] - [رد1], [رد2]... أو\nremove [رسالتك] أو\nlist أو\nedit [رسالتك] - [رسالة جديدة]"
+};
+
+module.exports.langs = {
+    ar: {
+        askMe: ["قل لي شيء", "نعم؟", "اكتب help bby", "اكتب !دردشة مرحبا"],
+        invalidFormat: "❌ صيغة غير صحيحة!",
+        repliesAdded: "✅ تمت إضافة الردود %1\nالمعلم: %2\nعدد التعليمات: %3",
+        totalTeach: "إجمالي التعليمات = %1\n👑 قائمة معلمي البوت\n%2",
+        message: "الرسالة %1 = %2",
+        changed: "تم التغيير %1",
+        checkConsole: "تحقق من الكونسول للخطأ",
+        error: "خطأ: %1"
     }
 };
 
@@ -22,7 +32,8 @@ module.exports.onStart = async ({
     api,
     event,
     args,
-    usersData
+    usersData,
+    getLang
 }) => {
     const link = `${await baseApiUrl()}/baby`;
     const dipto = args.join(" ").toLowerCase();
@@ -31,12 +42,12 @@ module.exports.onStart = async ({
 
     try {
         if (!args[0]) {
-            const ran = ["Bolo baby", "hum", "type help baby", "type !baby hi"];
+            const ran = getLang("askMe");
             return api.sendMessage(ran[Math.floor(Math.random() * ran.length)], event.threadID, event.messageID);
         }
 
-        if (args[0] === 'remove') {
-            const fina = dipto.replace("remove ", "");
+        if (args[0] === 'remove' || args[0] === 'حذف') {
+            const fina = dipto.replace("remove ", "").replace("حذف ", "");
             const dat = (await axios.get(`${link}?remove=${fina}&senderID=${uid}`)).data.message;
             return api.sendMessage(dat, event.threadID, event.messageID);
         }
@@ -47,8 +58,8 @@ module.exports.onStart = async ({
             return api.sendMessage(da, event.threadID, event.messageID);
         }
 
-        if (args[0] === 'list') {
-            if (args[1] === 'all') {
+        if (args[0] === 'list' || args[0] === 'قائمة') {
+            if (args[1] === 'all' || args[1] === 'الكل') {
                 const data = (await axios.get(`${link}?list=all`)).data;
                 const teachers = await Promise.all(data.teacher.teacherList.map(async (item) => {
                     const number = Object.keys(item)[0];
@@ -61,55 +72,42 @@ module.exports.onStart = async ({
                 }));
                 teachers.sort((a, b) => b.value - a.value);
                 const output = teachers.map((t, i) => `${i + 1}/ ${t.name}: ${t.value}`).join('\n');
-                return api.sendMessage(`Total Teach = ${data.length}\n👑 | List of Teachers of baby\n${output}`, event.threadID, event.messageID);
+                return api.sendMessage(`إجمالي التعليمات = ${data.length}\n👑 قائمة معلمي البوت\n${output}`, event.threadID, event.messageID);
             } else {
                 const d = (await axios.get(`${link}?list=all`)).data.length;
-                return api.sendMessage(`Total Teach = ${d}`, event.threadID, event.messageID);
+                return api.sendMessage(`إجمالي التعليمات = ${d}`, event.threadID, event.messageID);
             }
         }
 
-        if (args[0] === 'msg') {
-            const fuk = dipto.replace("msg ", "");
+        if (args[0] === 'msg' || args[0] === 'رسالة') {
+            const fuk = dipto.replace("msg ", "").replace("رسالة ", "");
             const d = (await axios.get(`${link}?list=${fuk}`)).data.data;
-            return api.sendMessage(`Message ${fuk} = ${d}`, event.threadID, event.messageID);
+            return api.sendMessage(`الرسالة ${fuk} = ${d}`, event.threadID, event.messageID);
         }
 
-        if (args[0] === 'edit') {
+        if (args[0] === 'edit' || args[0] === 'تعديل') {
             const command = dipto.split(' - ')[1];
-            if (command.length < 2) return api.sendMessage('❌ | Invalid format! Use edit [YourMessage] - [NewReply]', event.threadID, event.messageID);
+            if (command.length < 2) return api.sendMessage('❌ صيغة غير صحيحة! استخدم edit [رسالتك] - [الرد الجديد]', event.threadID, event.messageID);
             const dA = (await axios.get(`${link}?edit=${args[1]}&replace=${command}&senderID=${uid}`)).data.message;
-            return api.sendMessage(`changed ${dA}`, event.threadID, event.messageID);
+            return api.sendMessage(`تم التغيير ${dA}`, event.threadID, event.messageID);
         }
 
-        if (args[0] === 'teach' && args[1] !== 'amar' && args[1] !== 'react') {
+        if ((args[0] === 'teach' || args[0] === 'علم') && args[1] !== 'amar' && args[1] !== 'react') {
             [comd, command] = dipto.split(' - ');
-            final = comd.replace("teach ", "");
-            if (command.length < 2) return api.sendMessage('❌ | Invalid format!', event.threadID, event.messageID);
+            final = comd.replace("teach ", "").replace("علم ", "");
+            if (command.length < 2) return api.sendMessage('❌ صيغة غير صحيحة!', event.threadID, event.messageID);
             const re = await axios.get(`${link}?teach=${final}&reply=${command}&senderID=${uid}`);
             const tex = re.data.message;
             const teacher = (await usersData.get(re.data.teacher)).name;
-            return api.sendMessage(`✅ Replies added ${tex}\nTeacher: ${teacher}\nTeachs: ${re.data.teachs}`, event.threadID, event.messageID);
+            return api.sendMessage(`✅ تمت إضافة الردود ${tex}\nالمعلم: ${teacher}\nعدد التعليمات: ${re.data.teachs}`, event.threadID, event.messageID);
         }
 
-        if (args[0] === 'teach' && args[1] === 'amar') {
+        if ((args[0] === 'teach' || args[0] === 'علم') && args[1] === 'react') {
             [comd, command] = dipto.split(' - ');
-            final = comd.replace("teach ", "");
-            if (command.length < 2) return api.sendMessage('❌ | Invalid format!', event.threadID, event.messageID);
-            const tex = (await axios.get(`${link}?teach=${final}&senderID=${uid}&reply=${command}&key=intro`)).data.message;
-            return api.sendMessage(`✅ Replies added ${tex}`, event.threadID, event.messageID);
-        }
-
-        if (args[0] === 'teach' && args[1] === 'react') {
-            [comd, command] = dipto.split(' - ');
-            final = comd.replace("teach react ", "");
-            if (command.length < 2) return api.sendMessage('❌ | Invalid format!', event.threadID, event.messageID);
+            final = comd.replace("teach react ", "").replace("علم react ", "");
+            if (command.length < 2) return api.sendMessage('❌ صيغة غير صحيحة!', event.threadID, event.messageID);
             const tex = (await axios.get(`${link}?teach=${final}&react=${command}`)).data.message;
-            return api.sendMessage(`✅ Replies added ${tex}`, event.threadID, event.messageID);
-        }
-
-        if (dipto.includes('amar name ki') || dipto.includes('amr nam ki') || dipto.includes('amar nam ki') || dipto.includes('amr name ki') || dipto.includes('whats my name')) {
-            const data = (await axios.get(`${link}?text=amar name ki&senderID=${uid}&key=intro`)).data.reply;
-            return api.sendMessage(data, event.threadID, event.messageID);
+            return api.sendMessage(`✅ تمت إضافة الردود ${tex}`, event.threadID, event.messageID);
         }
 
         const d = (await axios.get(`${link}?text=${dipto}&senderID=${uid}&font=1`)).data.reply;
@@ -126,7 +124,7 @@ module.exports.onStart = async ({
 
     } catch (e) {
         console.log(e);
-        api.sendMessage("Check console for error", event.threadID, event.messageID);
+        api.sendMessage("تحقق من الكونسول للخطأ", event.threadID, event.messageID);
     }
 };
 
@@ -149,7 +147,7 @@ module.exports.onReply = async ({
             }, event.messageID);
         }
     } catch (err) {
-        return api.sendMessage(`Error: ${err.message}`, event.threadID, event.messageID);
+        return api.sendMessage(`خطأ: ${err.message}`, event.threadID, event.messageID);
     }
 };
 
@@ -160,9 +158,9 @@ module.exports.onChat = async ({
 }) => {
     try {
         const body = event.body ? event.body?.toLowerCase() : ""
-        if (body.startsWith("baby") || body.startsWith("bby") || body.startsWith("bot") || body.startsWith("jan") || body.startsWith("babu") || body.startsWith("janu")) {
+        if (body.startsWith("baby") || body.startsWith("bby") || body.startsWith("bot") || body.startsWith("بوت") || body.startsWith("حبيبي") || body.startsWith("دردشة")) {
             const arr = body.replace(/^\S+\s*/, "")
-            const randomReplies = ["😚", "Yes 😀, I am here", "What's up?", "Bolo jaan ki korte panmr jonno"];
+            const randomReplies = ["😚", "نعم 😀، أنا هنا", "ماذا تريد؟", "قل لي ماذا تحتاج"];
             if (!arr) {
 
                 await api.sendMessage(randomReplies[Math.floor(Math.random() * randomReplies.length)], event.threadID, (error, info) => {
@@ -187,6 +185,6 @@ module.exports.onChat = async ({
             }, event.messageID)
         }
     } catch (err) {
-        return api.sendMessage(`Error: ${err.message}`, event.threadID, event.messageID);
+        return api.sendMessage(`خطأ: ${err.message}`, event.threadID, event.messageID);
     }
 };

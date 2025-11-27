@@ -8,29 +8,12 @@ module.exports = {
     author: "Yamada KJ",
     countDown: 8,
     role: 2,
-    description: {
-      en: "Manage friend requests stylishly",
-      ar: "إدارة طلبات الصداقة بأناقة"
-    },
+    description: "إدارة طلبات الصداقة بأناقة",
     category: "أدوات",
-    guide: {
-      en: "{pn} [add|del] [number|all]",
-      ar: "{pn} [add|del] [رقم|جميع]"
-    }
+    guide: "{pn} [add|del] [رقم|جميع]"
   },
 
   langs: {
-    en: {
-      invalidCommand: "❌ Invalid command. Usage: <add|del> <number|all>",
-      cannotFind: "🚫 Can't find request #%1",
-      acceptedFailed: "accepted",
-      rejectedFailed: "rejected",
-      successfully: "✨ Successfully %1 %2 request(s):\n%3\n\n",
-      failedProcess: "⚠️ Failed to process %1 request(s):\n%2",
-      noValid: "❌ No valid requests were processed.",
-      noPending: "🌟 You have no pending friend requests!"
-    },
-                ar: { command: "أمر", error: "خطأ", success: "نجح", usage: "الاستخدام", invalid: "غير صالح" },
     ar: {
       invalidCommand: "❌ أمر غير صحيح. الاستخدام: <add|del> <رقم|جميع>",
       cannotFind: "🚫 لم يتم العثور على الطلب #%1",
@@ -39,7 +22,11 @@ module.exports = {
       successfully: "✨ تم بنجاح %1 %2 طلب(طلبات):\n%3\n\n",
       failedProcess: "⚠️ فشل في معالجة %1 طلب(طلبات):\n%2",
       noValid: "❌ لم يتم معالجة أي طلبات صالحة.",
-      noPending: "🌟 ليس لديك أي طلبات صداقة معلقة!"
+      noPending: "🌟 ليس لديك أي طلبات صداقة معلقة!",
+      pendingHeader: "📩 طلبات صداقة معلقة:\n\n",
+      userItem: "🔹 %1. %2\n",
+      instructions: "\n.قبول add <رقم> أو .قبول add جميع - لقبول الطلبات\n.قبول del <رقم> أو .قبول del جميع - لرفض الطلبات",
+      error: "❌ حدث خطأ: %1"
     }
   },
 
@@ -148,12 +135,12 @@ module.exports = {
         return api.sendMessage(getLang("noPending"), event.threadID);
       }
 
-      let msg = "📩 طلبات صداقة معلقة (Pending Friend Requests):\n\n";
+      let msg = getLang("pendingHeader");
       listRequest.forEach((user, index) => {
-        msg += `🔹 ${index + 1}. ${user.node.name}\n`;
+        msg += getLang("userItem", index + 1, user.node.name);
       });
 
-      msg += `\n.acp add <رقم> أو .acp add all - لقبول الطلبات\n.acp del <رقم> أو .acp del all - لرفض الطلبات`;
+      msg += getLang("instructions");
 
       api.sendMessage(msg, event.threadID, (err, info) => {
         global.GoatBot.onReply.set(info.messageID, {
@@ -164,7 +151,7 @@ module.exports = {
         });
       });
     } catch (e) {
-      api.sendMessage("❌ حدث خطأ: " + e.message, event.threadID);
+      api.sendMessage(getLang("error", e.message), event.threadID);
     }
   }
 };

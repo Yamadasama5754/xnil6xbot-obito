@@ -2,29 +2,21 @@ const { removeHomeDir, log } = global.utils;
 
 module.exports = {
 	config: {
-		name: "eval",
+		name: "تنفيذ",
+		aliases: ["eval", "كود"],
 		version: "1.6",
-		author: "NTKhang",
+		author: "Yamada KJ",
 		usePrefix: false,
 		countDown: 5,
 		role: 2,
-		description: {
-			vi: "Test code nhanh",
-			en: "Test code quickly",
-			ar: "أمر"},
-		category: "owner",
-		guide: {
-			vi: "{pn} <đoạn code cần test>",
-			en: "{pn} <code to test>"
-		}
+		description: "اختبار الكود بسرعة",
+		category: "المالك",
+		guide: "{pn} <الكود المراد اختباره>"
 	},
 
 	langs: {
-		vi: {
-			error: "❌ Đã có lỗi xảy ra:"
-		},
-		en: {
-			error: "❌ An error occurred:"
+		ar: {
+			error: "❌ حدث خطأ:"
 		}
 	},
 

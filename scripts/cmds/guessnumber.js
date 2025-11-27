@@ -20,94 +20,42 @@ const rows = [
 
 module.exports = {
 	config: {
-		name: "guessnumber",
-		aliases: ["guessnum"],
+		name: "تخمين_الأرقام",
+		aliases: ["guessnumber", "guessnum", "خمن"],
 		version: "1.1",
-		author: "NTKhang",
+		author: "Yamada KJ",
 		countDown: 5,
 		role: 0,
-		description: {
-			vi: "Game đoán số",
-			en: "Guess number game",
-			ar: "لعبة"},
-		category: "game",
-		guide: {
-			vi: "  {pn} [4 | 5 | 6] [single | multi]: tạo một bàn chơi mới, với:"
-				+ "\n    4 5 6 là số chữ số của số cần đoán, mặc định là 4."
-				+ "\n    single | multi là chế độ chơi, single là 1 người chơi, multi là nhiều người chơi, mặc định là single."
-				+ "\n   Ví dụ:"
-				+ "\n    {pn}"
-				+ "\n    {pn} 4 single"
-				+ "\n"
-				+ "\n   Cách chơi: người chơi trả lời tin nhắn của bot theo quy tắc sau:"
-				+ "\n   Bạn có " + rows.map(item => `${item.row} lần (${item.col} số)`).join(", ") + "."
-				+ "\n   Sau mỗi lần đoán, bạn sẽ nhận được thêm gợi ý là số lượng chữ số đúng (hiển thị bên trái) và số lượng chữ số đúng vị trí (hiển thị bên phải)."
-				+ "\n   Lưu ý: Số được hình thành với các chữ số từ 0 đến 9, mỗi chữ số xuất hiện duy nhất một lần và số có thể đứng đầu là 0."
-				+ "\n\n   {pn} rank <trang>: xem bảng xếp hạng."
-				+ "\n   {pn} info [<uid> | <@tag> | <reply> | <để trống>]: xem thông tin xếp hạng của bạn hoặc người khác."
-				+ "\n   {pn} reset: reset bảng xếp hạng (chỉ admin bot).",
-			en: "  {pn} [4 | 5 | 6] [single | multi]: create a new game, with:"
-				+ "\n    4 5 6 is the number of digits of the number to guess, default is 4."
-				+ "\n    single | multi is the game mode, single is 1 player, multi is multi player, default is single."
-				+ "\n   Example:"
-				+ "\n    {pn}"
-				+ "\n    {pn} 4 single"
-				+ "\n"
-				+ "\n   How to play: the player replies to the message of the bot with the following rules:"
-				+ "\n   You have " + rows.map(item => `${item.row} times (${item.col} numbers)`).join(", ") + "."
-				+ "\n   After each guess, you will get additional hints of the number of correct digits (shown on the left) and the number of correct digits (shown on the right)."
-				+ "\n   Note: The number is formed with digits from 0 to 9, each digit appears only once and the number can start with 0."
-				+ "\n\n   {pn} rank <page>: view the ranking."
-				+ "\n   {pn} info [<uid> | <@tag> | <reply> | <empty>]: view your or other's ranking information."
-				+ "\n   {pn} reset: reset the ranking (only admin bot)."
-		}
+		description: "لعبة تخمين الأرقام",
+		category: "ألعاب",
+		guide: "{pn} [4 | 5 | 6] [single | multi]: إنشاء لعبة جديدة، حيث:\n    4 5 6 هو عدد أرقام الرقم المطلوب تخمينه، الافتراضي هو 4.\n    single | multi هو وضع اللعب، single لاعب واحد، multi لاعبين متعددين، الافتراضي هو single.\n   مثال:\n    {pn}\n    {pn} 4 single\n\n   طريقة اللعب: يرد اللاعب على رسالة البوت بالقواعد التالية:\n   لديك " + rows.map(item => `${item.row} محاولة (${item.col} أرقام)`).join("، ") + ".\n   بعد كل تخمين، ستحصل على تلميحات إضافية عن عدد الأرقام الصحيحة (على اليسار) وعدد الأرقام في المكان الصحيح (على اليمين).\n   ملاحظة: الرقم مكون من أرقام من 0 إلى 9، كل رقم يظهر مرة واحدة فقط ويمكن أن يبدأ بـ 0.\n\n   {pn} rank <صفحة>: عرض الترتيب.\n   {pn} info [<uid> | <@إشارة> | <رد> | <فارغ>]: عرض معلومات ترتيبك أو ترتيب شخص آخر.\n   {pn} reset: إعادة تعيين الترتيب (مشرف البوت فقط)."
 	},
 
 	langs: {
-		vi: {
-			charts: "🏆 | Bảng xếp hạng:\n%1",
-			pageInfo: "Trang %1/%2",
-			noScore: "⭕ | Hiện tại chưa có ai ghi điểm.",
-			noPermissionReset: "⚠️ | Bạn không có quyền reset bảng xếp hạng.",
-			notFoundUser: "⚠️ | Không tìm thấy người dùng có id %1 trong bảng xếp hạng.",
-			userRankInfo: "🏆 | Thông tin xếp hạng:\nTên: %1\nĐiểm: %2\nSố lần chơi: %3\nSố lần thắng: %4\n%5\nSố lần thua: %6\nTỉ lệ thắng: %7%\nTổng thời gian chơi: %8",
-			digits: "%1 chữ số: %2",
-			resetRankSuccess: "✅ | Reset bảng xếp hạng thành công.",
-			invalidCol: "⚠️ | Vui lòng nhập số chữ số của số cần đoán là 4, 5 hoặc 6",
-			invalidMode: "⚠️ | Vui lòng nhập chế độ chơi là single hoặc multi",
-			created: "✅ | Tạo bàn chơi thành công.",
-			gameName: "GAME ĐOÁN SỐ",
-			gameGuide: "⏳ | Cách chơi:\nBạn có %1 lần đoán.\nSau mỗi lần đoán, bạn sẽ nhận được thêm gợi ý là số lượng chữ số đúng (hiển thị bên trái) và số lượng chữ số đúng vị trí (hiển thị bên phải).",
-			gameNote: "📄 | Lưu ý:\nSố được hình thành với các chữ số từ 0 đến 9, mỗi chữ số xuất hiện duy nhất một lần và số có thể đứng đầu là 0.",
-			replyToPlayGame: "🎮 | Phản hồi tin nhắn hình ảnh bên dưới kèm theo %1 số bạn đoán để chơi game.",
-			invalidNumbers: "⚠️ | Vui lòng nhập %1 số bạn muốn đoán",
-			win: "🎉 | Chúc mừng bạn đã đoán đúng số %1 sau %2 lần đoán và nhận được %3 điểm thưởng.",
-			loss: "🤦‍♂️ | Bạn đã thua, số đúng là %1."
-		},
-		en: {
-			charts: "🏆 | Ranking:\n%1",
-			pageInfo: "Page %1/%2",
-			noScore: "⭕ | There is no one who has scored.",
-			noPermissionReset: "⚠️ | You do not have permission to reset the ranking.",
-			notFoundUser: "⚠️ | Could not find user with id %1 in the ranking.",
-			userRankInfo: "🏆 | Ranking information:\nName: %1\nScore: %2\nNumber of games: %3\nNumber of wins: %4\n%5\nNumber of losses: %6\nWin rate: %7%\nTotal play time: %8",
-			digits: "%1 digits: %2",
-			resetRankSuccess: "✅ | Reset the ranking successfully.",
-			invalidCol: "⚠️ | Please enter the number of digits of the number to guess is 4, 5 or 6",
-			invalidMode: "⚠️ | Please enter the game mode is single or multi",
-			created: "✅ | Create game successfully.",
-			gameName: "GUESS NUMBER GAME",
-			gameGuide: "⏳ | How to play:\nYou have %1 guesses.\nAfter each guess, you will get additional hints of the number of correct digits (shown on the left) and the number of correct digits (shown on the right).",
-			gameNote: "📄 | Note:\nThe number is formed with digits from 0 to 9, each digit appears only once and the number can start with 0.",
-			replyToPlayGame: "🎮 | Reply to the message below with the image of %1 numbers you guess to play the game.",
-			invalidNumbers: "⚠️ | Please enter %1 numbers you want to guess",
-			win: "🎉 | Congratulations you guessed the number %1 after %2 guesses and received %3 bonus points.",
-			loss: "🤦‍♂️ | You lost, the correct number is %1."
+		ar: {
+			charts: "🏆 | الترتيب:\n%1",
+			pageInfo: "صفحة %1/%2",
+			noScore: "⭕ | لا يوجد أحد سجل نقاط بعد.",
+			noPermissionReset: "⚠️ | ليس لديك صلاحية إعادة تعيين الترتيب.",
+			notFoundUser: "⚠️ | لم يتم العثور على مستخدم بالمعرف %1 في الترتيب.",
+			userRankInfo: "🏆 | معلومات الترتيب:\nالاسم: %1\nالنقاط: %2\nعدد المباريات: %3\nعدد الانتصارات: %4\n%5\nعدد الخسائر: %6\nنسبة الفوز: %7%\nإجمالي وقت اللعب: %8",
+			digits: "%1 أرقام: %2",
+			resetRankSuccess: "✅ | تم إعادة تعيين الترتيب بنجاح.",
+			invalidCol: "⚠️ | يرجى إدخال عدد الأرقام 4 أو 5 أو 6",
+			invalidMode: "⚠️ | يرجى إدخال وضع اللعب single أو multi",
+			created: "✅ | تم إنشاء اللعبة بنجاح.",
+			gameName: "لعبة تخمين الأرقام",
+			gameGuide: "⏳ | طريقة اللعب:\nلديك %1 تخمينات.\nبعد كل تخمين، ستحصل على تلميحات إضافية عن عدد الأرقام الصحيحة (على اليسار) وعدد الأرقام في المكان الصحيح (على اليمين).",
+			gameNote: "📄 | ملاحظة:\nالرقم مكون من أرقام من 0 إلى 9، كل رقم يظهر مرة واحدة فقط ويمكن أن يبدأ بـ 0.",
+			replyToPlayGame: "🎮 | رد على الرسالة أدناه مع صورة %1 أرقام تخمنها للعب اللعبة.",
+			invalidNumbers: "⚠️ | يرجى إدخال %1 أرقام تريد تخمينها",
+			win: "🎉 | مبروك! لقد خمنت الرقم %1 بعد %2 تخمينات وحصلت على %3 نقاط مكافأة.",
+			loss: "🤦‍♂️ | خسرت، الرقم الصحيح هو %1."
 		}
 	},
 
 	onStart: async function ({ message, event, getLang, commandName, args, globalData, usersData, role }) {
-		if (args[0] == "rank") {
+		if (args[0] == "rank" || args[0] == "ترتيب") {
 			const rankGuessNumber = await globalData.get("rankGuessNumber", "data", []);
 			if (!rankGuessNumber.length)
 				return message.reply(getLang("noScore"));
@@ -129,12 +77,12 @@ module.exports = {
 			const medals = ["🥇", "🥈", "🥉"];
 			const rankGuessNumberText = rankGuessNumberHandle.map((item, index) => {
 				const medal = medals[index] || index + 1;
-				return `${medal} ${item.userName} - ${item.winNumber} wins - ${item.lossNumber} losses`;
+				return `${medal} ${item.userName} - ${item.winNumber} فوز - ${item.lossNumber} خسارة`;
 			}).join("\n");
 
 			return message.reply(getLang("charts", rankGuessNumberText || getLang("noScore")) + "\n" + getLang("pageInfo", page, Math.ceil(rankGuessNumber.length / maxUserOnePage)));
 		}
-		else if (args[0] == "info") {
+		else if (args[0] == "info" || args[0] == "معلومات") {
 			const rankGuessNumber = await globalData.get("rankGuessNumber", "data", []);
 			let targetID;
 			if (Object.keys(event.mentions).length)
@@ -162,7 +110,7 @@ module.exports = {
 			const playTime = convertTime(userDataGuessNumber.wins.reduce((a, b) => a + b.timeSuccess, 0) + userDataGuessNumber.losses.reduce((a, b) => a + b.timeSuccess, 0));
 			return message.reply(getLang("userRankInfo", userName, pointsReceived, playNumber, winNumber, Object.keys(winInfo).map(item => `  + ${getLang("digits", item, winInfo[item])}`).join("\n"), lossNumber, winRate, playTime));
 		}
-		else if (args[0] == "reset") {
+		else if (args[0] == "reset" || args[0] == "إعادة") {
 			if (role < 2)
 				return message.reply(getLang("noPermissionReset"));
 			await globalData.set("rankGuessNumber", [], "data");
@@ -377,46 +325,6 @@ function drawWrappedText(ctx, text, startY, wrapWidth, lineHeight, boldFirstLine
 	return y;
 }
 
-
-function drawBorderSquareRadius(ctx, x, y, width, height, radius = 5, lineWidth = 1, strokeStyle = '#000', fill) {
-	ctx.save();
-	ctx.beginPath();
-	ctx.moveTo(x + radius, y);
-	ctx.lineTo(x + width - radius, y);
-	ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-	ctx.lineTo(x + width, y + height - radius);
-	ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-	ctx.lineTo(x + radius, y + height);
-	ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
-	ctx.lineTo(x, y + radius);
-	ctx.quadraticCurveTo(x, y, x + radius, y);
-	ctx.closePath();
-	if (fill) {
-		ctx.fillStyle = strokeStyle;
-		ctx.fill();
-	}
-	else {
-		ctx.strokeStyle = strokeStyle;
-		ctx.lineWidth = lineWidth;
-		ctx.stroke();
-	}
-	ctx.restore();
-}
-
-function drawWrappedText(ctx, text, startY, wrapWidth, lineHeight, boldFirstLine, margin, marginText) {
-	const splitText = text.split('\n');
-	let y = startY;
-	for (let i = 0; i < splitText.length; i++) {
-		if (i === 0 && boldFirstLine)
-			ctx.font = `bold ${ctx.font}`;
-		else
-			ctx.font = ctx.font.replace('bold ', '');
-		const height = wrapText(ctx, splitText[i], margin / 2, y, wrapWidth, lineHeight);
-		y += height + marginText;
-	}
-	return y;
-}
-
 function getPositionOfSquare(x, y, sizeOfOneSquare, distance, marginX, marginY, lineWidth, heightGameName) {
 	const xOutSide = marginX + x * (sizeOfOneSquare + distance) + lineWidth / 2;
 	const yOutSide = marginY + y * (sizeOfOneSquare + distance) + lineWidth / 2 + heightGameName;
@@ -436,219 +344,125 @@ function guessNumberGame(options) {
 	const { col, answer, gameName, gameGuide, gameNote } = options;
 	tryNumber--;
 	if (Array.isArray(numbers))
-		numbers = numbers.map(item => item.toString().trim());
-	if (typeof numbers == 'string')
-		numbers = numbers.split('').map(item => item.trim());
+		tryNumber++;
 
-	if (numbers.length)
-		options.allGuesss ? options.allGuesss.push(numbers) : options.allGuesss = [numbers];
-
-	row = row || 10;
-
-	const heightGameName = 40;
-	const yGameName = 150;
-	const sizeOfOneSquare = 100;
-	const lineWidth = 6;
-	const radius = 10;
+	const lineWidth = 4;
+	const sizeOfOneSquare = 80;
 	const distance = 10;
-	const marginX = 150;
-	const marginY = 100;
-	const backgroundColor = '#F0F2F5';
+	const marginX = 40;
+	const marginY = 30;
+	const radius = 10;
+	const fontSize = 40;
+	const lineHeightGuideText = 25;
+	const marginText = 10;
 
-	const fontGameGuide = '35px "Arial"';
-	const fontGameName = 'bold 50px "Arial"';
-	const fontNumbers = 'bold 60px "Arial"';
-	const fontSuggest = 'bold 40px "Arial"';
-	const fontResultWin = 'bold 150px "Times New Roman"';
-	const fontResultLose = 'bold 150px "Arial"';
-	const marginText = 2.9;
-	const lineHeightGuideText = 38;
+	if (!ctx) {
+		const heightGameName = 50;
+		const widthGuide = (sizeOfOneSquare + distance) * (col + 2) + marginX * 2 - distance;
+		const ctxTemp = createCanvas(1, 1).getContext('2d');
+		ctxTemp.font = `20px Arial`;
+		const heightGuide = wrapTextGetHeight(ctxTemp, gameGuide, widthGuide - marginX, lineHeightGuideText, marginText);
+		const heightNote = wrapTextGetHeight(ctxTemp, gameNote, widthGuide - marginX, lineHeightGuideText, marginText);
+		const width = widthGuide;
+		const height = (sizeOfOneSquare + distance) * row + marginY * 2 - distance + heightGameName + heightGuide + heightNote + marginText * 2;
 
-	if (!ctx && !canvas) {
-		const xCanvas = col * sizeOfOneSquare + (col - 1) * distance + marginX * 2;
-		canvas = createCanvas(1, 1);
+		canvas = createCanvas(width, height);
 		ctx = canvas.getContext('2d');
-		ctx.font = fontGameGuide;
 
-		const heightGameGuide = wrapTextGetHeight(ctx, gameGuide, xCanvas - marginX, lineHeightGuideText, marginText);
-		const heightGameNote = wrapTextGetHeight(ctx, gameNote, xCanvas - marginX, lineHeightGuideText, marginText);
-		const marginGuideNote = 10;
+		ctx.fillStyle = '#fff';
+		ctx.fillRect(0, 0, width, height);
 
-		canvas = createCanvas(
-			col * sizeOfOneSquare + (col - 1) * distance + marginX * 2,
-			heightGameName + row * sizeOfOneSquare + (row - 1) * distance + marginY * 2 + heightGameGuide + heightGameNote + marginGuideNote
-		);
-		ctx = canvas.getContext('2d');
-		ctx.fillStyle = backgroundColor;
-		ctx.fillRect(0, 0, canvas.width, canvas.height);
+		ctx.fillStyle = '#000';
+		ctx.font = `bold 30px Arial`;
+		ctx.fillText(gameName, marginX / 2, marginY);
 
-		// draw game name
-		ctx.font = fontGameName;
-		ctx.fillStyle = '#404040';
-		ctx.textAlign = 'center';
-		ctx.textBaseline = 'middle';
-		ctx.fillText(gameName, canvas.width / 2, yGameName / 2);
+		ctx.font = `20px Arial`;
+		const yGuide = drawWrappedText(ctx, gameGuide, marginY + heightGameName - 15, width - marginX, lineHeightGuideText, true, marginX, marginText);
+		drawWrappedText(ctx, gameNote, yGuide, width - marginX, lineHeightGuideText, true, marginX, marginText);
 
-		// draw guide
-		ctx.font = fontGameGuide;
-		ctx.fillStyle = '#404040';
-		ctx.textAlign = 'left';
-		const yGuide = heightGameName + marginY / 2 + row * (sizeOfOneSquare + distance) + marginY / 2 + lineHeightGuideText * 2;
-
-		// draw note
-		const yNote = drawWrappedText(ctx, gameGuide, yGuide, canvas.width - marginX, lineHeightGuideText, true, marginX, marginText);
-
-		drawWrappedText(ctx, gameNote, yNote + 10, canvas.width - marginX, lineHeightGuideText, true, marginX, marginText);
-
-		// draw all squares
-		for (let i = 0; i < col; i++) {
-			for (let j = 0; j < row; j++) {
-				const { xOutSide, yOutSide, xInSide, yInSide } = getPositionOfSquare(i, j, sizeOfOneSquare, distance, marginX, marginY, lineWidth, heightGameName);
-				drawBorderSquareRadius(
-					ctx,
-					xOutSide,
-					yOutSide,
-					sizeOfOneSquare,
-					sizeOfOneSquare,
-					radius,
-					lineWidth,
-					'#919191',
-					true
-				);
-
-				drawBorderSquareRadius(
-					ctx,
-					xInSide,
-					yInSide,
-					sizeOfOneSquare - lineWidth * 2,
-					sizeOfOneSquare - lineWidth * 2,
-					radius / 2,
-					lineWidth,
-					backgroundColor,
-					true
-				);
-			}
-		}
-	}
-
-	if (!canvasHightLight) {
-		// if there's no canvasHightLight, then of course ctxHightLight, canvasNumbers and ctxNumbers doesn't either
-		canvasHightLight = createCanvas(canvas.width, canvas.height);
-		ctxHightLight = canvasHightLight.getContext('2d');
-		canvasNumbers = createCanvas(canvas.width, canvas.height);
+		const widthNumbers = (sizeOfOneSquare + distance) * col + marginX - distance;
+		const heightNumbers = (sizeOfOneSquare + distance) * row + marginY - distance;
+		canvasNumbers = createCanvas(widthNumbers, heightNumbers);
 		ctxNumbers = canvasNumbers.getContext('2d');
-	}
 
-	// draw numbers
-	let isWin = null;
-	if (numbers.length) {
-		ctxNumbers.font = fontNumbers;
-		ctxNumbers.fillStyle = '#f0f0f0';
-		ctxNumbers.textAlign = 'center';
-		ctxNumbers.textBaseline = 'middle';
-		for (let i = 0; i < col; i++) {
-			const { xOutSide, yOutSide, xInSide, yInSide } = getPositionOfSquare(i, tryNumber, sizeOfOneSquare, distance, marginX, marginY, lineWidth, heightGameName);
-			// draw background of square
-			drawBorderSquareRadius(
-				ctx,
-				xInSide,
-				yInSide,
-				sizeOfOneSquare - lineWidth * 2,
-				sizeOfOneSquare - lineWidth * 2,
-				radius / 2,
-				lineWidth,
-				'#a3a3a3',
-				true
-			);
-			// draw number
-			const x = xOutSide + sizeOfOneSquare / 2;
-			const y = yOutSide + sizeOfOneSquare / 2;
-			ctxNumbers.fillText(numbers[i], x, y);
+		canvasHightLight = createCanvas(widthNumbers, heightNumbers);
+		ctxHightLight = canvasHightLight.getContext('2d');
 
-			// yellow || green 
-			if (
-				answer.includes(numbers[i]) // yellow (correct number)
-				|| numbers[i] === answer[i] // green (correct number and position)
-			) {
-				drawBorderSquareRadius(
-					ctxHightLight,
-					xOutSide,
-					yOutSide,
-					sizeOfOneSquare,
-					sizeOfOneSquare,
-					radius,
-					lineWidth,
-					numbers[i] == answer[i] ? '#417642' : '#A48502',
-					true
-				);
-				drawBorderSquareRadius(
-					ctxHightLight,
-					xInSide,
-					yInSide,
-					sizeOfOneSquare - lineWidth * 2,
-					sizeOfOneSquare - lineWidth * 2,
-					radius / 2,
-					lineWidth,
-					numbers[i] == answer[i] ? '#57AC58' : '#E9BE00',
-					true
-				);
+		for (let y = 0; y < row; y++) {
+			for (let x = 0; x < col; x++) {
+				const { xOutSide, yOutSide } = getPositionOfSquare(x, y, sizeOfOneSquare, distance, 0, 0, lineWidth, 0);
+				drawBorderSquareRadius(ctxNumbers, xOutSide, yOutSide, sizeOfOneSquare, sizeOfOneSquare, radius, lineWidth, '#000');
 			}
 		}
-
-		// After each guess, you will get additional hints of the number of correct digits (shown on the left) and the number of correct digits (shown on the right).
-		let numberRight = 0;
-		let numberRightPosition = 0;
-		answer.split('').forEach((item, index) => {
-			if (numbers.includes(item))
-				numberRight++;
-			if (item == numbers[index])
-				numberRightPosition++;
-		});
-
-		ctx.font = fontSuggest;
-		ctx.fillText(numberRight, marginX / 2, marginY + sizeOfOneSquare / 2 + heightGameName + tryNumber * (sizeOfOneSquare + distance));
-		ctx.fillText(numberRightPosition, marginX + col * (sizeOfOneSquare) + distance * (col - 1) + marginX / 2, marginY + sizeOfOneSquare / 2 + heightGameName + tryNumber * (sizeOfOneSquare + distance));
-
-		if (
-			numberRight == answer.length && numberRightPosition == answer.length
-			|| tryNumber + 1 == row
-		) {
-			isWin = numberRight == answer.length && numberRightPosition == answer.length;
-			ctx.save();
-			ctx.drawImage(canvasHightLight, 0, 0);
-			ctx.drawImage(canvasNumbers, 0, 0);
-
-			ctx.font = isWin ? fontResultWin : fontResultLose;
-			ctx.fillStyle = isWin ? '#005900' : '#590000';
-			// rotate -45 degree
-			ctx.globalAlpha = 0.4;
-			ctx.translate(canvas.width / 2, marginY + heightGameName + (row * (sizeOfOneSquare + distance)) / 2);
-			ctx.textAlign = 'center';
-			ctx.textBaseline = 'middle';
-			ctx.rotate(-45 * Math.PI / 180);
-			ctx.fillText(isWin ? 'YOU WIN' : answer.split('').join(' '), 0, 0);
-			ctx.restore();
-		}
-		else {
-			ctx.drawImage(canvasNumbers, 0, 0);
-		}
 	}
 
-	tryNumber++;
+	let isWin = null;
+	if (Array.isArray(numbers) && numbers.length === col) {
+		let countCorrect = 0;
+		let countCorrectPosition = 0;
+		for (let i = 0; i < col; i++) {
+			if (answer.includes(numbers[i]))
+				countCorrect++;
+			if (answer[i] === numbers[i])
+				countCorrectPosition++;
+		}
 
-	const imageStream = canvas.createPNGStream();
-	imageStream.path = `guessNumber${Date.now()}.png`;
+		if (countCorrectPosition === col)
+			isWin = true;
+		else if (tryNumber >= row)
+			isWin = false;
+
+		for (let x = 0; x < col; x++) {
+			const { xOutSide, yOutSide, xInSide, yInSide } = getPositionOfSquare(x, tryNumber - 1, sizeOfOneSquare, distance, 0, 0, lineWidth, 0);
+			const fillColor = isWin === true ? '#00ff00' : (isWin === false ? '#ff0000' : '#fff');
+			drawBorderSquareRadius(ctxNumbers, xOutSide, yOutSide, sizeOfOneSquare, sizeOfOneSquare, radius, lineWidth, fillColor, true);
+			drawBorderSquareRadius(ctxNumbers, xOutSide, yOutSide, sizeOfOneSquare, sizeOfOneSquare, radius, lineWidth, '#000');
+
+			ctxNumbers.fillStyle = '#000';
+			ctxNumbers.font = `bold ${fontSize}px Arial`;
+			ctxNumbers.fillText(numbers[x], xInSide + sizeOfOneSquare / 2 - fontSize / 2 - 5, yInSide + sizeOfOneSquare / 2 + fontSize / 2 - 10);
+		}
+
+		const { xOutSide: xOutSideLeft, yOutSide: yOutSideLeft } = getPositionOfSquare(col, tryNumber - 1, sizeOfOneSquare, distance, 0, 0, lineWidth, 0);
+		drawBorderSquareRadius(ctxHightLight, xOutSideLeft, yOutSideLeft, sizeOfOneSquare, sizeOfOneSquare, radius, lineWidth, '#87CEEB', true);
+		drawBorderSquareRadius(ctxHightLight, xOutSideLeft, yOutSideLeft, sizeOfOneSquare, sizeOfOneSquare, radius, lineWidth, '#000');
+		ctxHightLight.fillStyle = '#000';
+		ctxHightLight.font = `bold ${fontSize}px Arial`;
+		ctxHightLight.fillText(countCorrect, xOutSideLeft + sizeOfOneSquare / 2 - fontSize / 2 + 5, yOutSideLeft + sizeOfOneSquare / 2 + fontSize / 2 - 10);
+
+		const { xOutSide: xOutSideRight, yOutSide: yOutSideRight } = getPositionOfSquare(col + 1, tryNumber - 1, sizeOfOneSquare, distance, 0, 0, lineWidth, 0);
+		drawBorderSquareRadius(ctxHightLight, xOutSideRight, yOutSideRight, sizeOfOneSquare, sizeOfOneSquare, radius, lineWidth, '#FFD700', true);
+		drawBorderSquareRadius(ctxHightLight, xOutSideRight, yOutSideRight, sizeOfOneSquare, sizeOfOneSquare, radius, lineWidth, '#000');
+		ctxHightLight.fillStyle = '#000';
+		ctxHightLight.font = `bold ${fontSize}px Arial`;
+		ctxHightLight.fillText(countCorrectPosition, xOutSideRight + sizeOfOneSquare / 2 - fontSize / 2 + 5, yOutSideRight + sizeOfOneSquare / 2 + fontSize / 2 - 10);
+	}
+
+	const heightGameName = 50;
+	const widthGuide = (sizeOfOneSquare + distance) * (col + 2) + marginX * 2 - distance;
+	const ctxTemp = createCanvas(1, 1).getContext('2d');
+	ctxTemp.font = `20px Arial`;
+	const heightGuide = wrapTextGetHeight(ctxTemp, gameGuide, widthGuide - marginX, lineHeightGuideText, marginText);
+	const heightNote = wrapTextGetHeight(ctxTemp, gameNote, widthGuide - marginX, lineHeightGuideText, marginText);
+
+	ctx.drawImage(canvasNumbers, marginX / 2, marginY + heightGameName + heightGuide + heightNote + marginText);
+	ctx.drawImage(canvasHightLight, marginX / 2, marginY + heightGameName + heightGuide + heightNote + marginText);
 
 	return {
-		...options,
-		imageStream,
+		imageStream: canvas.createPNGStream(),
+		isWin,
+		tryNumber: tryNumber + 1,
+		answer,
+		col,
+		row,
 		ctx,
 		canvas,
-		tryNumber: tryNumber + 1,
-		isWin,
+		ctxNumbers,
+		canvasNumbers,
 		ctxHightLight,
 		canvasHightLight,
-		ctxNumbers,
-		canvasNumbers
+		gameName,
+		gameGuide,
+		gameNote
 	};
 }

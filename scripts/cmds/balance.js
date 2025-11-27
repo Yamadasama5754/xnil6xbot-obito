@@ -6,49 +6,15 @@ module.exports = {
     author: "Yamada KJ",
     countDown: 3,
     role: 0,
-    description: {
-      en: "💰 Premium Economy System with Stylish Display",
-      ar: "💰 نظام اقتصادي متميز بعرض أنيق"
-    },
+    description: "💰 نظام اقتصادي متميز بعرض أنيق",
     category: "اقتصاد",
-    guide: {
-      en: "╔════✦ Usage Guide ✦════╗\n"
-        + "║ ➤ {pn} - Check your balance\n"
-        + "║ ➤ {pn} @user - Check others\n"
-        + "║ ➤ {pn} t @user amount - Transfer\n"
-        + "║ ➤ {pn} [reply] - Check replied user's balance\n"
-        + "╚══════════════════════╝",
-      ar: "╔════✦ دليل الاستخدام ✦════╗\n"
-        + "║ ➤ {pn} - تحقق من رصيدك\n"
-        + "║ ➤ {pn} @مستخدم - تحقق من رصيد غيرك\n"
-        + "║ ➤ {pn} t @مستخدم المبلغ - تحويل أموال\n"
-        + "║ ➤ {pn} [رد] - تحقق من رصيد المستخدم بالرد\n"
-        + "╚══════════════════════╝"
-    }
+    guide: "╔════✦ دليل الاستخدام ✦════╗\n║ ➤ {pn} - تحقق من رصيدك\n║ ➤ {pn} @مستخدم - تحقق من رصيد غيرك\n║ ➤ {pn} t @مستخدم المبلغ - تحويل أموال\n║ ➤ {pn} [رد] - تحقق من رصيد المستخدم بالرد\n╚══════════════════════╝"
   },
 
   langs: {
-    en: {
-      invalidUsage: "Invalid Usage",
-      usageGuide: "Use: {prefix},
-                ar: {}balance t @user amount",
-      error: "Error",
-      amountPositive: "Amount must be positive.",
-      cantSendSelf: "You can't send money to yourself.",
-      insufficientBalance: "Insufficient Balance",
-      needMore: "You need {amount} more.",
-      transferComplete: "Transfer Complete",
-      to: "To: {name}",
-      sent: "Sent: {amount}",
-      newBalance: "Your New Balance: {amount}",
-      userBalance: "{name}'s Balance",
-      balance: "💰 Balance: {amount}",
-      userBalances: "User Balances",
-      yourBalance: "Your Balance"
-    },
     ar: {
       invalidUsage: "استخدام غير صحيح",
-      usageGuide: "استخدم: {prefix}balance t @مستخدم المبلغ",
+      usageGuide: "استخدم: {prefix}رصيد t @مستخدم المبلغ",
       error: "خطأ",
       amountPositive: "يجب أن يكون المبلغ إيجابياً.",
       cantSendSelf: "لا يمكنك إرسال أموال لنفسك.",

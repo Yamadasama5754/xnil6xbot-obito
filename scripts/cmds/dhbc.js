@@ -3,40 +3,27 @@ const { getStreamFromURL } = global.utils;
 
 module.exports = {
 	config: {
-		name: "dhbc",
+		name: "تخمين_الكلمة",
+		aliases: ["dhbc", "guessword"],
 		version: "1.3",
-		author: "NTKhang",
+		author: "Yamada KJ",
 		countDown: 5,
 		role: 0,
-		description: {
-			vi: "chơi game đuổi hình bắt chữ",
-			en: "play game catch the word",
-			ar: "play game catch the word - أمر البوت"},
-		category: "game",
-		guide: {
-			en: "{pn,
-			ar: ",
-			ar: "{pn}"استخدم: {pn}"}"
-		},
+		description: "لعبة تخمين الكلمة من الصور",
+		category: "ألعاب",
+		guide: "{pn}",
 		envConfig: {
 			reward: 1000
 		}
 	},
 
 	langs: {
-		vi: {
-			reply: "Hãy reply tin nhắn này với câu trả lời\n%1",
-			isSong: "Đây là tên bài hát của ca sĩ %1",
-			notPlayer: "⚠️ Bạn không phải là người chơi của câu hỏi này",
-			correct: "🎉 Chúc mừng bạn đã trả lời đúng và nhận được %1$",
-			wrong: "⚠️ Bạn đã trả lời sai"
-		},
-		en: {
-			reply: "Please reply this message with the answer\n%1",
-			isSong: "This is the name of the song of the singer %1",
-			notPlayer: "⚠️ You are not the player of this question",
-			correct: "🎉 Congratulations you have answered correctly and received %1$",
-			wrong: "⚠️ You have answered incorrectly"
+		ar: {
+			reply: "رد على هذه الرسالة بالإجابة\n%1",
+			isSong: "هذا اسم أغنية للمغني %1",
+			notPlayer: "⚠️ أنت لست اللاعب في هذا السؤال",
+			correct: "🎉 مبروك! أجبت بشكل صحيح وحصلت على %1$",
+			wrong: "⚠️ إجابة خاطئة"
 		}
 	},
 

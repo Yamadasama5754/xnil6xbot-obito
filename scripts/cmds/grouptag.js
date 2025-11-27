@@ -1,80 +1,33 @@
 module.exports = {
 	config: {
-		name: "grouptag",
-		aliases: ["grtag"],
+		name: "وسم_المجموعة",
+		aliases: ["grouptag", "grtag", "وسم"],
 		version: "1.5",
-		author: "NTKhang",
+		author: "Yamada KJ",
 		countDown: 5,
 		role: 0,
-		description: {
-			vi: "Tag thành viên theo nhóm",
-			en: "Tag members by group",
-			ar: "أمر"},
-		category: "info",
-		guide: {
-			vi: "   {pn} add <groupTagName> <@tags>: dùng để thêm nhóm tag mới hoặc thêm thành viên vào nhóm tag đã có"
-				+ "\n   Ví dụ:"
-				+ "\n    {pn} add TEAM1 @tag1 @tag2"
-				+ "\n\n   {pn} del <groupTagName> <@tags>: dùng để xóa các thành viên được tag khỏi nhóm tag <groupTagName>"
-				+ "\n   Ví dụ:"
-				+ "\n    {pn} del TEAM1 @tag1 @tag2"
-				+ "\n\n   {pn} remove <groupTagName>: dùng để xóa nhóm tag"
-				+ "\n   Ví dụ:"
-				+ "\n    {pn} remove TEAM1"
-				+ "\n\n	 {pn} tag <groupTagName>: dùng để tag nhóm tag"
-				+ "\n\n   {pn} rename <groupTagName> | <newGroupTagName>: dùng để đổi tên nhóm tag"
-				+ "\n\n   {pn} [list | all]: dùng để xem danh sách các nhóm tag trong nhóm chat của bạn"
-				+ "\n\n   {pn} info <groupTagName>: dùng để xem thông tin của nhóm tag",
-			en: "   {pn} add <groupTagName> <@tags>: use to add new group tag or add members to group tag"
-				+ "\n   Example:"
-				+ "\n    {pn} add TEAM1 @tag1 @tag2"
-				+ "\n\n   {pn} del <groupTagName> <@tags>: use to remove members from group tag"
-				+ "\n   Example:"
-				+ "\n    {pn} del TEAM1 @tag1 @tag2"
-				+ "\n\n   {pn} remove <groupTagName>: use to remove group tag"
-				+ "\n   Example:"
-				+ "\n    {pn} remove TEAM1"
-				+ "\n\n	 {pn} tag <groupTagName>: use to tag group tag"
-				+ "\n\n   {pn} rename <groupTagName> | <newGroupTagName>: use to rename group tag"
-				+ "\n\n   {pn} [list | all]: use to view list of group tag in your group chat"
-				+ "\n\n   {pn} info <groupTagName>: use to view info of group tag"
-		}
+		description: "وسم الأعضاء حسب المجموعة",
+		category: "معلومات",
+		guide: "{pn} add <اسم المجموعة> <@إشارات>: لإضافة مجموعة وسم جديدة أو إضافة أعضاء إلى مجموعة وسم موجودة\n   مثال:\n    {pn} add TEAM1 @tag1 @tag2\n\n   {pn} del <اسم المجموعة> <@إشارات>: لإزالة أعضاء من مجموعة الوسم\n   مثال:\n    {pn} del TEAM1 @tag1 @tag2\n\n   {pn} remove <اسم المجموعة>: لحذف مجموعة الوسم\n   مثال:\n    {pn} remove TEAM1\n\n  {pn} tag <اسم المجموعة>: لوسم مجموعة الوسم\n\n   {pn} rename <الاسم القديم> | <الاسم الجديد>: لإعادة تسمية مجموعة الوسم\n\n   {pn} [list | all]: لعرض قائمة مجموعات الوسم\n\n   {pn} info <اسم المجموعة>: لعرض معلومات مجموعة الوسم"
 	},
 
 	langs: {
-		vi: {
-			noGroupTagName: "Vui lòng nhập tên nhóm tag",
-			noMention: "Bạn chưa tag thành viên nào để thêm vào nhóm tag",
-			addedSuccess: "Đã thêm các thành viên sau vào nhóm tag \"%1\":\n%2",
-			addedSuccess2: "Đã thêm nhóm tag \"%1\" với các thành viên sau:\n%2",
-			existedInGroupTag: "Các thành viên sau:\n%1\nđã có trong nhóm tag \"%2\" từ trước",
-			notExistedInGroupTag: "Các thành viên sau:\n%1\nkhông có trong nhóm tag \"%2\"",
-			noExistedGroupTag: "Nhóm tag \"%1\" không tồn tại trong box chat của bạn",
-			noExistedGroupTag2: "Box chat của bạn chưa thêm nhóm tag nào",
-			noMentionDel: "Vui lòng tag thành viên muốn xóa khỏi nhóm tag \"%1\"",
-			deletedSuccess: "Đã xóa các thành viên sau:\n%1\nkhỏi nhóm tag \"%2\"",
-			deletedSuccess2: "Đã xóa nhóm tag \"%1\"",
-			tagged: "Tag nhóm \"%1\":\n%2",
-			noGroupTagName2: "Vui lòng nhập tên nhóm tag cũ và tên mới, cách nhau bằng dấu \"|\"",
-			renamedSuccess: "Đã đổi tên nhóm tag \"%1\" thành \"%2\"",
-			infoGroupTag: "📑 | Tên nhóm: %1\n👥 | Số thành viên: %2\n👨‍👩‍👧‍👦 | Danh sách thành viên:\n %3"
-		},
-		en: {
-			noGroupTagName: "Please enter group tag name",
-			noMention: "You haven't tagged any member to add to group tag",
-			addedSuccess: "Added members to group tag \"%1\":\n%2",
-			addedSuccess2: "Added group tag \"%1\" with members:\n%2",
-			existedInGroupTag: "Members:\n%1\nalready existed in group tag \"%2\"",
-			notExistedInGroupTag: "Members:\n%1\ndoesn't exist in group tag \"%2\"",
-			noExistedGroupTag: "Group tag \"%1\" doesn't exist in your group chat",
-			noExistedGroupTag2: "Your group chat hasn't added any group tag",
-			noMentionDel: "Please tag members to remove from group tag \"%1\"",
-			deletedSuccess: "Deleted members:\n%1\nfrom group tag \"%2\"",
-			deletedSuccess2: "Deleted group tag \"%1\"",
-			tagged: "Tag group \"%1\":\n%2",
-			noGroupTagName2: "Please enter old group tag name and new group tag name, separated by \"|\"",
-			renamedSuccess: "Renamed group tag \"%1\" to \"%2\"",
-			infoGroupTag: "📑 | Group name: %1\n👥 | Number of members: %2\n👨‍👩‍👧‍👦 | List of members:\n %3"
+		ar: {
+			noGroupTagName: "يرجى إدخال اسم مجموعة الوسم",
+			noMention: "لم تقم بإشارة أي عضو لإضافته إلى مجموعة الوسم",
+			addedSuccess: "تمت إضافة الأعضاء التالية إلى مجموعة الوسم \"%1\":\n%2",
+			addedSuccess2: "تمت إضافة مجموعة الوسم \"%1\" مع الأعضاء التالية:\n%2",
+			existedInGroupTag: "الأعضاء:\n%1\nموجودون بالفعل في مجموعة الوسم \"%2\"",
+			notExistedInGroupTag: "الأعضاء:\n%1\nغير موجودين في مجموعة الوسم \"%2\"",
+			noExistedGroupTag: "مجموعة الوسم \"%1\" غير موجودة في محادثتك",
+			noExistedGroupTag2: "لم تتم إضافة أي مجموعة وسم في محادثتك",
+			noMentionDel: "يرجى إشارة الأعضاء لإزالتهم من مجموعة الوسم \"%1\"",
+			deletedSuccess: "تم حذف الأعضاء:\n%1\nمن مجموعة الوسم \"%2\"",
+			deletedSuccess2: "تم حذف مجموعة الوسم \"%1\"",
+			tagged: "وسم المجموعة \"%1\":\n%2",
+			noGroupTagName2: "يرجى إدخال اسم مجموعة الوسم القديم والجديد، مفصولين بـ \"|\"",
+			renamedSuccess: "تمت إعادة تسمية مجموعة الوسم \"%1\" إلى \"%2\"",
+			infoGroupTag: "📑 | اسم المجموعة: %1\n👥 | عدد الأعضاء: %2\n👨‍👩‍👧‍👦 | قائمة الأعضاء:\n %3"
 		}
 	},
 
@@ -85,7 +38,8 @@ module.exports = {
 		const groupTags = await threadsData.get(threadID, "data.groupTags", []);
 
 		switch (args[0]) {
-			case "add": {
+			case "add":
+			case "إضافة": {
 				const mentionsID = Object.keys(event.mentions);
 				const content = (args.slice(1) || []).join(" ");
 				const groupTagName = content.slice(0, content.indexOf(event.mentions[mentionsID[0]]) - 1).trim();
@@ -128,7 +82,9 @@ module.exports = {
 				break;
 			}
 			case "list":
-			case "all": {
+			case "all":
+			case "قائمة":
+			case "الكل": {
 				if (args[1]) {
 					const groupTagName = args.slice(1).join(" ");
 					if (!groupTagName)
@@ -142,7 +98,8 @@ module.exports = {
 				message.reply(msg || getLang("noExistedGroupTag2"));
 				break;
 			}
-			case "info": {
+			case "info":
+			case "معلومات": {
 				const groupTagName = args.slice(1).join(" ");
 				if (!groupTagName)
 					return message.reply(getLang("noGroupTagName"));
@@ -151,7 +108,8 @@ module.exports = {
 					return message.reply(getLang("noExistedGroupTag", groupTagName));
 				return showInfoGroupTag(message, groupTag, getLang);
 			}
-			case "del": {
+			case "del":
+			case "حذف": {
 				const content = (args.slice(1) || []).join(" ");
 				const mentionsID = Object.keys(event.mentions);
 				const groupTagName = content.slice(0, content.indexOf(mentions[mentionsID[0]]) - 1).trim();
@@ -184,7 +142,8 @@ module.exports = {
 				break;
 			}
 			case "remove":
-			case "rm": {
+			case "rm":
+			case "إزالة": {
 				const content = (args.slice(1) || []).join(" ");
 				const groupTagName = content.trim();
 				if (!groupTagName)
@@ -197,7 +156,8 @@ module.exports = {
 				message.reply(getLang("deletedSuccess2", groupTagName));
 				break;
 			}
-			case "rename": {
+			case "rename":
+			case "تسمية": {
 				const content = (args.slice(1) || []).join(" ");
 				const [oldGroupTagName, newGroupTagName] = content.split("|").map(str => str.trim());
 				if (!oldGroupTagName || !newGroupTagName)
@@ -211,8 +171,9 @@ module.exports = {
 				break;
 			}
 			case "tag":
+			case "وسم":
 			default: {
-				const content = (args.slice(args[0] === "tag" ? 1 : 0) || []).join(" ");
+				const content = (args.slice(args[0] === "tag" || args[0] === "وسم" ? 1 : 0) || []).join(" ");
 				const groupTagName = content.trim();
 				if (!groupTagName)
 					return message.reply(getLang("noGroupTagName"));

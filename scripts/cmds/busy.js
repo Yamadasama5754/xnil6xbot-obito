@@ -3,40 +3,25 @@ if (!global.client.busyList)
 
 module.exports = {
 	config: {
-		name: "busy",
+		name: "مشغول",
+		aliases: ["busy", "عدم_ازعاج"],
 		version: "1.6",
-		author: "NTKhang",
+		author: "Yamada KJ",
 		countDown: 5,
 		role: 0,
-		description: {
-			vi: "bật chế độ không làm phiền, khi bạn được tag bot sẽ thông báo",
-			en: "turn on do not disturb mode, when you are tagged bot will notify",
-			ar: "أمر"},
-		category: "box chat",
-		guide: {
-			vi: "   {pn} [để trống | <lý do>]: bật chế độ không làm phiền"
-				+ "\n   {pn} off: tắt chế độ không làm phiền",
-			en: "   {pn} [empty | <reason>]: turn on do not disturb mode"
-				+ "\n   {pn} off: turn off do not disturb mode"
-		}
+		description: "تشغيل وضع عدم الإزعاج، عند الإشارة إليك سيقوم البوت بالإخطار",
+		category: "المحادثة",
+		guide: "{pn} [فارغ | السبب]: تشغيل وضع عدم الإزعاج\n{pn} off: إيقاف وضع عدم الإزعاج"
 	},
 
 	langs: {
-		vi: {
-			turnedOff: "✅ | Đã tắt chế độ không làm phiền",
-			turnedOn: "✅ | Đã bật chế độ không làm phiền",
-			turnedOnWithReason: "✅ | Đã bật chế độ không làm phiền với lý do: %1",
-			turnedOnWithoutReason: "✅ | Đã bật chế độ không làm phiền",
-			alreadyOn: "Hiện tại người dùng %1 đang bận",
-			alreadyOnWithReason: "Hiện tại người dùng %1 đang bận với lý do: %2"
-		},
-		en: {
-			turnedOff: "✅ | Do not disturb mode has been turned off",
-			turnedOn: "✅ | Do not disturb mode has been turned on",
-			turnedOnWithReason: "✅ | Do not disturb mode has been turned on with reason: %1",
-			turnedOnWithoutReason: "✅ | Do not disturb mode has been turned on",
-			alreadyOn: "User %1 is currently busy",
-			alreadyOnWithReason: "User %1 is currently busy with reason: %2"
+		ar: {
+			turnedOff: "✅ تم إيقاف وضع عدم الإزعاج",
+			turnedOn: "✅ تم تشغيل وضع عدم الإزعاج",
+			turnedOnWithReason: "✅ تم تشغيل وضع عدم الإزعاج بسبب: %1",
+			turnedOnWithoutReason: "✅ تم تشغيل وضع عدم الإزعاج",
+			alreadyOn: "المستخدم %1 مشغول حالياً",
+			alreadyOnWithReason: "المستخدم %1 مشغول حالياً بسبب: %2"
 		}
 	},
 

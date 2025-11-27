@@ -1,30 +1,17 @@
 module.exports = {
 	config: {
-		name: "kick",
+		name: "طرد",
+		aliases: ["kick", "إزالة_عضو"],
 		version: "1.3",
-		author: "NTKhang",
+		author: "Yamada KJ",
 		countDown: 5,
 		role: 1,
-		description: {
-			vi: "Kick thành viên khỏi box chat",
-			en: "Kick member out of chat box",
-			ar: "طرد عضو من المحادثة"
-		},
-		category: "box chat",
-		guide: {
-			vi: "   {pn} @tags: dùng để kick những người được tag",
-			en: "   {pn} @tags: use to kick members who are tagged",
-			ar: "   {pn} @إشارات: لطرد الأعضاء المُشار إليهم"
-		}
+		description: "طرد عضو من المحادثة",
+		category: "المحادثة",
+		guide: "{pn} @إشارات: لطرد الأعضاء المُشار إليهم"
 	},
 
 	langs: {
-		vi: {
-			needAdmin: "Vui lòng thêm quản trị viên cho bot trước khi sử dụng tính năng này"
-		},
-		en: {
-			needAdmin: "Please add admin for bot before using this feature"
-		},
 		ar: {
 			needAdmin: "يرجى إضافة صلاحية مشرف للبوت قبل استخدام هذه الميزة"
 		}

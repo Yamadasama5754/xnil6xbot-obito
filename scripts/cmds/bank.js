@@ -6,38 +6,12 @@ module.exports = {
     author: "Yamada KJ",
     countDown: 5,
     role: 0,
-    description: {
-      en: "Bank system with wallet, bank, loan, etc.",
-      ar: "نظام البنك مع المحفظة والقروض وغيرها"
-    },
+    description: "نظام البنك مع المحفظة والقروض وغيرها",
     category: "اقتصاد",
-    guide: {
-      en: "{pn} balance\n{pn} deposit <amount>\n{pn} withdraw <amount>\n{pn} loan\n{pn} preloan\n{pn} top",
-      ar: "{pn} balance - عرض الرصيد\n{pn} deposit <مبلغ> - إيداع\n{pn} withdraw <مبلغ> - سحب\n{pn} loan - قرض\n{pn} preloan - سداد القرض\n{pn} top - الترتيب"
-    }
+    guide: "{pn} balance - عرض الرصيد\n{pn} deposit <مبلغ> - إيداع\n{pn} withdraw <مبلغ> - سحب\n{pn} loan - قرض\n{pn} preloan - سداد القرض\n{pn} top - الترتيب"
   },
 
   langs: {
-    en: {
-      commands: "🏦 Bank Commands:\n• balance\n• deposit <amount>\n• withdraw <amount>\n• loan\n• preloan\n• top",
-      summary: "🏦 Your Bank Account Summary:\n💰 Wallet: {wallet},
-                ar: {}\n🏦 Bank: {bank}\n💳 Loan: {loan}",
-      invalidAmount: "❌ Provide a valid amount to deposit.",
-      notEnoughWallet: "❌ You only have {amount} in your wallet.",
-      deposited: "✅ Deposited {amount}\n🏦 Bank: {bank}\n💰 Wallet: {wallet}",
-      invalidWithdraw: "❌ Provide a valid amount to withdraw.",
-      notEnoughBank: "❌ You only have {amount} in your bank.",
-      withdrew: "✅ Withdrew {amount}\n💰 Wallet: {wallet}\n🏦 Bank: {bank}",
-      existingLoan: "⛔ You already have a loan of {amount}. Repay it first.",
-      loanApproved: "✅ Loan approved: {amount} added to your wallet. Remember to repay it!",
-      noLoan: "✅ You have no active loan.",
-      needMoreForLoan: "❌ You need {amount} to repay.",
-      loanRepaid: "✅ Loan fully repaid. You are debt-free!",
-      noUsersInBank: "❌ No users found with money in bank.",
-      topUsers: "🏆 Top 10 Users by Bank Balance:\n",
-      invalidCommand: "❓ Invalid subcommand. Try: balance, deposit, withdraw, loan, preloan, top",
-      error: "❌ An error occurred. Please try again later."
-    },
     ar: {
       commands: "🏦 أوامر البنك:\n• balance - الرصيد\n• deposit <مبلغ> - إيداع\n• withdraw <مبلغ> - سحب\n• loan - قرض\n• preloan - سداد القرض\n• top - الترتيب",
       summary: "🏦 ملخص حسابك البنكي:\n💰 المحفظة: {wallet}\n🏦 البنك: {bank}\n💳 القرض: {loan}",
@@ -62,11 +36,11 @@ module.exports = {
   formatMoney(amount) {
     if (amount === 0) return "0";
     const abs = Math.abs(amount);
-    if (abs >= 1e15) return (amount / 1e15).toFixed(2).replace(/\.00$/, "") + "qt";
-    if (abs >= 1e12) return (amount / 1e12).toFixed(2).replace(/\.00$/, "") + "treelion";
-    if (abs >= 1e9) return (amount / 1e9).toFixed(2).replace(/\.00$/, "") + "bilon";
-    if (abs >= 1e6) return (amount / 1e6).toFixed(2).replace(/\.00$/, "") + "milon";
-    if (abs >= 1e3) return (amount / 1e3).toFixed(2).replace(/\.00$/, "") + "k";
+    if (abs >= 1e15) return (amount / 1e15).toFixed(2).replace(/\.00$/, "") + "كوادريليون";
+    if (abs >= 1e12) return (amount / 1e12).toFixed(2).replace(/\.00$/, "") + "تريليون";
+    if (abs >= 1e9) return (amount / 1e9).toFixed(2).replace(/\.00$/, "") + "مليار";
+    if (abs >= 1e6) return (amount / 1e6).toFixed(2).replace(/\.00$/, "") + "مليون";
+    if (abs >= 1e3) return (amount / 1e3).toFixed(2).replace(/\.00$/, "") + "ألف";
     return amount.toString();
   },
 
@@ -87,7 +61,7 @@ module.exports = {
       let wallet = userData.money || 0;
       let bankData = userData.data.bankdata;
 
-      if (cmd === "balance") {
+      if (cmd === "balance" || cmd === "رصيد") {
         return message.reply(
           getLang("summary")
             .replace(/{wallet}/g, format(wallet))
@@ -96,7 +70,7 @@ module.exports = {
         );
       }
 
-      if (cmd === "deposit") {
+      if (cmd === "deposit" || cmd === "ايداع") {
         const amount = parseInt(args[1]);
         if (isNaN(amount) || amount <= 0) {
           return message.reply(getLang("invalidAmount"));
@@ -118,7 +92,7 @@ module.exports = {
         );
       }
 
-      if (cmd === "withdraw") {
+      if (cmd === "withdraw" || cmd === "سحب") {
         const amount = parseInt(args[1]);
         if (isNaN(amount) || amount <= 0) {
           return message.reply(getLang("invalidWithdraw"));
@@ -140,7 +114,7 @@ module.exports = {
         );
       }
 
-      if (cmd === "loan") {
+      if (cmd === "loan" || cmd === "قرض") {
         const loanLimit = 1000000;
         if (bankData.loan > 0) {
           return message.reply(getLang("existingLoan").replace(/{amount}/g, format(bankData.loan)));
@@ -154,7 +128,7 @@ module.exports = {
         return message.reply(getLang("loanApproved").replace(/{amount}/g, format(loanLimit)));
       }
 
-      if (cmd === "preloan") {
+      if (cmd === "preloan" || cmd === "سداد") {
         if (bankData.loan === 0) {
           return message.reply(getLang("noLoan"));
         }
@@ -170,7 +144,7 @@ module.exports = {
         return message.reply(getLang("loanRepaid"));
       }
 
-      if (cmd === "top") {
+      if (cmd === "top" || cmd === "ترتيب") {
         const allUsers = await usersData.getAll();
         const topUsers = allUsers
           .filter(u => u?.data?.bankdata?.bank > 0)
@@ -184,7 +158,7 @@ module.exports = {
         let msg = getLang("topUsers");
         for (let i = 0; i < topUsers.length; i++) {
           const user = topUsers[i];
-          msg += `${i + 1}. ${user.name || "Unknown"}: ${format(user.data.bankdata.bank)}\n`;
+          msg += `${i + 1}. ${user.name || "غير معروف"}: ${format(user.data.bankdata.bank)}\n`;
         }
 
         return message.reply(msg.trim());
@@ -193,7 +167,7 @@ module.exports = {
       return message.reply(getLang("invalidCommand"));
 
     } catch (error) {
-      console.error("Bank command error:", error);
+      console.error("خطأ في أمر البنك:", error);
       return message.reply(getLang("error"));
     }
   }

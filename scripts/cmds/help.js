@@ -5,57 +5,18 @@ const { commands, aliases } = global.GoatBot;
 
 module.exports = {
   config: {
-    name: "help",
+    name: "مساعدة",
+    aliases: ["help", "اوامر", "الأوامر"],
     version: "3.2",
-    author: "NTKhang // xnil6x",
+    author: "Yamada KJ",
     countDown: 5,
     role: 0,
-    description: {
-      en: "View command information with enhanced interface",
-			ar: "عرض معلومات الأوامر بواجهة محسنة"
-    },
-    category: "info",
-    guide: {
-      en: "{pn} [command] - View command details\n{pn} all - View all commands\n{pn} c [category] - View commands in category",
-			ar: "{pn} [أمر] - عرض تفاصيل الأمر\n{pn} all - عرض جميع الأوامر\n{pn} c [فئة] - عرض أوامر الفئة"
-    }
+    description: "عرض معلومات الأوامر بواجهة محسنة",
+    category: "معلومات",
+    guide: "{pn} [أمر] - عرض تفاصيل الأمر\n{pn} all - عرض جميع الأوامر\n{pn} c [فئة] - عرض أوامر الفئة"
   },
 
   langs: {
-    en: {
-      helpHeader: "╔══════════◇◆◇══════════╗\n"
-                + "      BOT COMMAND LIST\n"
-                + "╠══════════◇◆◇══════════╣",
-      categoryHeader: "\n   ┌────── {category},
-		ar: {} ──────┐\n",
-      commandItem: "║ │ 🟢 {name}",
-      helpFooter: "║ └─────────────────┘\n"
-                + "╚══════════◇◆◇══════════╝",
-      commandInfo: "╔══════════◇◆◇══════════╗\n"
-                 + "║           COMMAND INFORMATION      \n"
-                 + "╠══════════◇◆◇══════════╣\n"
-                 + "║ 🏷️ Name: {name}\n"
-                 + "║ 📝 Description: {description}\n"
-                 + "║ 📂 Category: {category}\n"
-                 + "║ 🔤 Aliases: {aliases}\n"
-                 + "║ 🏷️ Version: {version}\n"
-                 + "║ 🔒 Permissions: {role}\n"
-                 + "║ ⏱️ Cooldown: {countDown}s\n"
-                 + "║ 🔧 Use Prefix: {usePrefix}\n"
-                 + "║ 👤 Author: {author}\n"
-                 + "╠══════════◇◆◇══════════╣",
-      usageHeader: "║ 🛠️ USAGE GUIDE",
-      usageBody: " ║ {usage}",
-      usageFooter: "╚══════════◇◆◇══════════╝",
-      commandNotFound: "⚠️ Command '{command}' not found!",
-      doNotHave: "None",
-      roleText0: "👥 All Users",
-      roleText1: "👑 Group Admins",
-      roleText2: "⚡ Bot Admins",
-      totalCommands: "📊 Total Commands: {total}\n"
-                  + "xnil",
-      noCommandsInCategory: "❌ No commands found in category: {category}"
-    },
     ar: {
       helpHeader: "╔══════════◇◆◇══════════╗\n"
                 + "      قائمة أوامر البوت\n"
@@ -85,9 +46,13 @@ module.exports = {
       roleText0: "👥 جميع المستخدمين",
       roleText1: "👑 مشرفو المجموعة",
       roleText2: "⚡ مشرفو البوت",
-      totalCommands: "📊 إجمالي الأوامر: {total}\n"
-                  + "xnil",
-      noCommandsInCategory: "❌ لا توجد أوامر في الفئة: {category}"
+      totalCommands: "📊 إجمالي الأوامر: {total}",
+      noCommandsInCategory: "❌ لا توجد أوامر في الفئة: {category}",
+      yes: "نعم",
+      no: "لا",
+      unknown: "غير معروف",
+      noDescription: "لا يوجد وصف",
+      noGuide: "لا يوجد دليل استخدام"
     }
   },
 
@@ -103,7 +68,7 @@ module.exports = {
 
       for (const [name, cmd] of commands) {
         if (cmd.config.role > 1 && role < cmd.config.role) continue;
-        const category = cmd.config.category?.toUpperCase() || "GENERAL";
+        const category = cmd.config.category?.toUpperCase() || "عام";
         if (category === categoryArg) {
           commandsInCategory.push({ name });
         }
@@ -126,13 +91,13 @@ module.exports = {
       return message.reply(replyMsg);
     }
 
-    if (!commandName || commandName === 'all') {
+    if (!commandName || commandName === 'all' || commandName === 'الكل') {
       const categories = new Map();
 
       for (const [name, cmd] of commands) {
         if (cmd.config.role > 1 && role < cmd.config.role) continue;
 
-        const category = cmd.config.category?.toUpperCase() || "GENERAL";
+        const category = cmd.config.category?.toUpperCase() || "عام";
         if (!categories.has(category)) {
           categories.set(category, []);
         }
@@ -168,7 +133,7 @@ module.exports = {
           return message.reply(replyMsg);
         }
       } catch (e) {
-        console.error("Couldn't load help banner:", e);
+        console.error("تعذر تحميل صورة المساعدة:", e);
         return message.reply(replyMsg);
       }
     }
@@ -179,10 +144,11 @@ module.exports = {
     }
 
     const config = cmd.config;
-    const lang = global.GoatBot.config.language || "en";
-    const description = config.description?.[lang] || config.description?.en || config.description || "No description";
+    const description = typeof config.description === 'object' 
+      ? (config.description.ar || config.description.en || getLang("noDescription"))
+      : (config.description || getLang("noDescription"));
     const aliasesList = config.aliases?.join(", ") || getLang("doNotHave");
-    const category = config.category?.toUpperCase() || "GENERAL";
+    const category = config.category?.toUpperCase() || "عام";
 
     let roleText;
     switch(config.role) {
@@ -191,9 +157,18 @@ module.exports = {
       default: roleText = getLang("roleText0");
     }
 
-    let guide = config.guide?.[lang] || config.guide?.en || config.usage || config.guide || "No usage guide available";
+    let guide = typeof config.guide === 'object'
+      ? (config.guide.ar || config.guide.en || getLang("noGuide"))
+      : (config.guide || config.usage || getLang("noGuide"));
     if (typeof guide === "object") guide = guide.body;
     guide = guide.replace(/\{prefix\}/g, prefix).replace(/\{name\}/g, config.name).replace(/\{pn\}/g, prefix + config.name);
+
+    let usePrefixText;
+    if (typeof config.usePrefix === "boolean") {
+      usePrefixText = config.usePrefix ? getLang("yes") : getLang("no");
+    } else {
+      usePrefixText = getLang("unknown");
+    }
 
     let replyMsg = getLang("commandInfo")
       .replace(/{name}/g, config.name)
@@ -203,8 +178,8 @@ module.exports = {
       .replace(/{version}/g, config.version)
       .replace(/{role}/g, roleText)
       .replace(/{countDown}/g, config.countDown || 1)
-      .replace(/{usePrefix}/g, typeof config.usePrefix === "boolean" ? (config.usePrefix ? "✅ نعم" : "❌ لا") : "❓ غير معروف")
-      .replace(/{author}/g, config.author || "Unknown");
+      .replace(/{usePrefix}/g, usePrefixText)
+      .replace(/{author}/g, config.author || "غير معروف");
 
     replyMsg += "\n" + getLang("usageHeader") + "\n" +
                 getLang("usageBody").replace(/{usage}/g, guide.split("\n").join("\n ")) + "\n" +

@@ -1,152 +1,148 @@
 const axios = require('axios');
 
 module.exports = {
-  config: {
-    name: "fbstalk",
-    version: "3.0",
-    author: "xnil6x",
-    role: 0,
-    shortDescription: "Advanced Facebook profile lookup",
-    longDescription: "Fetch Facebook profile info using UID, profile link, mention, or message reply",
-    category: "Utility",
-    guide: {
-      en: "{p}fbstalk [uid/link/mention/reply]",
-			ar: "{pn}"
-    }
-  },
-
-  
-	langs: {
-		en: {},
-		ar: { command: "أمر", error: "خطأ", success: "نجح", usage: "الاستخدام", invalid: "غير صالح" }
+	config: {
+		name: "معلومات_فيسبوك",
+		aliases: ["fbstalk", "fbinfo", "تتبع_فيسبوك"],
+		version: "3.0",
+		author: "Yamada KJ",
+		role: 0,
+		description: "البحث المتقدم عن ملف فيسبوك الشخصي",
+		category: "أدوات",
+		guide: "{pn} [uid/رابط/إشارة/رد]"
 	},
 
-	onStart: async function ({ message, api, event, args }) {
-    try {
-      const apiKey = "xnil69x"; // Replace with your actual API key
+	langs: {
+		ar: {
+			fetching: "🔍 جاري جلب معلومات الملف الشخصي...",
+			invalidInput: "❌ إدخال غير صالح. يرجى تقديم UID أو رابط الملف الشخصي أو الإشارة أو الرد على رسالة.",
+			fetchFailed: "❌ فشل في جلب بيانات المستخدم أو الملف الشخصي خاص",
+			profileInfo: "🌟 معلومات الملف الشخصي الكاملة\n━━━━━━━━━━━━━━━━━━━━━",
+			error: "⚠️ حدث خطأ. يرجى المحاولة لاحقاً."
+		}
+	},
 
-      const formatInfo = (label, value) => {
-        if (!value || value === "not available") return "";
-        return `🔹 ${label}: ${value}\n`;
-      };
+	onStart: async function ({ message, api, event, args, getLang }) {
+		try {
+			const apiKey = "xnil69x";
 
-      const formatArrayInfo = (label, array) => {
-        if (!Array.isArray(array) || array.length === 0) return "";
-        const items = array.map(item => item.name || item).join(', ');
-        return `🔹 ${label}: ${items}\n`;
-      };
+			const formatInfo = (label, value) => {
+				if (!value || value === "not available") return "";
+				return `🔹 ${label}: ${value}\n`;
+			};
 
-      const getUID = async (input) => {
-        if (/^\d+$/.test(input)) return input; // If input is a UID, return it directly
+			const formatArrayInfo = (label, array) => {
+				if (!Array.isArray(array) || array.length === 0) return "";
+				const items = array.map(item => item.name || item).join(', ');
+				return `🔹 ${label}: ${items}\n`;
+			};
 
-        if (input.includes("facebook.com")) {
-          const username = input.match(/(?:https?:\/\/)?(?:www\.)?facebook\.com\/([^\/]+)/)?.[1];
-          if (username) {
-            const res = await axios.get(`https://xnilapi-glvi.onrender.com/xnil/fbstalk?username=${username}&key=${apiKey}`);
-            return res.data.success ? res.data.id : null;
-          }
-        }
+			const getUID = async (input) => {
+				if (/^\d+$/.test(input)) return input;
 
-        if (input.startsWith("@")) {
-          const mention = Object.entries(event.mentions).find(([_, name]) => name === input.slice(1));
-          return mention ? mention[0] : null;
-        }
+				if (input.includes("facebook.com")) {
+					const username = input.match(/(?:https?:\/\/)?(?:www\.)?facebook\.com\/([^\/]+)/)?.[1];
+					if (username) {
+						const res = await axios.get(`https://xnilapi-glvi.onrender.com/xnil/fbstalk?username=${username}&key=${apiKey}`);
+						return res.data.success ? res.data.id : null;
+					}
+				}
 
-        return null;
-      };
+				if (input.startsWith("@")) {
+					const mention = Object.entries(event.mentions).find(([_, name]) => name === input.slice(1));
+					return mention ? mention[0] : null;
+				}
 
-      let targetUID;
+				return null;
+			};
 
-      if (event.messageReply) {
-        targetUID = event.messageReply.senderID;
-      } else if (!args[0]) {
-        targetUID = event.senderID;
-      } else {
-        targetUID = await getUID(args[0]);
-      }
+			let targetUID;
 
-      if (!targetUID) {
-        return message.reply("❌ Invalid input. Please provide a UID, profile link, mention, or reply to a message.");
-      }
+			if (event.messageReply) {
+				targetUID = event.messageReply.senderID;
+			} else if (!args[0]) {
+				targetUID = event.senderID;
+			} else {
+				targetUID = await getUID(args[0]);
+			}
 
-      api.sendMessage("🔍 Fetching profile information...", event.threadID);
+			if (!targetUID) {
+				return message.reply(getLang("invalidInput"));
+			}
 
-      const response = await axios.get(`https://xnilapi-glvi.onrender.com/xnil/fbstalk?uid=${targetUID}&key=${apiKey}`);
-      const user = response.data;
+			api.sendMessage(getLang("fetching"), event.threadID);
 
-      if (!user.success) {
-        return api.sendMessage("❌ Failed to fetch user data or profile is private", event.threadID);
-      }
+			const response = await axios.get(`https://xnilapi-glvi.onrender.com/xnil/fbstalk?uid=${targetUID}&key=${apiKey}`);
+			const user = response.data;
 
-      let formattedInfo = `🌟 𝗖𝗢𝗠𝗣𝗟𝗘𝗧𝗘 𝗣𝗥𝗢𝗙𝗜𝗟𝗘 𝗜𝗡𝗙𝗢𝗥𝗠𝗔𝗧𝗜𝗢𝗡\n━━━━━━━━━━━━━━━━━━━━━\n`;
+			if (!user.success) {
+				return api.sendMessage(getLang("fetchFailed"), event.threadID);
+			}
 
-      // Basic Info
-      formattedInfo += formatInfo("🆔 User ID", user.id);
-      formattedInfo += formatInfo("👤 Name", user.name);
-      formattedInfo += formatInfo("📛 Full Name", 
-        [user.first_name, user.middle_name, user.last_name].filter(Boolean).join(' '));
-      formattedInfo += formatInfo("🔗 Username", user.username);
-      formattedInfo += formatInfo("🌐 Profile Link", user.link);
+			let formattedInfo = getLang("profileInfo") + "\n";
 
-      // Personal Info
-      formattedInfo += formatInfo("📝 About", user.about);
-      formattedInfo += formatInfo("🎂 Birthday", user.birthday);
-      formattedInfo += formatInfo("👫 Gender", user.gender);
-      formattedInfo += formatInfo("💑 Relationship", user.relationship_status);
-      formattedInfo += formatInfo("📍 Location", user.location);
-      formattedInfo += formatInfo("🛕 Religion", user.religion);
-      formattedInfo += formatInfo("🏠 Hometown", user.hometown);
+			formattedInfo += formatInfo("🆔 معرف المستخدم", user.id);
+			formattedInfo += formatInfo("👤 الاسم", user.name);
+			formattedInfo += formatInfo("📛 الاسم الكامل", 
+				[user.first_name, user.middle_name, user.last_name].filter(Boolean).join(' '));
+			formattedInfo += formatInfo("🔗 اسم المستخدم", user.username);
+			formattedInfo += formatInfo("🌐 رابط الملف الشخصي", user.link);
 
-      // Education
-      if (user.highSchoolName || user.collegeName) {
-        formattedInfo += `📚 𝗘𝗱𝘂𝗰𝗮𝘁𝗶𝗼𝗻:\n`;
-        formattedInfo += formatInfo("🏫 High School", user.highSchoolName);
-        formattedInfo += formatInfo("🎓 College", user.collegeName);
-      }
+			formattedInfo += formatInfo("📝 نبذة", user.about);
+			formattedInfo += formatInfo("🎂 تاريخ الميلاد", user.birthday);
+			formattedInfo += formatInfo("👫 الجنس", user.gender);
+			formattedInfo += formatInfo("💑 الحالة الاجتماعية", user.relationship_status);
+			formattedInfo += formatInfo("📍 الموقع", user.location);
+			formattedInfo += formatInfo("🛕 الديانة", user.religion);
+			formattedInfo += formatInfo("🏠 مسقط الرأس", user.hometown);
 
-      // Arrays
-      formattedInfo += formatArrayInfo("🗣️ Languages", user.languages);
-      formattedInfo += formatArrayInfo("⚽ Sports", user.sports);
-      formattedInfo += formatArrayInfo("🏆 Favorite Teams", user.favorite_teams);
-      formattedInfo += formatArrayInfo("🏅 Favorite Athletes", user.favorite_athletes);
+			if (user.highSchoolName || user.collegeName) {
+				formattedInfo += `📚 التعليم:\n`;
+				formattedInfo += formatInfo("🏫 الثانوية", user.highSchoolName);
+				formattedInfo += formatInfo("🎓 الجامعة", user.collegeName);
+			}
 
-      // Additional Info
-      formattedInfo += formatInfo("👥 Followers", user.follower);
-      formattedInfo += formatInfo("📅 Account Created", 
-        user.created_time ? new Date(user.created_time).toLocaleString() : null);
-      formattedInfo += formatInfo("🔄 Last Updated", 
-        user.updated_time ? new Date(user.updated_time).toLocaleString() : null);
+			formattedInfo += formatArrayInfo("🗣️ اللغات", user.languages);
+			formattedInfo += formatArrayInfo("⚽ الرياضات", user.sports);
+			formattedInfo += formatArrayInfo("🏆 الفرق المفضلة", user.favorite_teams);
+			formattedInfo += formatArrayInfo("🏅 الرياضيين المفضلين", user.favorite_athletes);
 
-      formattedInfo += `━━━━━━━━━━━━━━━━━━━━━`;
+			formattedInfo += formatInfo("👥 المتابعون", user.follower);
+			formattedInfo += formatInfo("📅 تاريخ إنشاء الحساب", 
+				user.created_time ? new Date(user.created_time).toLocaleString('ar-EG') : null);
+			formattedInfo += formatInfo("🔄 آخر تحديث", 
+				user.updated_time ? new Date(user.updated_time).toLocaleString('ar-EG') : null);
 
-      const attachments = [];
-      
-      if (user.picture) {
-        try {
-          const profilePic = await global.utils.getStreamFromURL(user.picture);
-          attachments.push(profilePic);
-        } catch (e) {
-          console.error("Failed to get profile picture:", e);
-        }
-      }
+			formattedInfo += `━━━━━━━━━━━━━━━━━━━━━`;
 
-      if (user.cover) {
-        try {
-          const coverPhoto = await global.utils.getStreamFromURL(user.cover);
-          attachments.push(coverPhoto);
-        } catch (e) {
-          console.error("Failed to get cover photo:", e);
-        }
-      }
+			const attachments = [];
+			
+			if (user.picture) {
+				try {
+					const profilePic = await global.utils.getStreamFromURL(user.picture);
+					attachments.push(profilePic);
+				} catch (e) {
+					console.error("فشل في جلب صورة الملف الشخصي:", e);
+				}
+			}
 
-      await api.sendMessage({
-        body: formattedInfo,
-        attachment: attachments
-      }, event.threadID);
+			if (user.cover) {
+				try {
+					const coverPhoto = await global.utils.getStreamFromURL(user.cover);
+					attachments.push(coverPhoto);
+				} catch (e) {
+					console.error("فشل في جلب صورة الغلاف:", e);
+				}
+			}
 
-    } catch (error) {
-      console.error("FBStalk Error:", error);
-      api.sendMessage("⚠️ An error occurred. Please try again later.", event.threadID);
-    }
-  }
+			await api.sendMessage({
+				body: formattedInfo,
+				attachment: attachments
+			}, event.threadID);
+
+		} catch (error) {
+			console.error("خطأ FBStalk:", error);
+			api.sendMessage(getLang("error"), event.threadID);
+		}
+	}
 };

@@ -4,40 +4,26 @@ function sleep(time) {
 
 module.exports = {
 	config: {
-		name: "filteruser",
+		name: "تصفية_الأعضاء",
+		aliases: ["filteruser", "فلترة"],
 		version: "1.6",
-		author: "NTKhang",
+		author: "Yamada KJ",
 		countDown: 5,
 		role: 1,
-		description: {
-			vi: "lọc thành viên nhóm theo số tin nhắn hoặc bị khóa acc",
-			en: "filter group members by number of messages or locked account",
-			ar: "أمر"},
-		category: "box chat",
-		guide: {
-			vi: "   {pn} [<số tin nhắn> | die]",
-			en: "   {pn} [<number of messages> | die]"
-		}
+		description: "تصفية أعضاء المجموعة حسب عدد الرسائل أو الحسابات المقفلة",
+		category: "المحادثة",
+		guide: "{pn} [<عدد الرسائل> | die]"
 	},
 
 	langs: {
-		vi: {
-			needAdmin: "⚠️ | Vui lòng thêm bot làm quản trị viên của box để sử dụng lệnh này",
-			confirm: "⚠️ | Bạn có chắc chắn muốn xóa thành viên nhóm có số tin nhắn nhỏ hơn %1 không?\nThả cảm xúc bất kì vào tin nhắn này để xác nhận",
-			kickByBlock: "✅ | Đã xóa thành công %1 thành viên bị khóa acc",
-			kickByMsg: "✅ | Đã xóa thành công %1 thành viên có số tin nhắn nhỏ hơn %2",
-			kickError: "❌ | Đã xảy ra lỗi không thể kick %1 thành viên:\n%2",
-			noBlock: "✅ | Không có thành viên nào bị khóa acc",
-			noMsg: "✅ | Không có thành viên nào có số tin nhắn nhỏ hơn %1"
-		},
-		en: {
-			needAdmin: "⚠️ | Please add the bot as a group admin to use this command",
-			confirm: "⚠️ | Are you sure you want to delete group members with less than %1 messages?\nReact to this message to confirm",
-			kickByBlock: "✅ | Successfully removed %1 members unavailable account",
-			kickByMsg: "✅ | Successfully removed %1 members with less than %2 messages",
-			kickError: "❌ | An error occurred and could not kick %1 members:\n%2",
-			noBlock: "✅ | There are no members who are locked acc",
-			noMsg: "✅ | There are no members with less than %1 messages"
+		ar: {
+			needAdmin: "⚠️ يرجى إضافة البوت كمشرف للمجموعة لاستخدام هذا الأمر",
+			confirm: "⚠️ هل أنت متأكد من حذف أعضاء المجموعة الذين لديهم أقل من %1 رسالة؟\nضع تفاعل على هذه الرسالة للتأكيد",
+			kickByBlock: "✅ تم حذف %1 عضو بحساب مقفل بنجاح",
+			kickByMsg: "✅ تم حذف %1 عضو لديهم أقل من %2 رسالة بنجاح",
+			kickError: "❌ حدث خطأ ولم يتم طرد %1 عضو:\n%2",
+			noBlock: "✅ لا يوجد أعضاء بحسابات مقفلة",
+			noMsg: "✅ لا يوجد أعضاء لديهم أقل من %1 رسالة"
 		}
 	},
 
@@ -56,7 +42,7 @@ module.exports = {
 				});
 			});
 		}
-		else if (args[0] == "die") {
+		else if (args[0] == "die" || args[0] == "مقفلة") {
 			const threadData = await api.getThreadInfo(event.threadID);
 			const membersBlocked = threadData.userInfo.filter(user => user.type !== "User");
 			const errors = [];
@@ -96,7 +82,6 @@ module.exports = {
 		const membersCountLess = threadData.members.filter(member =>
 			member.count < minimum
 			&& member.inGroup == true
-			// ignore bot and admin box
 			&& member.userID != botID
 			&& !threadData.adminIDs.some(id => id == member.userID)
 		);

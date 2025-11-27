@@ -3,67 +3,60 @@ const fs = require('fs');
 const path = require('path');
 
 module.exports = {
-  config: {
-    name: "d3",
-    version: "1.0",
-    author: "xnil6x",
-    role: 2,
-    usePrefix: false,
-    shortDescription: {
-      en: "Generate images using DALL·E 3 API"
-    },
-    longDescription: {
-      en: "Create high-quality images from text prompts using MJUnlimited's DALL·E 3 API"
-    },
-    category: "AI",
-    guide: {
-      en: "{p}dalle3 <prompt>",
-			ar: "{pn}"
-    }
-  },
-
-  
-	langs: {
-		en: {},
-		ar: { command: "أمر", error: "خطأ", success: "نجح", usage: "الاستخدام", invalid: "غير صالح" }
+	config: {
+		name: "توليد_صورة",
+		aliases: ["d3", "dalle3", "دالي"],
+		version: "1.0",
+		author: "Yamada KJ",
+		role: 2,
+		usePrefix: false,
+		description: "توليد صور باستخدام DALL·E 3 API",
+		category: "ذكاء اصطناعي",
+		guide: "{pn} <الوصف>"
 	},
 
-	onStart: async function ({ api, event, args, message }) {
-    try {
-      const prompt = args.join(" ");
-      
-      if (!prompt) {
-        return message.reply("❌ Please provide an image generation prompt. Example: {p}dalle3 a cat wearing sunglasses");
-      }
+	langs: {
+		ar: {
+			providePrompt: "❌ يرجى تقديم وصف لتوليد الصورة.\nمثال: {pn} قطة ترتدي نظارات شمسية",
+			generating: "🖌️ جاري توليد صورتك... يرجى الانتظار...",
+			hereIsImage: "🖼️ هذه صورتك المولدة لـ: \"%1\"",
+			failed: "⚠️ فشل في توليد الصورة. يرجى المحاولة لاحقاً."
+		}
+	},
 
-      message.reply("🖌️ Generating your image... Please wait...");
+	onStart: async function ({ api, event, args, message, getLang }) {
+		try {
+			const prompt = args.join(" ");
 
-      // Call the API to get image info
-      const apiUrl = `https://mjunlimited.onrender.com/gen?prompt=${encodeURIComponent(prompt)}&api_key=xnil6xxx11`;
-      const response = await axios.get(apiUrl);
+			if (!prompt) {
+				return message.reply(getLang("providePrompt"));
+			}
 
-      const imageUrl = response.data?.original_images?.info?.imageUrl?.[0];
+			message.reply(getLang("generating"));
 
-      if (!imageUrl) {
-        throw new Error("Image URL not found in response");
-      }
+			const apiUrl = `https://mjunlimited.onrender.com/gen?prompt=${encodeURIComponent(prompt)}&api_key=xnil6xxx11`;
+			const response = await axios.get(apiUrl);
 
-      // Download the image from URL
-      const imageBuffer = await axios.get(imageUrl, { responseType: 'arraybuffer' });
-      const tempPath = path.join(__dirname, 'temp_dalle.png');
-      fs.writeFileSync(tempPath, imageBuffer.data);
+			const imageUrl = response.data?.original_images?.info?.imageUrl?.[0];
 
-      // Send the image
-      message.reply({
-        body: `🖼️ Here's your generated image for: "${prompt}"`,
-        attachment: fs.createReadStream(tempPath)
-      }, () => {
-        fs.unlinkSync(tempPath); // delete the file after sending
-      });
+			if (!imageUrl) {
+				throw new Error("لم يتم العثور على رابط الصورة");
+			}
 
-    } catch (error) {
-      console.error("DALL·E 3 Error:", error);
-      message.reply("⚠️ Failed to generate image. Please try again later.");
-    }
-  }
+			const imageBuffer = await axios.get(imageUrl, { responseType: 'arraybuffer' });
+			const tempPath = path.join(__dirname, 'temp_dalle.png');
+			fs.writeFileSync(tempPath, imageBuffer.data);
+
+			message.reply({
+				body: getLang("hereIsImage", prompt),
+				attachment: fs.createReadStream(tempPath)
+			}, () => {
+				fs.unlinkSync(tempPath);
+			});
+
+		} catch (error) {
+			console.error("خطأ DALL·E 3:", error);
+			message.reply(getLang("failed"));
+		}
+	}
 };

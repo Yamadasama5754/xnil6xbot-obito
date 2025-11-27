@@ -14,49 +14,18 @@ const { openAIUsing, openAIHistory } = global.temp;
 
 module.exports = {
 	config: {
-		name: "gpt",
+		name: "جي_بي_تي",
+		aliases: ["gpt", "شات"],
 		version: "1.4",
-		author: "NTKhang",
+		author: "Yamada KJ",
 		countDown: 5,
 		role: 0,
-		description: {
-			vi: "GPT chat",
-			en: "GPT chat",
-			ar: "محادثة GPT"
-		},
-		category: "box chat",
-		guide: {
-			vi: "   {pn} <draw> <nội dung> - tạo hình ảnh từ nội dung"
-				+ "\n   {pn} <clear> - xóa lịch sử chat với gpt"
-				+ "\n   {pn} <nội dung> - chat với gpt",
-			en: "   {pn} <draw> <content> - create image from content"
-				+ "\n   {pn} <clear> - clear chat history with gpt"
-				+ "\n   {pn} <content> - chat with gpt",
-			ar: "   {pn} <draw> <المحتوى> - إنشاء صورة من المحتوى"
-				+ "\n   {pn} <clear> - مسح سجل المحادثة مع gpt"
-				+ "\n   {pn} <المحتوى> - محادثة مع gpt"
-		}
+		description: "محادثة GPT",
+		category: "ذكاء اصطناعي",
+		guide: "{pn} <draw> <المحتوى> - إنشاء صورة من المحتوى\n{pn} <clear> - مسح سجل المحادثة مع gpt\n{pn} <المحتوى> - محادثة مع gpt"
 	},
 
 	langs: {
-		vi: {
-			apiKeyEmpty: "Vui lòng cung cấp api key cho openai tại file scripts/cmds/gpt.js",
-			invalidContentDraw: "Vui lòng nhập nội dung bạn muốn vẽ",
-			yourAreUsing: "Bạn đang sử dụng gpt chat, vui lòng chờ quay lại sau khi yêu cầu trước kết thúc",
-			processingRequest: "Đang xử lý yêu cầu của bạn, quá trình này có thể mất vài phút, vui lòng chờ",
-			invalidContent: "Vui lòng nhập nội dung bạn muốn chat",
-			error: "Đã có lỗi xảy ra\n%1",
-			clearHistory: "Đã xóa lịch sử chat của bạn với gpt"
-		},
-		en: {
-			apiKeyEmpty: "Please provide api key for openai at file scripts/cmds/gpt.js",
-			invalidContentDraw: "Please enter the content you want to draw",
-			yourAreUsing: "You are using gpt chat, please wait until the previous request ends",
-			processingRequest: "Processing your request, this process may take a few minutes, please wait",
-			invalidContent: "Please enter the content you want to chat",
-			error: "An error has occurred\n%1",
-			clearHistory: "Your chat history with gpt has been deleted"
-		},
 		ar: {
 			apiKeyEmpty: "يرجى توفير مفتاح API لـ OpenAI في ملف scripts/cmds/gpt.js",
 			invalidContentDraw: "يرجى إدخال المحتوى الذي تريد رسمه",
@@ -75,7 +44,8 @@ module.exports = {
 		switch (args[0]) {
 			case 'img':
 			case 'image':
-			case 'draw': {
+			case 'draw':
+			case 'رسم': {
 				if (!args[1])
 					return message.reply(getLang('invalidContentDraw'));
 				if (openAIUsing[event.senderID])
@@ -120,7 +90,8 @@ module.exports = {
 					message.unsend((await sending).messageID);
 				}
 			}
-			case 'clear': {
+			case 'clear':
+			case 'مسح': {
 				openAIHistory[event.senderID] = [];
 				return message.reply(getLang('clearHistory'));
 			}

@@ -2,25 +2,15 @@ const moment = require("moment-timezone");
 
 module.exports = {
 	config: {
-		name: "daily",
+		name: "يومي",
+		aliases: ["daily", "هدية_يومية"],
 		version: "1.2",
-		author: "NTKhang",
+		author: "Yamada KJ",
 		countDown: 5,
 		role: 0,
-		description: {
-			vi: "Nhận quà hàng ngày",
-			en: "Receive daily gift",
-			ar: "استلام الهدية اليومية"
-		},
-		category: "game",
-		guide: {
-			vi: "   {pn}: Nhận quà hàng ngày"
-				+ "\n   {pn} info: Xem thông tin quà hàng ngày",
-			en: "   {pn}: Receive daily gift"
-				+ "\n   {pn} info: View daily gift information",
-			ar: "   {pn}: استلام الهدية اليومية"
-				+ "\n   {pn} info: عرض معلومات الهدية اليومية"
-		},
+		description: "استلام الهدية اليومية",
+		category: "ألعاب",
+		guide: "{pn}: استلام الهدية اليومية\n{pn} info: عرض معلومات الهدية اليومية",
 		envConfig: {
 			rewardFirstDay: {
 				coin: 100,
@@ -30,28 +20,6 @@ module.exports = {
 	},
 
 	langs: {
-		vi: {
-			monday: "Thứ 2",
-			tuesday: "Thứ 3",
-			wednesday: "Thứ 4",
-			thursday: "Thứ 5",
-			friday: "Thứ 6",
-			saturday: "Thứ 7",
-			sunday: "Chủ nhật",
-			alreadyReceived: "Bạn đã nhận quà rồi",
-			received: "Bạn đã nhận được %1 coin và %2 exp"
-		},
-		en: {
-			monday: "Monday",
-			tuesday: "Tuesday",
-			wednesday: "Wednesday",
-			thursday: "Thursday",
-			friday: "Friday",
-			saturday: "Saturday",
-			sunday: "Sunday",
-			alreadyReceived: "You have already received the gift",
-			received: "You have received %1 coin and %2 exp"
-		},
 		ar: {
 			monday: "الإثنين",
 			tuesday: "الثلاثاء",
@@ -60,15 +28,15 @@ module.exports = {
 			friday: "الجمعة",
 			saturday: "السبت",
 			sunday: "الأحد",
-			alreadyReceived: "لقد استلمت الهدية بالفعل",
-			received: "لقد حصلت على %1 عملة و %2 خبرة"
+			alreadyReceived: "⚠️ لقد استلمت الهدية بالفعل اليوم",
+			received: "🎁 لقد حصلت على %1 عملة و %2 خبرة"
 		}
 	},
 
 	onStart: async function ({ args, message, event, envCommands, usersData, commandName, getLang }) {
 		const reward = envCommands[commandName].rewardFirstDay;
-		if (args[0] == "info") {
-			let msg = "";
+		if (args[0] == "info" || args[0] == "معلومات") {
+			let msg = "📋 جدول الهدايا اليومية:\n";
 			for (let i = 1; i < 8; i++) {
 				const getCoin = Math.floor(reward.coin * (1 + 20 / 100) ** ((i == 0 ? 7 : i) - 1));
 				const getExp = Math.floor(reward.exp * (1 + 20 / 100) ** ((i == 0 ? 7 : i) - 1));
@@ -79,7 +47,7 @@ module.exports = {
 								i == 3 ? getLang("wednesday") :
 									i == 2 ? getLang("tuesday") :
 										getLang("monday");
-				msg += `${day}: ${getCoin} coin, ${getExp} exp\n`;
+				msg += `${day}: ${getCoin} عملة، ${getExp} خبرة\n`;
 			}
 			return message.reply(msg);
 		}

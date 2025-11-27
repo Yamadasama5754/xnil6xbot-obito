@@ -2,35 +2,20 @@ const fs = require("fs-extra");
 
 module.exports = {
 	config: {
-		name: "getfbstate",
-		aliases: ["getstate", "getcookie"],
+		name: "جلب_حالة_فيسبوك",
+		aliases: ["getfbstate", "getstate", "getcookie"],
 		version: "1.2",
-		author: "NTKhang",
+		author: "Yamada KJ",
 		countDown: 5,
 		role: 2,
-		description: {
-			vi: "Lấy fbstate hiện tại",
-			en: "Get current fbstate",
-			ar: "Get current fbstate - أمر البوت"},
-		category: "owner",
-		guide: {
-			en: "   {pn,
-			ar: ",
-			ar: "{pn}"استخدم: {pn}"}: get fbstate (appState)\n"
-				+ "   {pn} [cookies|cookie|c]: get fbstate with cookies format\n"
-				+ "   {pn} [string|str|s]: get fbstate with string format\n",
-			vi: "   {pn}: get fbstate (appState)\n"
-				+ "   {pn} [cookies|cookie|c]: get fbstate dạng cookies\n"
-				+ "   {pn} [string|str|s]: get fbstate dạng string\n"
-		}
+		description: "الحصول على fbstate الحالي",
+		category: "المالك",
+		guide: "{pn}: جلب fbstate (appState)\n{pn} [cookies|cookie|c]: جلب fbstate بصيغة cookies\n{pn} [string|str|s]: جلب fbstate بصيغة نص"
 	},
 
 	langs: {
-		vi: {
-			success: "Đã gửi fbstate đến bạn, vui lòng kiểm tra tin nhắn riêng của bot"
-		},
-		en: {
-			success: "Sent fbstate to you, please check bot's private message"
+		ar: {
+			success: "✅ تم إرسال fbstate إليك، يرجى التحقق من الرسائل الخاصة للبوت"
 		}
 	},
 

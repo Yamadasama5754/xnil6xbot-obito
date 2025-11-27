@@ -25,6 +25,18 @@
     },
     "dhbc": {
       "reward": 1000
+    },
+    "يومي": {
+      "rewardFirstDay": {
+        "coin": 100,
+        "exp": 10
+      }
+    },
+    "تخمين_الكلمة": {
+      "reward": 1000
+    },
+    "المرتبة": {
+      "deltaNext": 5
     }
   },
   "envEvents": {

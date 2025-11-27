@@ -1,30 +1,32 @@
 module.exports = {
- config: {
- name: "out",
- author: "xnil",
- role: 2, 
- shortDescription: "Make the bot leave the group",
- category: "admin",
- guide: "{pn}"
- },
-
- 
-	langs: {
-		en: {},
-		ar: { command: "أمر", error: "خطأ", success: "نجح", usage: "الاستخدام", invalid: "غير صالح" }
+	config: {
+		name: "خروج",
+		aliases: ["out", "مغادرة"],
+		version: "1.0",
+		author: "Yamada KJ",
+		role: 2,
+		description: "جعل البوت يغادر المجموعة",
+		category: "المالك",
+		guide: "{pn}"
 	},
 
-	onStart: async function ({ api, event }) {
- const threadID = event.threadID;
+	langs: {
+		ar: {
+			groupOnly: "❌ يمكن استخدام هذا الأمر فقط في المحادثات الجماعية.",
+			goodbye: "👋 وداعاً! أنا أغادر هذه المجموعة الآن..."
+		}
+	},
 
- // Check if it's a group chat
- const threadInfo = await api.getThreadInfo(threadID);
- if (!threadInfo.isGroup) {
- return api.sendMessage("❌ This command can only be used in group chats.", threadID);
- }
+	onStart: async function ({ api, event, getLang }) {
+		const threadID = event.threadID;
 
- await api.sendMessage("👋 Goodbye! I'm leaving this group now...", threadID, () => {
- api.removeUserFromGroup(api.getCurrentUserID(), threadID);
- });
- }
+		const threadInfo = await api.getThreadInfo(threadID);
+		if (!threadInfo.isGroup) {
+			return api.sendMessage(getLang("groupOnly"), threadID);
+		}
+
+		await api.sendMessage(getLang("goodbye"), threadID, () => {
+			api.removeUserFromGroup(api.getCurrentUserID(), threadID);
+		});
+	}
 };
