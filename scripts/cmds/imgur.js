@@ -3,32 +3,20 @@ const axios = require('axios');
 module.exports = {
   config: {
     name: "رابط",
-    aliases: ["img", "imgur"],
+    aliases: ["img", "imgur", "رفع"],
     version: "1.1",
     author: "Yamada KJ",
-    shortDescription: {
-      en: "🖼️ Upload media to Imgur"
-    },
-    longDescription: {
-      en: "✨ Uploads images/videos/GIFs to Imgur and returns the public link"
-    },
-    category: "utility",
-    guide: {
-      en: "{p}imgur [reply to media]",
-			ar: "{pn}"
-    }
+    cooldowns: 5,
+    role: 0,
+    description: "رفع الصور والفيديوهات على Imgur",
+    category: "الأدوات",
+    guide: "{pn}: رد على صورة لرفعها"
   },
 
-  
-	langs: {
-		en: {},
-		ar: { command: "أمر", error: "خطأ", success: "نجح", usage: "الاستخدام", invalid: "غير صالح" }
-	},
-
-	onStart: async function ({ api, event, message }) {
+  onStart: async function ({ api, event, message }) {
     try {
       if (!event.messageReply || !event.messageReply.attachments || event.messageReply.attachments.length === 0) {
-        return message.reply("🔍 Please reply to an image, video, or GIF to upload it to Imgur.");
+        return message.reply("🔍 يرجى الرد على صورة أو فيديو لرفعها على Imgur");
       }
 
       const attachment = event.messageReply.attachments[0];
@@ -36,17 +24,12 @@ module.exports = {
 
       api.setMessageReaction("⏳", event.messageID, () => {}, true);
 
-      const imgurToken = process.env.IMGUR_TOKEN;
-      if (!imgurToken) {
-        throw new Error("Imgur API token not configured");
-      }
-
       const response = await axios.post(
         "https://api.imgur.com/3/upload",
         { image: fileUrl },
         {
           headers: {
-            Authorization: `Bearer ${imgurToken}`,
+            Authorization: "Bearer 911dc78bc9cf5b7a327227fef7d53abd2585bec5",
             "Content-Type": "application/json"
           }
         }
@@ -55,26 +38,26 @@ module.exports = {
       const imgurData = response.data.data;
 
       if (!imgurData.link) {
-        throw new Error("No link returned from Imgur");
+        throw new Error("لم يتم إرجاع رابط من Imgur");
       }
 
       api.setMessageReaction("✅", event.messageID, () => {}, true);
 
       const resultMessage = `
-🖼️ 𝗜𝗠𝗚𝗨𝗥 𝗨𝗣𝗟𝗢𝗔𝗗 𝗦𝗨𝗖𝗖𝗘𝗦𝗦𝗙𝗨𝗟!
+🖼️ تم الرفع بنجاح على Imgur!
 ━━━━━━━━━━━━━━
-🔗 𝗟𝗶𝗻𝗸: ${imgurData.link}
-💽 𝗧𝘆𝗽𝗲: ${imgurData.type}
+🔗 الرابط: ${imgurData.link}
+💽 النوع: ${imgurData.type}
 ━━━━━━━━━━━━━━
-✨ 𝗣𝗼𝘄𝗲𝗿𝗲𝗱 𝗯𝘆 ${this.config.author}
+✨ بواسطة ${this.config.author}
       `;
 
       message.reply({ body: resultMessage });
 
     } catch (error) {
-      console.error("🔴 Imgur Upload Error:", error);
+      console.error("❌ خطأ في رفع الصورة على Imgur:", error);
       api.setMessageReaction("❌", event.messageID, () => {}, true);
-      message.reply("⚠️ An error occurred while uploading to Imgur. Please try again later.");
+      message.reply("⚠️ حدث خطأ أثناء رفع الصورة. يرجى المحاولة لاحقاً");
     }
   }
 };
