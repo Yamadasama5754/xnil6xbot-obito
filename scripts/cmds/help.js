@@ -67,7 +67,7 @@ module.exports = {
         if (cmd.config.role > 1 && role < cmd.config.role) continue;
         const category = cmd.config.category?.toUpperCase() || "عام";
         if (category === categoryArg) {
-          commandsInCategory.push({ name: cmd.config.name });
+          commandsInCategory.push(cmd.config.name);
         }
       }
 
@@ -78,8 +78,8 @@ module.exports = {
       let replyMsg = getLang("helpHeader");
       replyMsg += getLang("categoryHeader").replace(/{category}/g, categoryArg);
 
-      commandsInCategory.sort((a, b) => a.name.localeCompare(b.name)).forEach(cmd => {
-        replyMsg += getLang("commandItem").replace(/{name}/g, cmd.name) + "\n";
+      commandsInCategory.sort().forEach(cmdName => {
+        replyMsg += getLang("commandItem").replace(/{name}/g, cmdName) + "\n";
       });
 
       replyMsg += getLang("helpFooter");
@@ -98,7 +98,7 @@ module.exports = {
         if (!categories.has(category)) {
           categories.set(category, []);
         }
-        categories.get(category).push({ name: cmd.config.name });
+        categories.get(category).push(cmd.config.name);
       }
 
       const sortedCategories = [...categories.keys()].sort();
@@ -106,13 +106,13 @@ module.exports = {
       let totalCommands = 0;
 
       for (const category of sortedCategories) {
-        const commandsInCategory = categories.get(category).sort((a, b) => a.name.localeCompare(b.name));
+        const commandsInCategory = categories.get(category).sort();
         totalCommands += commandsInCategory.length;
 
         replyMsg += getLang("categoryHeader").replace(/{category}/g, category);
 
-        commandsInCategory.forEach(cmd => {
-          replyMsg += getLang("commandItem").replace(/{name}/g, cmd.name) + "\n";
+        commandsInCategory.forEach(cmdName => {
+          replyMsg += getLang("commandItem").replace(/{name}/g, cmdName) + "\n";
         });
 
         replyMsg += getLang("helpFooter");
