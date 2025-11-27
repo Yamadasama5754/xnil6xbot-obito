@@ -92,8 +92,8 @@ module.exports.onStart = async function ({ api, event, args }) {
   }
 };
 
-module.exports.onReply = async function ({ api, event, reply }) {
-  if (!reply || reply.type !== 'pick') return;
+module.exports.onReply = async function ({ api, event, reply, message }) {
+  if (!reply || !reply.commandName || reply.commandName !== "يوتيوب") return;
 
   try {
     if (event.senderID !== reply.authorID) {
