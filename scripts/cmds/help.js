@@ -101,10 +101,20 @@ module.exports.onStart = async function ({ api, event, args }) {
       ? (command.config?.aliases || command.aliases).join(", ") 
       : "لا توجد";
     
+    // استخراج الوصف من الكائن
+    let description = "بلا وصف";
+    if (command.config?.description) {
+      if (typeof command.config.description === 'object') {
+        description = command.config.description.en || command.config.description.ar || command.config.description.vi || "بلا وصف";
+      } else {
+        description = command.config.description;
+      }
+    }
+    
     let infoMsg = `📖 | معلومات الأمر\n`;
     infoMsg += `═══════════════════════\n`;
     infoMsg += `📌 اسم الأمر: ${command.config?.name || command.name}\n`;
-    infoMsg += `ℹ️ الوصف: ${command.config?.description || "بلا وصف"}\n`;
+    infoMsg += `ℹ️ الوصف: ${description}\n`;
     infoMsg += `👤 الدور المطلوب: ${roleDesc}\n`;
     infoMsg += `⏱️ فترة الانتظار: ${command.config?.cooldowns || 0} ثانية\n`;
     infoMsg += `🔗 الأسماء البديلة: ${aliases}\n`;
