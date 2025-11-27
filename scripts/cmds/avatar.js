@@ -16,71 +16,86 @@ module.exports = {
 
 	langs: {
 		ar: {
-			initImage: "⏳ جاري تهيئة الصورة، يرجى الانتظار...",
+			initImage: "⏳ جاري تهيئة الأفاتار، يرجى الانتظار...",
 			invalidCharacter: "⚠️ حالياً هناك %1 شخصية فقط على النظام، يرجى إدخال معرف شخصية أقل",
 			notFoundCharacter: "❌ لم يتم العثور على شخصية تحمل اسم %1 في قائمة الشخصيات",
-			errorGetCharacter: "❌ حدث خطأ أثناء الحصول على بيانات الشخصية:\n%1: %2",
-			success: "✅ أفاتارك\nالشخصية: %1\nالمعرف: %2\nنص الخلفية: %3\nالتوقيع: %4\nاللون: %5",
+			errorGetCharacter: "❌ حدث خطأ أثناء جلب الشخصيات: %1",
+			success: "✅ أفاتارك\n🎨 الشخصية: %1\n🔢 المعرف: %2\n📝 الخلفية: %3\n✍️ التوقيع: %4\n🎨 اللون: %5",
 			defaultColor: "الافتراضي",
-			error: "❌ حدث خطأ\n%1: %2"
+			error: "❌ حدث خطأ في إنشاء الأفاتار: %1",
+			apiError: "❌ خدمة الأفاتار غير متاحة حالياً، يرجى المحاولة لاحقاً"
 		}
 	},
 
 	onStart: async function ({ args, message, getLang }) {
-		const content = args.join(" ").split("|").map(item => item = item.trim());
+		const content = args.join(" ").split("|").map(item => item.trim());
 		let idNhanVat, tenNhanvat;
-		const chu_Nen = content[1];
-		const chu_Ky = content[2];
-		const colorBg = content[3];
+		const chu_Nen = content[1] || "";
+		const chu_Ky = content[2] || "";
+		const colorBg = content[3] || "";
+
 		if (!args[0])
 			return message.SyntaxError();
+
 		message.reply(getLang("initImage"));
+
 		try {
-			const dataChracter = (await axios.get("https://goatbotserver.onrender.com/taoanhdep/listavataranime?apikey=ntkhang")).data.data;
+			// Get list of characters
+			const charResponse = await axios.get("https://goatbotserver.onrender.com/taoanhdep/listavataranime?apikey=ntkhang", {
+				timeout: 10000
+			});
+
+			const dataChracter = charResponse.data?.data;
+			if (!dataChracter || dataChracter.length === 0)
+				return message.reply(getLang("apiError"));
+
+			// Find character by ID or name
 			if (!isNaN(content[0])) {
 				idNhanVat = parseInt(content[0]);
 				const totalCharacter = dataChracter.length - 1;
 				if (idNhanVat > totalCharacter)
 					return message.reply(getLang("invalidCharacter", totalCharacter));
-				tenNhanvat = dataChracter[idNhanVat].name;
+				tenNhanvat = dataChracter[idNhanVat]?.name || "Unknown";
 			}
 			else {
-				const findChracter = dataChracter.find(item => item.name.toLowerCase() == content[0].toLowerCase());
+				const findChracter = dataChracter.find(item => item.name?.toLowerCase() === content[0]?.toLowerCase());
 				if (findChracter) {
 					idNhanVat = findChracter.stt;
-					tenNhanvat = content[0];
+					tenNhanvat = findChracter.name;
 				}
 				else
 					return message.reply(getLang("notFoundCharacter", content[0]));
 			}
-		}
-		catch (error) {
-			const err = error.response.data;
-			return message.reply(getLang("errorGetCharacter", err.error, err.message));
-		}
 
-		const endpoint = `https://goatbotserver.onrender.com/taoanhdep/avataranime`;
-		const params = {
-			id: idNhanVat,
-			chu_Nen,
-			chu_Ky,
-			apikey: "ntkhangGoatBot"
-		};
-		if (colorBg)
-			params.colorBg = colorBg;
+			// Create avatar
+			const endpoint = `https://goatbotserver.onrender.com/taoanhdep/avataranime`;
+			const params = {
+				id: idNhanVat,
+				chu_Nen: chu_Nen || "Goat Bot",
+				chu_Ky: chu_Ky || "V2",
+				apikey: "ntkhangGoatBot"
+			};
 
-		try {
-			const avatarImage = await getStreamFromURL(endpoint, "avatar.png", { params });
-			message.reply({
-				body: getLang("success", tenNhanvat, idNhanVat, chu_Nen, chu_Ky, colorBg || getLang("defaultColor")),
-				attachment: avatarImage
-			});
-		}
-		catch (error) {
-			error.response.data.on("data", function (e) {
-				const err = JSON.parse(e);
-				message.reply(getLang("error", err.error, err.message));
-			});
+			if (colorBg)
+				params.colorBg = colorBg;
+
+			try {
+				const avatarImage = await getStreamFromURL(endpoint, "avatar.png", { params });
+				message.reply({
+					body: getLang("success", tenNhanvat, idNhanVat, chu_Nen || "ملخصة", chu_Ky || "الوصف", colorBg || getLang("defaultColor")),
+					attachment: avatarImage
+				});
+			} catch (error) {
+				console.error("Avatar generation error:", error.message);
+				message.reply(getLang("error", "فشل إنشاء الصورة"));
+			}
+
+		} catch (error) {
+			console.error("Avatar command error:", error.message);
+			if (error.code === "ECONNABORTED" || error.code === "ENOTFOUND")
+				return message.reply(getLang("apiError"));
+			else
+				return message.reply(getLang("errorGetCharacter", error.message));
 		}
 	}
 };
