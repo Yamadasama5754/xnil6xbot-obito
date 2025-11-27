@@ -1,27 +1,17 @@
 module.exports = {
 	config: {
-		name: "tid",
+		name: "معرف",
+		aliases: ["tid", "threadid", "الآيدي"],
 		version: "1.2",
-		author: "NTKhang",
+		author: "Yamada KJ",
 		countDown: 5,
 		role: 0,
-		description: {
-			vi: "Xem id nhóm chat của bạn",
-			en: "View threadID of your group chat",
-			ar: "عرض معرف المحادثة الجماعية"
-		},
-		category: "info",
-		guide: {
-			en: "{pn}",
-			ar: "{pn}"
-		}
+		description: "عرض معرف المحادثة الجماعية",
+		category: "معلومات",
+		guide: "{pn}"
 	},
 
 	langs: {
-		en: {
-			threadID: "Thread ID: {id},
-		ar: {}"
-		},
 		ar: {
 			threadID: "معرف المحادثة: {id}"
 		}

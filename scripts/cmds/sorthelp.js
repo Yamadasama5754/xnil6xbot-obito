@@ -1,30 +1,20 @@
 module.exports = {
 	config: {
-		name: "sorthelp",
+		name: "ترتيب_المساعدة",
+		aliases: ["sorthelp", "ترتيب"],
 		version: "1.2",
-		author: "NTKhang",
+		author: "Yamada KJ",
 		countDown: 5,
 		role: 0,
-		description: {
-			vi: "Sắp xếp danh sách help",
-			en: "Sort help list",
-			ar: "Sort help list - أمر البوت"},
-		category: "image",
-		guide: {
-			en: "{pn,
-			ar: ",
-			ar: "{pn}"استخدم: {pn}"} [name | category]"
-		}
+		description: "ترتيب قائمة المساعدة",
+		category: "معلومات",
+		guide: "{pn} [name | category]"
 	},
 
 	langs: {
-		vi: {
-			savedName: "Đã lưu cài đặt sắp xếp danh sách help theo thứ tự chữ cái",
-			savedCategory: "Đã lưu cài đặt sắp xếp danh sách help theo thứ tự thể loại"
-		},
-		en: {
-			savedName: "Saved sort help list by name",
-			savedCategory: "Saved sort help list by category"
+		ar: {
+			savedName: "تم حفظ إعداد ترتيب قائمة المساعدة بالترتيب الأبجدي",
+			savedCategory: "تم حفظ إعداد ترتيب قائمة المساعدة حسب الفئة"
 		}
 	},
 

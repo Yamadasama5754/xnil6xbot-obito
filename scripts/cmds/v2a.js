@@ -1,57 +1,50 @@
 const axios = require("axios");
 const fs = require("fs-extra");
+
 module.exports = {
-  config: {
-    name: "v2a",
-    aliases: ["video2audio"],
-    description: "Convert Video to audio ",
-    version: "1.2",
-    author: "dipto",
-    countDown: 20,
-   description: {
-      en: "Reply to a video",
-			ar: "Reply to a video - أمر البوت"},
-    category: "media",
-    guide: {
-      en: "{p,
-			ar: ",
-			ar: "{pn}"استخدم: {pn}"}{n}"
-    }
-
-  },
-  
-
-	langs: {
-		en: {},
-		ar: {},
-		ar: {}
+	config: {
+		name: "فيديو_لصوت",
+		aliases: ["v2a", "video2audio", "تحويل_فيديو"],
+		version: "1.2",
+		author: "Yamada KJ",
+		countDown: 20,
+		description: "تحويل الفيديو إلى صوت",
+		category: "وسائط",
+		guide: "{pn} - رد على رسالة فيديو"
 	},
 
-	onStart: async function ({ api, event, args, message }) {
-    try {
-      if (!event.messageReply || !event.messageReply.attachments || event.messageReply.attachments.length === 0) {
-        message.reply("Please reply to a video message to convert it to audio.");
-        return;
-      }
+	langs: {
+		ar: {
+			invalidMedia: "يرجى الرد على رسالة فيديو لتحويلها إلى صوت",
+			error: "حدث خطأ أثناء التحويل"
+		}
+	},
 
-      const dipto = event.messageReply.attachments[0];
-      if (dipto.type !== "video") {
-        message.reply("The replied content must be a video.");
-        return;
-      }
-      const { data } = await axios.get(dipto.url, { method: 'GET', responseType: 'arraybuffer' });
- const path = __dirname + `/cache/dvia.m4a`
-            if(!fs.existsSync(path)){
-        fs.mkdir(__dirname + '/cache');
-      }
-      fs.writeFileSync(path, Buffer.from(data, 'utf-8'));
+	onStart: async function ({ api, event, message }) {
+		try {
+			if (!event.messageReply || !event.messageReply.attachments || event.messageReply.attachments.length === 0) {
+				return message.reply("يرجى الرد على رسالة فيديو لتحويلها إلى صوت");
+			}
 
-      const audioReadStream = fs.createReadStream(path);
-      const msg = { body: "", attachment: [audioReadStream] };
-      api.sendMessage(msg, event.threadID, event.messageID);
-    } catch (e) {
-      console.log(e);
-message.reply(e.message)
-    }
-  },
+			const attachment = event.messageReply.attachments[0];
+			if (attachment.type !== "video") {
+				return message.reply("يجب أن يكون المحتوى المرد عليه فيديو");
+			}
+
+			const { data } = await axios.get(attachment.url, { method: 'GET', responseType: 'arraybuffer' });
+			const path = __dirname + `/cache/audio.m4a`;
+			
+			if (!fs.existsSync(__dirname + '/cache')) {
+				fs.mkdirSync(__dirname + '/cache');
+			}
+
+			fs.writeFileSync(path, Buffer.from(data));
+			const audioStream = fs.createReadStream(path);
+			
+			api.sendMessage({ body: "", attachment: [audioStream] }, event.threadID, event.messageID);
+		} catch (e) {
+			console.error(e);
+			message.reply("حدث خطأ أثناء التحويل: " + e.message);
+		}
+	}
 };

@@ -70,7 +70,7 @@ module.exports = {
         if (cmd.config.role > 1 && role < cmd.config.role) continue;
         const category = cmd.config.category?.toUpperCase() || "عام";
         if (category === categoryArg) {
-          commandsInCategory.push({ name });
+          commandsInCategory.push({ name: cmd.config.name });
         }
       }
 
@@ -101,7 +101,7 @@ module.exports = {
         if (!categories.has(category)) {
           categories.set(category, []);
         }
-        categories.get(category).push({ name });
+        categories.get(category).push({ name: cmd.config.name });
       }
 
       const sortedCategories = [...categories.keys()].sort();

@@ -4,38 +4,26 @@ const { drive } = global.utils;
 
 module.exports = {
 	config: {
-		name: "rankup",
+		name: "ترقية",
+		aliases: ["rankup", "رفع_مستوى"],
 		version: "1.4",
-		author: "NTKhang",
+		author: "Yamada KJ",
 		countDown: 5,
 		role: 0,
-		description: {
-			vi: "Bật/tắt thông báo level up",
-			en: "Turn on/off level up notification",
-			ar: "Turn on/off level up notification - أمر البوت"},
-		category: "rank",
-		guide: {
-			en: "{pn,
-			ar: ",
-			ar: "{pn}"استخدم: {pn}"} [on | off]"
-		},
+		description: "تشغيل/إيقاف إخطار رفع المستوى",
+		category: "المرتبة",
+		guide: "{pn} [on | off]",
 		envConfig: {
 			deltaNext: 5
 		}
 	},
 
 	langs: {
-		vi: {
-			syntaxError: "Sai cú pháp, chỉ có thể dùng {pn} on hoặc {pn} off",
-			turnedOn: "Đã bật thông báo level up",
-			turnedOff: "Đã tắt thông báo level up",
-			notiMessage: "🎉🎉 chúc mừng bạn đạt level %1"
-		},
-		en: {
-			syntaxError: "Syntax error, only use {pn} on or {pn} off",
-			turnedOn: "Turned on level up notification",
-			turnedOff: "Turned off level up notification",
-			notiMessage: "🎉🎉 Congratulations on reaching level %1"
+		ar: {
+			syntaxError: "خطأ في الصيغة، يمكنك فقط استخدام {pn} on أو {pn} off",
+			turnedOn: "تم تشغيل إخطار رفع المستوى",
+			turnedOff: "تم إيقاف إخطار رفع المستوى",
+			notiMessage: "🎉🎉 تهانينا على الوصول إلى المستوى %1"
 		}
 	},
 
@@ -62,38 +50,21 @@ module.exports = {
 			if (customMessage) {
 				userData = await usersData.get(event.senderID);
 				customMessage = customMessage
-					// .replace(/{userName}/g, userData.name)
-					.replace(/{oldRank}/g, currentLevel - 1)
-					.replace(/{currentRank}/g, currentLevel);
-				if (customMessage.includes("{userNameTag}")) {
-					isTag = true;
-					customMessage = customMessage.replace(/{userNameTag}/g, `@${userData.name}`);
-				}
-				else {
-					customMessage = customMessage.replace(/{userName}/g, userData.name);
-				}
-
+					.replace(/{userName}/g, userData.name)
+					.replace(/{level}/g, currentLevel);
+				isTag = true;
 				formMessage.body = customMessage;
+				formMessage.mentions = [{
+					id: event.senderID,
+					tag: userData.name
+				}];
 			}
 			else {
-				formMessage.body = getLang("notiMessage", currentLevel);
-			}
-
-			if (threadData.data.rankup?.attachments?.length > 0) {
-				const files = threadData.data.rankup.attachments;
-				const attachments = files.reduce((acc, file) => {
-					acc.push(drive.getFile(file, "stream"));
-					return acc;
-				}, []);
-				formMessage.attachment = (await Promise.allSettled(attachments))
-					.filter(({ status }) => status == "fulfilled")
-					.map(({ value }) => value);
-			}
-
-			if (isTag) {
+				userData = await usersData.get(event.senderID);
+				formMessage.body = getLang("notiMessage", currentLevel).replace(/{userName}/g, userData.name);
 				formMessage.mentions = [{
-					tag: `@${userData.name}`,
-					id: event.senderID
+					id: event.senderID,
+					tag: userData.name
 				}];
 			}
 

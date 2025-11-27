@@ -11,31 +11,21 @@ let hubbleData;
 
 module.exports = {
 	config: {
-		name: "hubble",
+		name: "هابل",
+		aliases: ["hubble", "صورة_هابل"],
 		version: "1.3",
-		author: "NTKhang",
+		author: "Yamada KJ",
 		countDown: 5,
 		role: 0,
-		description: {
-			vi: "Xem ảnh từ Hubble",
-			en: "View Hubble images",
-			ar: "View Hubble images - أمر البوت"},
-		category: "owner",
-		guide: {
-			en: "{pn,
-			ar: ",
-			ar: "{pn}"استخدم: {pn}"} <date (mm-dd)>"
-		}
+		description: "عرض صور تلسكوب هابل",
+		category: "صور",
+		guide: "{pn} [تاريخ (mm-dd)]"
 	},
 
 	langs: {
-		vi: {
-			invalidDate: "Ngày tháng bạn nhập vào không hợp lệ, vui lòng nhập lại theo định dạng mm-dd",
-			noImage: "Không có ảnh nào được tìm thấy trong ngày này"
-		},
-		en: {
-			invalidDate: "The date you entered is invalid, please enter again in the mm-dd format",
-			noImage: "No images were found on this day"
+		ar: {
+			invalidDate: "التاريخ الذي أدخلته غير صحيح، يرجى إدخاله بصيغة mm-dd",
+			noImage: "لم يتم العثور على صور في هذا التاريخ"
 		}
 	},
 
@@ -57,7 +47,7 @@ module.exports = {
 			return message.reply(getLang('noImage'));
 		const { image, name, caption, url } = data;
 		const getImage = await getStreamFromURL('https://imagine.gsfc.nasa.gov/hst_bday/images/' + image);
-		const msg = `📅 Date: ${dateText}\n🌀 Name: ${name}\n📖 Caption: ${caption}\n🔗 Source: ${url}`;
+		const msg = `📅 التاريخ: ${dateText}\n🌀 الاسم: ${name}\n📖 الشرح: ${caption}\n🔗 المصدر: ${url}`;
 		message.reply({
 			body: msg,
 			attachment: getImage
@@ -65,28 +55,13 @@ module.exports = {
 	}
 };
 
-const monthText = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 function checkValidDate(date) {
-	const dateArr = date.split(/[-/]/);
-	if (dateArr.length != 2)
-		return false;
-	let day;
-	let month;
-	if (dateArr[0] < 13) {
-		day = dateArr[1];
-		month = dateArr[0];
-	}
-	else {
-		day = dateArr[0];
-		month = dateArr[1];
-	}
-	if (month < 1 || month > 12)
-		return false;
-	if (day < 1 || day > 31)
-		return false;
-	if (month === 2 && day > 29)
-		return false;
-	if ([4, 6, 9, 11].includes(month) && day > 30)
-		return false;
-	return monthText[month - 1] + ' ' + parseInt(day);
+	if (!date || date.length !== 5 || date[2] !== "-")
+		return null;
+	const [month, day] = date.split("-");
+	const m = parseInt(month);
+	const d = parseInt(day);
+	if (isNaN(m) || isNaN(d) || m < 1 || m > 12 || d < 1 || d > 31)
+		return null;
+	return `${String(m).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
 }

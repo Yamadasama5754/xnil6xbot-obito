@@ -37,6 +37,12 @@
     },
     "المرتبة": {
       "deltaNext": 5
+    },
+    "إخطار": {
+      "delayPerGroup": 250
+    },
+    "ترقية": {
+      "deltaNext": 5
     }
   },
   "envEvents": {
