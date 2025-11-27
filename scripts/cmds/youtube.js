@@ -13,6 +13,7 @@ module.exports.config = {
 };
 
 const youtubeApiKey = process.env.YOUTUBE_API_KEY || "AIzaSyC_CVzKGFtLAqxNdAZ_EyLbL0VRGJ-FaMU";
+const pendingSearches = new Map();
 
 module.exports.onStart = async function ({ api, event, args }) {
   if (args.length < 1) {
@@ -22,11 +23,9 @@ module.exports.onStart = async function ({ api, event, args }) {
   let downloadType = args[0].toLowerCase();
   let videoName;
 
-  // تحديد نوع التحميل
   if (downloadType === "فيديو" || downloadType === "صوت") {
     videoName = args.slice(1).join(" ");
   } else {
-    // إذا لم يتم تحديد النوع، افتراضي فيديو
     downloadType = "فيديو";
     videoName = args.join(" ");
   }
@@ -38,13 +37,11 @@ module.exports.onStart = async function ({ api, event, args }) {
   try {
     const sentMessage = await api.sendMessage(`✔ | جاري البحث عن المقطع المطلوب "${videoName}". المرجو الانتظار...`, event.threadID);
 
-    // البحث عن الفيديو في YouTube باستخدام API الجديد
     const encodedQuery = encodeURIComponent(videoName);
     const searchApiUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodedQuery}&key=${youtubeApiKey}&type=video&maxResults=4`;
     
     console.log(`🔍 البحث عن الفيديو في YouTube: ${videoName}`);
 
-    // البحث عن الفيديوهات
     const searchResponse = await axios.get(searchApiUrl, { timeout: 15000 });
     
     if (!searchResponse.data.items || searchResponse.data.items.length === 0) {
@@ -54,7 +51,6 @@ module.exports.onStart = async function ({ api, event, args }) {
     const searchResults = searchResponse.data.items;
     let msg = `🎥 | تم العثور على المقاطع الأربعة التالية (${downloadType === "فيديو" ? "فيديو" : "صوت"}) :\n\n`;
 
-    // الرموز التي تم طلبها للأرقام
     const numberSymbols = ['⓵', '⓶', '⓷', '⓸'];
 
     for (let i = 0; i < searchResults.length; i++) {
@@ -66,7 +62,6 @@ module.exports.onStart = async function ({ api, event, args }) {
       msg += `${videoIndex} ❀ العنوان: ${title}\n`;
       msg += `   📺 القناة: ${channel}\n\n`;
       
-      // إضافة بيانات إضافية للاستخدام لاحقاً
       video.videoUrl = `https://www.youtube.com/watch?v=${video.id.videoId}`;
       video.thumbnail = video.snippet.thumbnails.default.url;
       video.downloadType = downloadType;
@@ -79,13 +74,11 @@ module.exports.onStart = async function ({ api, event, args }) {
     api.sendMessage(msg, event.threadID, (error, info) => {
       if (error) return console.error(error);
 
-      if (!global.GoatBot.onReply) global.GoatBot.onReply = new Map();
-      global.GoatBot.onReply.set(info.messageID, {
-        commandName: "يوتيوب",
-        author: event.senderID,
-        type: "pick",
+      pendingSearches.set(info.messageID, {
         searchResults: searchResults,
-        downloadType: downloadType
+        downloadType: downloadType,
+        author: event.senderID,
+        threadID: event.threadID
       });
     });
 
@@ -98,7 +91,11 @@ module.exports.onStart = async function ({ api, event, args }) {
 module.exports.onReply = async function ({ api, event, reply }) {
   if (!reply || reply.type !== 'pick') return;
 
-  const { author, searchResults, downloadType } = reply;
+  const messageId = reply.messageReply?.messageID || reply.messageID;
+  const data = pendingSearches.get(messageId);
+  if (!data) return;
+
+  const { searchResults, downloadType, author } = data;
 
   if (event.senderID !== author) {
     return api.sendMessage("⚠️ | هذا ليس لك.", event.threadID);
@@ -121,6 +118,8 @@ module.exports.onReply = async function ({ api, event, reply }) {
     } else {
       await downloadYouTubeAudio(videoUrl, api, event, video);
     }
+
+    pendingSearches.delete(messageId);
 
   } catch (error) {
     console.error('[ERROR]', error);
@@ -147,9 +146,8 @@ async function downloadYouTubeVideo(url, api, event, videoInfo) {
       writer.on("error", reject);
     });
 
-    // التحقق من حجم الملف
     const fileStats = fs.statSync(tempPath);
-    if (fileStats.size > 26214400) { // 25MB
+    if (fileStats.size > 26214400) {
       fs.unlinkSync(tempPath);
       return api.sendMessage('❌ | لا يمكن إرسال الملف لأن حجمه أكبر من 25 ميغابايت.', event.threadID);
     }
@@ -161,7 +159,6 @@ async function downloadYouTubeVideo(url, api, event, videoInfo) {
 
     await api.sendMessage(message, event.threadID);
     
-    // حذف الملف المؤقت
     setTimeout(() => {
       if (fs.existsSync(tempPath)) fs.unlinkSync(tempPath);
     }, 1000);
@@ -191,9 +188,8 @@ async function downloadYouTubeAudio(url, api, event, videoInfo) {
       writer.on("error", reject);
     });
 
-    // التحقق من حجم الملف
     const fileStats = fs.statSync(tempPath);
-    if (fileStats.size > 26214400) { // 25MB
+    if (fileStats.size > 26214400) {
       fs.unlinkSync(tempPath);
       return api.sendMessage('❌ | لا يمكن إرسال الملف لأن حجمه أكبر من 25 ميغابايت.', event.threadID);
     }
@@ -205,7 +201,6 @@ async function downloadYouTubeAudio(url, api, event, videoInfo) {
 
     await api.sendMessage(message, event.threadID);
     
-    // حذف الملف المؤقت
     setTimeout(() => {
       if (fs.existsSync(tempPath)) fs.unlinkSync(tempPath);
     }, 1000);
