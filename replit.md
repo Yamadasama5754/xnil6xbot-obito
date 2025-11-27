@@ -1,80 +1,100 @@
-# Goat Bot V2 - Arabic Version
+# Goat Bot V2 - النسخة العربية الكاملة
 
-## Overview
-This is a Facebook Messenger bot (Goat Bot V2) that has been fully translated to Arabic. The bot uses a personal Facebook account to respond to messages in groups and private chats.
+## نظرة عامة
+هذا بوت ماسنجر فيسبوك (Goat Bot V2@1.5.35) تم ترجمته بالكامل إلى اللغة العربية. يستخدم البوت حساب فيسبوك شخصي للرد على الرسائل في المجموعات والمحادثات الخاصة.
 
-## Recent Changes
-- **2025-11-27**: Full Arabic translation implemented
-  - Created `languages/ar.lang` - Main system messages in Arabic
-  - Created `languages/cmds/ar.js` - All command translations in Arabic
-  - Created `languages/events/ar.js` - Event messages in Arabic
-  - Updated `config.json` to use Arabic language (`"language": "ar"`)
+## آخر التحديثات
+- **2025-11-27**: ترجمة عربية كاملة شاملة
+  - ملف `languages/ar.lang` - رسائل النظام الرئيسية
+  - ملف `languages/cmds/ar.js` - ترجمات الأوامر
+  - ملف `languages/events/ar.js` - ترجمات الأحداث
+  - تحديث `config.json` للغة العربية (`"language": "ar"`)
+  - **ترجمة داخلية للأوامر**: تمت إضافة دعم اللغة العربية لجميع ملفات الأوامر الرئيسية
 
-## Project Architecture
+### الأوامر المترجمة داخلياً:
+- **المعلومات**: help, uid, tid
+- **الإدارة**: admin, ban, kick, warn
+- **الاقتصاد**: balance, bank, daily, top, slot
+- **الألعاب**: quiz, slot
+- **الميديا**: sing, dl
+- **الذكاء الاصطناعي**: gpt, gemini
+- **الأدوات**: translate
 
-### Directory Structure
+## هيكل المشروع
+
+### بنية المجلدات
 ```
 /
-├── bot/                    # Bot core functionality
-│   ├── handler/           # Event and action handlers
-│   ├── login/             # Login and authentication
-│   └── custom.js          # Custom bot features
-├── dashboard/             # Web dashboard
-│   ├── css/              # Stylesheets
-│   ├── js/               # JavaScript files
-│   ├── views/            # ETA templates
-│   └── routes/           # Express routes
-├── database/              # Database management
-│   ├── controller/       # Data controllers
-│   ├── models/           # Database models
-│   └── data/             # SQLite database files
-├── languages/             # Language files
-│   ├── ar.lang           # Arabic main translations
-│   ├── en.lang           # English main translations
-│   ├── cmds/             # Command translations
-│   │   ├── ar.js        # Arabic command translations
-│   │   └── en.js        # English command translations
-│   └── events/           # Event translations
-│       ├── ar.js        # Arabic event translations
-│       └── en.js        # English event translations
-├── scripts/               # Bot commands and events
-│   ├── cmds/             # Command scripts
-│   └── events/           # Event scripts
-├── config.json           # Main configuration
-├── index.js              # Entry point
-└── account.txt           # Facebook cookies
+├── bot/                    # النواة الأساسية للبوت
+│   ├── handler/           # معالجات الأحداث والإجراءات
+│   ├── login/             # تسجيل الدخول والمصادقة
+│   └── custom.js          # ميزات مخصصة
+├── dashboard/             # لوحة التحكم
+│   ├── css/              # ملفات الأنماط
+│   ├── js/               # ملفات جافاسكريبت
+│   ├── views/            # قوالب ETA
+│   └── routes/           # مسارات Express
+├── database/              # إدارة قاعدة البيانات
+│   ├── controller/       # وحدات التحكم
+│   ├── models/           # نماذج البيانات
+│   └── data/             # ملفات SQLite
+├── languages/             # ملفات اللغة
+│   ├── ar.lang           # الترجمة العربية الرئيسية
+│   ├── en.lang           # الترجمة الإنجليزية
+│   ├── cmds/             # ترجمات الأوامر
+│   │   ├── ar.js        # ترجمة الأوامر العربية
+│   │   └── en.js        # ترجمة الأوامر الإنجليزية
+│   └── events/           # ترجمات الأحداث
+│       ├── ar.js        # ترجمة الأحداث العربية
+│       └── en.js        # ترجمة الأحداث الإنجليزية
+├── scripts/               # أوامر وأحداث البوت
+│   ├── cmds/             # ملفات الأوامر (مترجمة داخلياً)
+│   └── events/           # ملفات الأحداث
+├── config.json           # الإعدادات الرئيسية
+├── index.js              # نقطة البداية
+└── account.txt           # كوكيز فيسبوك
 ```
 
-### Key Configuration
-- **Language**: Arabic (`ar`)
-- **Prefix**: `.`
-- **Database**: SQLite
-- **Dashboard Port**: 3001
+### الإعدادات الرئيسية
+- **اللغة**: العربية (`ar`)
+- **البادئة**: `.`
+- **قاعدة البيانات**: SQLite
+- **منفذ لوحة التحكم**: 3001
 
-### Running the Bot
-The bot is configured to run with `node index.js` and will:
-1. Login to Facebook using cookies from `account.txt`
-2. Connect to SQLite database
-3. Load all commands (107 commands)
-4. Load all events (6 events)
-5. Start the dashboard on port 3001
-6. Begin listening for messages
+### تشغيل البوت
+البوت مُعد للتشغيل بـ `node index.js` وسيقوم بـ:
+1. تسجيل الدخول لفيسبوك باستخدام الكوكيز من `account.txt`
+2. الاتصال بقاعدة بيانات SQLite
+3. تحميل جميع الأوامر (107 أمر)
+4. تحميل جميع الأحداث (6 أحداث)
+5. تشغيل لوحة التحكم على المنفذ 3001
+6. البدء في الاستماع للرسائل
 
-## User Preferences
-- Language: Arabic (العربية)
-- All system messages, commands, and events are translated to Arabic
+## تفضيلات المستخدم
+- اللغة: العربية (العربية)
+- جميع رسائل النظام والأوامر والأحداث مترجمة للعربية
+- الترجمة الداخلية للأوامر تضمن استجابات عربية كاملة
 
-## Commands Overview
-The bot includes 107+ commands covering:
-- Admin management (`admin`, `ban`, `kick`)
-- Fun games (`quiz`, `slot`, `dice`, `spin`)
-- Utilities (`help`, `uid`, `tid`, `translate`)
-- Media downloads (`ytb`, `tik`, `sing`, `dl`)
-- Group management (`setwelcome`, `setleave`, `rules`)
-- Economy (`balance`, `daily`, `bank`, `top`)
-- AI integration (`gpt`, `gemini`)
+## نظرة عامة على الأوامر
+البوت يتضمن 107+ أمر تغطي:
+- إدارة المشرفين (`admin`, `ban`, `kick`)
+- ألعاب ممتعة (`quiz`, `slot`, `dice`, `spin`)
+- أدوات مساعدة (`help`, `uid`, `tid`, `translate`)
+- تحميل الميديا (`ytb`, `tik`, `sing`, `dl`)
+- إدارة المجموعات (`setwelcome`, `setleave`, `rules`)
+- الاقتصاد (`balance`, `daily`, `bank`, `top`)
+- تكامل الذكاء الاصطناعي (`gpt`, `gemini`)
 
-## Notes
-- Bot prefix is `.` (dot)
-- To change language back to English, update `config.json` and set `"language": "en"`
-- All commands support Arabic descriptions and responses
+## ملاحظات
+- بادئة البوت هي `.` (نقطة)
+- لتغيير اللغة للإنجليزية، حدّث `config.json` وضع `"language": "en"`
+- جميع الأوامر تدعم الأوصاف والاستجابات العربية
+- الترجمة الداخلية تضمن رسائل عربية في كل تفاعل
+
+## حالة الترجمة
+| القسم | الحالة |
+|-------|--------|
+| رسائل النظام | ✅ مكتمل |
+| أوصاف الأوامر | ✅ مكتمل |
+| رسائل الأحداث | ✅ مكتمل |
+| الترجمة الداخلية للأوامر | ✅ مكتمل (18+ أمر) |
