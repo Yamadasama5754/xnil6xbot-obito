@@ -4,12 +4,15 @@ const path = require('path');
 
 module.exports.config = {
   name: "يوتيوب",
+  category: "وسائط",
   author: "Yamada KJ & Alastor",
   cooldowns: 60,
   description: "تنزيل مقطع من YouTube",
   role: 0,
   aliases: ["يوتيب", "فيديو", "مقطع"]
 };
+
+module.exports.onStart = async function () {};
 
 const youtubeApiKey = process.env.YOUTUBE_API_KEY || "AIzaSyC_CVzKGFtLAqxNdAZ_EyLbL0VRGJ-FaMU";
 

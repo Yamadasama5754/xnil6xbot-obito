@@ -1,11 +1,14 @@
 module.exports.config = {
   name: "مساعدة",
+  category: "أدوات",
   author: "Yamada KJ & Alastor",
   cooldowns: 5,
   description: "عرض قائمة الأوامر أو معلومات عن أمر معين",
   role: 0,
   aliases: ["help", "اوامر", "أوامر", "الاوامر"]
 };
+
+module.exports.onStart = async function () {};
 
 module.exports.run = async function ({ api, event, args }) {
   try {
