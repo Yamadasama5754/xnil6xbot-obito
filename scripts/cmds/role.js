@@ -71,58 +71,67 @@ module.exports = {
         },
 
         onStart: async function ({ message, event, args, role, threadsData, api, getLang }) {
-                const { commands, aliases } = global.GoatBot;
-                const setRole = await threadsData.get(event.threadID, "data.setRole", {});
+                try {
+                        if (!global.GoatBot || !global.GoatBot.commands) {
+                                return message.reply("❌ البوت لم يكن جاهز، حاول لاحقاً");
+                        }
 
-                if (["view", "viewrole", "show", "عرض", "رؤية"].includes(args[0])) {
-                        if (!setRole || Object.keys(setRole).length === 0)
-                                return message.reply(getLang("noEditedCommand"));
-                        let msg = getLang("editedCommand");
-                        for (const cmd in setRole) msg += `- ${cmd} => ${setRole[cmd]}\n`;
-                        return message.reply(msg);
-                }
+                        const { commands, aliases } = global.GoatBot;
+                        const setRole = await threadsData.get(event.threadID, "data.setRole", {});
 
-                let commandName = (args[0] || "").toLowerCase();
-                let newRole = args[1];
-                
-                if (!commandName || !newRole)
-                        return message.reply(getLang("noPermission"));
-                
-                if ((isNaN(newRole) && newRole !== "default" && newRole !== "الأصل")) {
-                        return message.reply(getLang("noPermission"));
-                }
-                
-                if (role < 1)
-                        return message.reply(getLang("noPermission"));
+                        if (["view", "viewrole", "show", "عرض", "رؤية"].includes(args[0])) {
+                                if (!setRole || Object.keys(setRole).length === 0)
+                                        return message.reply(getLang("noEditedCommand"));
+                                let msg = getLang("editedCommand");
+                                for (const cmd in setRole) msg += `- ${cmd} => ${setRole[cmd]}\n`;
+                                return message.reply(msg);
+                        }
 
-                const command = commands.get(commandName) || commands.get(aliases.get(commandName));
-                if (!command)
-                        return message.reply(getLang("commandNotFound", commandName));
-                
-                commandName = command.config.name;
+                        let commandName = (args[0] || "").toLowerCase();
+                        let newRole = args[1];
+                        
+                        if (!commandName || newRole === undefined)
+                                return message.reply(getLang("noPermission"));
+                        
+                        if ((isNaN(newRole) && newRole !== "default" && newRole !== "الأصل")) {
+                                return message.reply("❌ يجب أن تكون القاعدة رقم (0 أو 1 أو 2) أو 'default'");
+                        }
+                        
+                        if (role === undefined || role < 1)
+                                return message.reply(getLang("noPermission"));
 
-                let Default = false;
-                if (newRole === "default" || newRole === "الأصل" || newRole == command.config.role) {
-                        Default = true;
-                        newRole = command.config.role;
-                }
-                else {
-                        newRole = parseInt(newRole);
-                }
+                        const command = commands.get(commandName) || commands.get(aliases.get(commandName));
+                        if (!command)
+                                return message.reply(getLang("commandNotFound", commandName));
+                        
+                        commandName = command.config.name;
 
-                if (!Default) {
-                        setRole[commandName] = newRole;
-                } else {
-                        delete setRole[commandName];
-                }
-                
-                await api.setMessageReaction("✅", event.messageID, (err) => {}, true);
-                await threadsData.set(event.threadID, setRole, "data.setRole");
-                
-                if (Default === true) {
-                        message.reply(getLang("resetRole", commandName));
-                } else {
-                        message.reply(getLang("changedRole", commandName, newRole));
+                        let Default = false;
+                        if (newRole === "default" || newRole === "الأصل" || parseInt(newRole) == command.config.role) {
+                                Default = true;
+                                newRole = command.config.role;
+                        }
+                        else {
+                                newRole = parseInt(newRole);
+                        }
+
+                        if (!Default) {
+                                setRole[commandName] = newRole;
+                        } else {
+                                delete setRole[commandName];
+                        }
+                        
+                        await api.setMessageReaction("✅", event.messageID, (err) => {}, true);
+                        await threadsData.set(event.threadID, setRole, "data.setRole");
+                        
+                        if (Default === true) {
+                                message.reply(getLang("resetRole", commandName));
+                        } else {
+                                message.reply(getLang("changedRole", commandName, newRole));
+                        }
+                } catch (error) {
+                        console.error("❌ خطأ في أمر التصنيف:", error);
+                        message.reply("❌ حدث خطأ: " + error.message);
                 }
         }
 };
