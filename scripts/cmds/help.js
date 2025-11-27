@@ -8,9 +8,7 @@ module.exports.config = {
   aliases: ["help", "اوامر", "أوامر", "الاوامر"]
 };
 
-module.exports.onStart = async function () {};
-
-module.exports.run = async function ({ api, event, args }) {
+module.exports.onStart = async function ({ api, event, args }) {
   try {
     const allCommands = Array.from(global.GoatBot.commands.values());
     const commandList = allCommands.filter(cmd => !cmd.config?.hidden);

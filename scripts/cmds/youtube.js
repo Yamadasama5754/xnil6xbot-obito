@@ -12,30 +12,23 @@ module.exports.config = {
   aliases: ["يوتيب", "فيديو", "مقطع"]
 };
 
-module.exports.onStart = async function () {};
-
 const youtubeApiKey = process.env.YOUTUBE_API_KEY || "AIzaSyC_CVzKGFtLAqxNdAZ_EyLbL0VRGJ-FaMU";
 
-module.exports.run = async function ({ api, event, args }) {
-  const input = event.body;
-  const data = input.split(" ");
-
-  if (data.length < 2) {
+module.exports.onStart = async function ({ api, event, args }) {
+  if (args.length < 1) {
     return api.sendMessage("⚠️ | أرجوك قم بإدخال اسم المقطع.\n\n📝 | الاستخدام:\n• يوتيوب فيديو [اسم المقطع] - لتحميل الفيديو\n• يوتيوب صوت [اسم المقطع] - لتحميل الصوت فقط", event.threadID);
   }
 
-  data.shift();
-  let downloadType = data[0].toLowerCase();
+  let downloadType = args[0].toLowerCase();
   let videoName;
 
   // تحديد نوع التحميل
   if (downloadType === "فيديو" || downloadType === "صوت") {
-    data.shift();
-    videoName = data.join(" ");
+    videoName = args.slice(1).join(" ");
   } else {
     // إذا لم يتم تحديد النوع، افتراضي فيديو
     downloadType = "فيديو";
-    videoName = data.join(" ");
+    videoName = args.join(" ");
   }
 
   if (!videoName) {
@@ -102,7 +95,7 @@ module.exports.run = async function ({ api, event, args }) {
   }
 };
 
-module.exports.onReply = async function ({ api, event, reply }) {
+module.exports.onReply = async function ({ api, event, reply, message }) {
   if (reply.type !== 'pick') return;
 
   const { author, searchResults, downloadType } = reply;
