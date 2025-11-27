@@ -607,7 +607,7 @@ async function getAppStateToLogin(loginWithEmail) {
             const number = parseInt(key.name);
             if (number >= 0 && number <= options.length)
               currentOption = number - 1;
-            process.stdout.write("\x1b[1D"); // delete the character
+            process.stdout.write("\033[1D"); // delete the character
           } else if (key.name === "enter" || key.name === "return") {
             rl.input.removeAllListeners("keypress");
             rl.close();
@@ -615,7 +615,7 @@ async function getAppStateToLogin(loginWithEmail) {
             showOptions();
             resolve();
           } else {
-            process.stdout.write("\x1b[1D"); // delete the character
+            process.stdout.write("\033[1D"); // delete the character
           }
 
           clearLines(options.length);
@@ -698,9 +698,9 @@ function stopListening(keyListen) {
 }
 
 // function removeListener(keyListen) {
-//      keyListen = keyListen || Object.keys(callbackListenTime).pop();
-//      if (callbackListenTime[keyListen])
-//              callbackListenTime[keyListen] = () => { };
+// 	keyListen = keyListen || Object.keys(callbackListenTime).pop();
+// 	if (callbackListenTime[keyListen])
+// 		callbackListenTime[keyListen] = () => { };
 // }
 
 async function startBot(loginWithEmail) {
@@ -1385,15 +1385,15 @@ async function startBot(loginWithEmail) {
           if (isSendNotiErrorMessage == true) isSendNotiErrorMessage = false;
 
           // "whiteListMode": {
-          //    "enable": false,
-          //    "whiteListIds": [],
-          //    "notes": "if you enable this feature, only the ids in the whiteListIds list can use the bot"
+          // 	"enable": false,
+          // 	"whiteListIds": [],
+          // 	"notes": "if you enable this feature, only the ids in the whiteListIds list can use the bot"
           // },
           // "whiteListModeThread": {
-          //    "enable": false,
-          //    "whiteListThreadIds": [],
-          //    "notes": "if you enable this feature, only the thread in the whiteListThreadIds list can use the bot",
-          //    "how_it_work": "if you enable both whiteListMode and whiteListModeThread, the system will check if the user is in whiteListIds, then check if the thread is in whiteListThreadIds, if one of the conditions is true, the user can use the bot"
+          // 	"enable": false,
+          // 	"whiteListThreadIds": [],
+          // 	"notes": "if you enable this feature, only the thread in the whiteListThreadIds list can use the bot",
+          // 	"how_it_work": "if you enable both whiteListMode and whiteListModeThread, the system will check if the user is in whiteListIds, then check if the thread is in whiteListThreadIds, if one of the conditions is true, the user can use the bot"
           // },
 
           // "if you enable both whiteListMode and whiteListModeThread, the system will check if the user is in whiteListIds, then check if the thread is in whiteListThreadIds, if one of the conditions is true, the user can use the bot"
@@ -1403,11 +1403,11 @@ async function startBot(loginWithEmail) {
           // const isWhitelistedThread = config.whiteListModeThread?.whiteListThreadIds.includes(event.threadID);
 
           // if (
-          //    (whitelistMode && whitelistModeThread && !isWhitelistedSender && !isWhitelistedThread) ||
-          //    (whitelistMode && !isWhitelistedSender) ||
-          //    (whitelistModeThread && !isWhitelistedThread)
+          // 	(whitelistMode && whitelistModeThread && !isWhitelistedSender && !isWhitelistedThread) ||
+          // 	(whitelistMode && !isWhitelistedSender) ||
+          // 	(whitelistModeThread && !isWhitelistedThread)
           // ) {
-          //    return;
+          // 	return;
           // }
 
           if (
