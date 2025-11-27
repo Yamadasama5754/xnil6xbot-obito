@@ -66,32 +66,45 @@ module.exports.onStart = async function ({ api, event, args }) {
     console.log(`[EDIT] Processing image with prompt: ${editPrompt}`);
     console.log(`[EDIT] Image URL: ${imageUrl}`);
 
-    const fullApiUrl = `${API_ENDPOINT}?prompt=${encodeURIComponent(editPrompt)}&url=${encodeURIComponent(imageUrl)}`;
+    // استخدام API بديلة أسرع
+    const fullApiUrl = `https://api.apiimg.net/enhance.php?url=${encodeURIComponent(imageUrl)}&prompt=${encodeURIComponent(editPrompt)}&quality=high`;
 
     console.log(`[EDIT] Calling API: ${fullApiUrl}`);
 
     const apiResponse = await axios.get(fullApiUrl, {
-      timeout: 45000
+      timeout: 20000,
+      headers: {
+        "User-Agent": "Mozilla/5.0"
+      }
     });
 
     const data = apiResponse.data;
     console.log(`[EDIT] API Response:`, data);
 
-    if (!data.success) {
-      throw new Error(data.error || "فشل في معالجة الصورة");
+    let finalImageUrl = null;
+    
+    // معالجة الاستجابة
+    if (data.success && data.imageUrl) {
+      finalImageUrl = data.imageUrl;
+    } else if (data.data && data.data.imageUrl) {
+      finalImageUrl = data.data.imageUrl;
+    } else if (typeof data === 'string' && data.startsWith('http')) {
+      finalImageUrl = data;
     }
 
-    if (!data.imageUrl) {
-      throw new Error("لم يتم الحصول على رابط الصورة من API");
+    if (!finalImageUrl) {
+      throw new Error("فشل في معالجة الصورة - لم يتم الحصول على رابط الصورة");
     }
 
-    const finalImageUrl = data.imageUrl;
     console.log(`[EDIT] Final image URL: ${finalImageUrl}`);
 
     // Download the edited image
     const imageDownloadResponse = await axios.get(finalImageUrl, {
       responseType: 'arraybuffer',
-      timeout: 45000
+      timeout: 15000,
+      headers: {
+        "User-Agent": "Mozilla/5.0"
+      }
     });
 
     const cacheDir = path.join(process.cwd(), "cache");
@@ -129,6 +142,8 @@ module.exports.onStart = async function ({ api, event, args }) {
     if (error.response) {
       console.error("[EDIT] API Response Error:", error.response.status, error.response.data);
       errorMessage = `خطأ في API: ${error.response.data?.error || error.response.status}`;
+    } else if (error.code === 'ECONNABORTED') {
+      errorMessage = "انتهت مهلة الانتظار - قد تكون الخدمة بطيئة. حاول لاحقاً";
     } else if (error.message) {
       errorMessage = error.message;
     }

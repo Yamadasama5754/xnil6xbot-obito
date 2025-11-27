@@ -45,17 +45,25 @@ module.exports.onStart = async function ({ api, event, args, message }) {
       // ترجمة كلمة البحث إلى الإنجليزية إذا كانت عربية
       keySearch = await translateToEnglish(keySearch);
 
+      // استخدام API بديلة أسرع
       const pinterestResponse = await axios.get(
-        `https://hiroshi-api.onrender.com/image/pinterest?search=${encodeURIComponent(keySearch)}`,
+        `https://api.apiimg.net/pinterest.php?search=${encodeURIComponent(keySearch)}&limit=5`,
         { 
-          timeout: 30000,
+          timeout: 15000,
           headers: {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+            "User-Agent": "Mozilla/5.0"
           }
         }
       );
 
-      const data = pinterestResponse.data?.data;
+      let data = pinterestResponse.data;
+      
+      // معالجة الاستجابة حسب صيغة الـ API
+      if (data.status === 'success' && data.data) {
+        data = data.data;
+      } else if (!Array.isArray(data)) {
+        data = [];
+      }
 
       if (!data || data.length === 0) {
         api.setMessageReaction("❌", event.messageID, (err) => {}, true);
