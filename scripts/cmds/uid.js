@@ -10,7 +10,8 @@ module.exports = {
 		role: 0,
 		description: {
 			vi: "Xem user id facebook của người dùng",
-			en: "View facebook user id of user"
+			en: "View facebook user id of user",
+			ar: "عرض معرف المستخدم على فيسبوك"
 		},
 		category: "info",
 		guide: {
@@ -21,7 +22,11 @@ module.exports = {
 			en: "   {pn}: use to view your facebook user id"
 				+ "\n   {pn} @tag: view facebook user id of tagged people"
 				+ "\n   {pn} <profile link>: view facebook user id of profile link"
-				+ "\n   Reply to someone's message with the command to view their facebook user id"
+				+ "\n   Reply to someone's message with the command to view their facebook user id",
+			ar: "   {pn}: لعرض معرف فيسبوك الخاص بك"
+				+ "\n   {pn} @إشارة: لعرض معرف فيسبوك للأشخاص المُشار إليهم"
+				+ "\n   {pn} <رابط الملف الشخصي>: لعرض معرف فيسبوك من رابط الملف الشخصي"
+				+ "\n   رد على رسالة شخص ما مع الأمر لعرض معرف فيسبوك الخاص به"
 		}
 	},
 
@@ -31,6 +36,9 @@ module.exports = {
 		},
 		en: {
 			syntaxError: "Please tag the person you want to view uid or leave it blank to view your own uid"
+		},
+		ar: {
+			syntaxError: "يرجى الإشارة للشخص الذي تريد عرض معرفه أو اتركه فارغاً لعرض معرفك الخاص"
 		}
 	},
 

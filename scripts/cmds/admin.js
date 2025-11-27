@@ -11,16 +11,20 @@ module.exports = {
 		role: 2,
 		description: {
 			vi: "Thêm, xóa, sửa quyền admin",
-			en: "Add, remove, edit admin role"
+			en: "Add, remove, edit admin role",
+			ar: "إضافة، حذف، تعديل صلاحيات المشرف"
 		},
 		category: "box chat",
 		guide: {
 			vi: '   {pn} [add | -a] <uid | @tag>: Thêm quyền admin cho người dùng'
-				+ '\n	  {pn} [remove | -r] <uid | @tag>: Xóa quyền admin của người dùng'
-				+ '\n	  {pn} [list | -l]: Liệt kê danh sách admin',
+				+ '\n     {pn} [remove | -r] <uid | @tag>: Xóa quyền admin của người dùng'
+				+ '\n     {pn} [list | -l]: Liệt kê danh sách admin',
 			en: '   {pn} [add | -a] <uid | @tag>: Add admin role for user'
-				+ '\n	  {pn} [remove | -r] <uid | @tag>: Remove admin role of user'
-				+ '\n	  {pn} [list | -l]: List all admins'
+				+ '\n     {pn} [remove | -r] <uid | @tag>: Remove admin role of user'
+				+ '\n     {pn} [list | -l]: List all admins',
+			ar: '   {pn} [add | -a] <uid | @tag>: إضافة صلاحية مشرف للمستخدم'
+				+ '\n     {pn} [remove | -r] <uid | @tag>: إزالة صلاحية مشرف من المستخدم'
+				+ '\n     {pn} [list | -l]: عرض قائمة المشرفين'
 		}
 	},
 
@@ -42,6 +46,15 @@ module.exports = {
 			notAdmin: "⚠️ | %1 users don't have admin role:\n%2",
 			missingIdRemove: "⚠️ | Please enter ID or tag user to remove admin role",
 			listAdmin: "👑 | List of admins:\n%1"
+		},
+		ar: {
+			added: "✅ | تمت إضافة صلاحية مشرف لـ %1 مستخدم:\n%2",
+			alreadyAdmin: "\n⚠️ | %1 مستخدم لديهم صلاحية مشرف بالفعل:\n%2",
+			missingIdAdd: "⚠️ | يرجى إدخال ID أو الإشارة للمستخدم لإضافة صلاحية مشرف",
+			removed: "✅ | تمت إزالة صلاحية مشرف من %1 مستخدم:\n%2",
+			notAdmin: "⚠️ | %1 مستخدم ليس لديهم صلاحية مشرف:\n%2",
+			missingIdRemove: "⚠️ | يرجى إدخال ID أو الإشارة للمستخدم لإزالة صلاحية مشرف",
+			listAdmin: "👑 | قائمة المشرفين:\n%1"
 		}
 	},
 

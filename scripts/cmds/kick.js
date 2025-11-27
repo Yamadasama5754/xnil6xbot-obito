@@ -7,12 +7,14 @@ module.exports = {
 		role: 1,
 		description: {
 			vi: "Kick thành viên khỏi box chat",
-			en: "Kick member out of chat box"
+			en: "Kick member out of chat box",
+			ar: "طرد عضو من المحادثة"
 		},
 		category: "box chat",
 		guide: {
 			vi: "   {pn} @tags: dùng để kick những người được tag",
-			en: "   {pn} @tags: use to kick members who are tagged"
+			en: "   {pn} @tags: use to kick members who are tagged",
+			ar: "   {pn} @إشارات: لطرد الأعضاء المُشار إليهم"
 		}
 	},
 
@@ -22,6 +24,9 @@ module.exports = {
 		},
 		en: {
 			needAdmin: "Please add admin for bot before using this feature"
+		},
+		ar: {
+			needAdmin: "يرجى إضافة صلاحية مشرف للبوت قبل استخدام هذه الميزة"
 		}
 	},
 

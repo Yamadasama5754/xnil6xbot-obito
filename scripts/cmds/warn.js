@@ -9,7 +9,8 @@ module.exports = {
 		role: 0,
 		description: {
 			vi: "cảnh cáo thành viên trong nhóm, đủ 3 lần ban khỏi box",
-			en: "warn member in group, if they have 3 warns, they will be banned"
+			en: "warn member in group, if they have 3 warns, they will be banned",
+			ar: "تحذير عضو في المجموعة، إذا حصل على 3 تحذيرات سيتم حظره"
 		},
 		category: "box chat",
 		guide: {
@@ -28,7 +29,15 @@ module.exports = {
 				+ "\n   {pn} unban [@tag | <uid> | reply | leave blank]: unban member, at the same time remove all warnings of that member"
 				+ "\n   {pn} unwarn [@tag | <uid> | reply | leave blank] [<number> | leave blank]: remove warning of member by uid and number of warning, if leave blank will remove the last warning"
 				+ "\n   {pn} reset: reset all warn data"
-				+ "\n⚠️ You need to set admin for bot to auto kick banned members"
+				+ "\n⚠️ You need to set admin for bot to auto kick banned members",
+			ar: "   {pn} @إشارة <السبب>: تحذير عضو"
+				+ "\n   {pn} list: عرض قائمة الأعضاء المحذرين"
+				+ "\n   {pn} listban: عرض قائمة الأعضاء المحظورين"
+				+ "\n   {pn} info [@إشارة | <uid> | رد | اتركه فارغاً]: عرض معلومات التحذير للشخص المُشار إليه أو uid أو نفسك"
+				+ "\n   {pn} unban [@إشارة | <uid> | رد | اتركه فارغاً]: إلغاء حظر العضو وإزالة جميع تحذيراته"
+				+ "\n   {pn} unwarn [@إشارة | <uid> | رد | اتركه فارغاً] [<رقم> | اتركه فارغاً]: إزالة تحذير العضو برقم التحذير، إذا تركته فارغاً ستتم إزالة آخر تحذير"
+				+ "\n   {pn} reset: إعادة تعيين جميع بيانات التحذير"
+				+ "\n⚠️ تحتاج لتعيين صلاحية مشرف للبوت لطرد الأعضاء المحظورين تلقائياً"
 		}
 	},
 
@@ -86,6 +95,33 @@ module.exports = {
 			hasBanned: "⚠️ The following members have been warned 3 times before and banned from the box:\n%1",
 			failedKick: "⚠️ An error occurred when kicking the following members:\n%1",
 			userNotInGroup: "⚠️ The user \"%1\" is currently not in your group"
+		},
+		ar: {
+			list: "قائمة الأعضاء المحذرين:\n%1\n\nلعرض تفاصيل التحذيرات، استخدم الأمر \"%2warn info [@إشارة | <uid> | اتركه فارغاً]\": لعرض معلومات التحذير للشخص المُشار إليه أو uid أو نفسك",
+			listBan: "قائمة الأعضاء الذين تم تحذيرهم 3 مرات وحظرهم من المحادثة:\n%1",
+			listEmpty: "لا يوجد أعضاء محذرين في مجموعتك",
+			listBanEmpty: "لا يوجد أعضاء محظورين في مجموعتك",
+			invalidUid: "يرجى إدخال uid صالح للشخص الذي تريد عرض معلوماته",
+			noData: "لا توجد بيانات",
+			noPermission: "❌ فقط مشرفو المجموعة يمكنهم إلغاء حظر الأعضاء المحظورين",
+			invalidUid2: "⚠️ يرجى إدخال uid صالح للشخص الذي تريد إلغاء حظره",
+			notBanned: "⚠️ المستخدم ذو المعرف %1 غير محظور من محادثتك",
+			unbanSuccess: "✅ تم إلغاء حظر العضو [%1 | %2] بنجاح، يمكنه الآن الانضمام لمحادثتك",
+			noPermission2: "❌ فقط مشرفو المجموعة يمكنهم إزالة التحذيرات من الأعضاء",
+			invalidUid3: "⚠️ يرجى إدخال uid أو الإشارة للشخص الذي تريد إزالة تحذيره",
+			noData2: "⚠️ المستخدم ذو المعرف %1 ليس لديه بيانات تحذير",
+			notEnoughWarn: "❌ المستخدم %1 لديه %2 تحذير فقط",
+			unwarnSuccess: "✅ تمت إزالة التحذير رقم %1 للعضو [%2 | %3] بنجاح",
+			noPermission3: "❌ فقط مشرفو المجموعة يمكنهم إعادة تعيين بيانات التحذير",
+			resetWarnSuccess: "✅ تم إعادة تعيين بيانات التحذير بنجاح",
+			noPermission4: "❌ فقط مشرفو المجموعة يمكنهم تحذير الأعضاء في المجموعة",
+			invalidUid4: "⚠️ تحتاج للإشارة أو الرد على رسالة الشخص الذي تريد تحذيره",
+			warnSuccess: "⚠️ تم تحذير العضو %1 للمرة %2\n- Uid: %3\n- السبب: %4\n- التاريخ والوقت: %5\nهذا العضو تم تحذيره 3 مرات وحظره من المحادثة، لإلغاء الحظر استخدم الأمر \"%6warn unban <uid>\"",
+			noPermission5: "⚠️ يحتاج البوت صلاحية مشرف لطرد الأعضاء المحظورين",
+			warnSuccess2: "⚠️ تم تحذير العضو %1 للمرة %2\n- Uid: %3\n- السبب: %4\n- التاريخ والوقت: %5\nإذا انتهك %6 مرات أخرى سيتم حظره من المحادثة",
+			hasBanned: "⚠️ الأعضاء التالية أسماؤهم تم تحذيرهم 3 مرات وحظرهم من المحادثة:\n%1",
+			failedKick: "⚠️ حدث خطأ عند طرد الأعضاء التالية أسماؤهم:\n%1",
+			userNotInGroup: "⚠️ المستخدم \"%1\" غير موجود حالياً في مجموعتك"
 		}
 	},
 
@@ -259,7 +295,7 @@ module.exports = {
 						api.removeUserFromGroup(uid, threadID, async (err) => {
 							if (err) {
 								const members = await threadsData.get(event.threadID, "members");
-								if (members.find(item => item.userID == uid)?.inGroup) // check if user is still in group
+								if (members.find(item => item.userID == uid)?.inGroup)
 									return message.reply(getLang("userNotInGroup", userName));
 								else
 									return message.reply(getLang("noPermission5"), (e, info) => {
@@ -327,43 +363,41 @@ module.exports = {
 									if (
 										event.logMessageType === "log:thread-admins"
 										&& event.logMessageData.ADMIN_EVENT == "add_admin"
-										&& event.logMessageData.TARGET_ID == api.getCurrentUserID()
 									) {
-										const threadData = await threadsData.get(event.threadID);
-										const warnList = threadData.data.warn;
-										const members = threadData.members;
-										removeUsers(hasBanned, warnList, api, event, message, getLang, members);
-										global.GoatBot.onEvent = onEvent.filter(item => item.messageID != info.messageID);
+										const { TARGET_ID } = event.logMessageData;
+										if (TARGET_ID == api.getCurrentUserID()) {
+											const failedKick = [];
+											for (const user of hasBanned) {
+												try {
+													await api.removeUserFromGroup(user.uid, event.threadID);
+												}
+												catch (e) {
+													failedKick.push(user);
+												}
+											}
+											if (failedKick.length)
+												message.reply(getLang("failedKick", failedKick.map(item => `  - ${item.name} (uid: ${item.uid})`).join("\n")));
+											global.GoatBot.onEvent = onEvent.filter(item => item.messageID != info.messageID);
+										}
 									}
 								}
 							});
 						});
 					else {
-						const members = await threadsData.get(event.threadID, "members");
-						removeUsers(hasBanned, warnList, api, event, message, getLang, members);
+						const failedKick = [];
+						for (const user of hasBanned) {
+							try {
+								await api.removeUserFromGroup(user.uid, event.threadID);
+							}
+							catch (e) {
+								failedKick.push(user);
+							}
+						}
+						if (failedKick.length)
+							message.reply(getLang("failedKick", failedKick.map(item => `  - ${item.name} (uid: ${item.uid})`).join("\n")));
 					}
 				}
 			};
 		}
 	}
 };
-
-async function removeUsers(hasBanned, warnList, api, event, message, getLang, members) {
-	const failed = [];
-	for (const user of hasBanned) {
-		if (members.find(item => item.userID == user.uid)?.inGroup) { // check if user is still in group
-			try {
-				if (warnList.find(item => item.uid == user.uid)?.list.length ?? 0 >= 3)
-					await api.removeUserFromGroup(user.uid, event.threadID);
-			}
-			catch (e) {
-				failed.push({
-					uid: user.uid,
-					name: user.name
-				});
-			}
-		}
-	}
-	if (failed.length)
-		message.reply(getLang("failedKick", failed.map(item => `  - ${item.name} (uid: ${item.uid})`).join("\n")));
-}

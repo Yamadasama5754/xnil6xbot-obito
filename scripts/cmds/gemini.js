@@ -11,17 +11,33 @@ module.exports = {
     name: "gemini",
     version: "1.0",
     author: "Dipto",
-    description: "gemeini ai",
+    description: {
+      en: "Gemini AI assistant",
+      ar: "مساعد Gemini الذكي"
+    },
     countDown: 5,
     role: 0,
     category: "google",
     guide: {
       en: "{pn} message | photo reply",
+      ar: "{pn} رسالة | رد على صورة"
     },
   },
-  onStart: async ({ api, args, event }) => {
+
+  langs: {
+    en: {
+      noPrompt: "Please provide a prompt or message reply",
+      error: "Sorry, there was an error processing your request."
+    },
+    ar: {
+      noPrompt: "يرجى تقديم سؤال أو الرد على رسالة",
+      error: "عذراً، حدث خطأ أثناء معالجة طلبك."
+    }
+  },
+
+  onStart: async ({ api, args, event, getLang }) => {
     const prompt = args.join(" ");
-    //---- Image Reply -----//
+    
     if (event.type === "message_reply") {
       var t = event.messageReply.attachments[0].url;
       try {
@@ -32,13 +48,12 @@ module.exports = {
         api.sendMessage(data2, event.threadID, event.messageID);
       } catch (error) {
         console.error("Error:", error.message);
-        api.sendMessage(error, event.threadID, event.messageID);
+        api.sendMessage(getLang("error") + " " + error, event.threadID, event.messageID);
       }
     }
-    //---------- Message Reply ---------//
     else if (!prompt) {
       return api.sendMessage(
-        "Please provide a prompt or message reply",
+        getLang("noPrompt"),
         event.threadID,
         event.messageID,
       );
@@ -52,7 +67,7 @@ module.exports = {
       } catch (error) {
         console.error("Error calling Gemini AI:", error);
         api.sendMessage(
-          `Sorry, there was an error processing your request.${error}`,
+          getLang("error") + " " + error,
           event.threadID,
           event.messageID,
         );

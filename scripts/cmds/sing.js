@@ -6,16 +6,18 @@ module.exports = {
   config: {
     name: "sing",
     version: "1.14",
-    aliases: ["song", "music", "play"],
+    aliases: ["song", "music", "play", "اغنية"],
     author: "xnil6x",
     countDown: 5,
     role: 0,
     description: {
-      en: "Download audio from YouTube"
+      en: "Download audio from YouTube",
+      ar: "تحميل صوت من يوتيوب"
     },
     category: "media",
     guide: {
-      en: "{pn} [<song name>|<song link>]: Use this command to download audio from YouTube.\n   Example:\n{pn} chipi chipi chapa chapa"
+      en: "{pn} [<song name>|<song link>]: Use this command to download audio from YouTube.\n   Example:\n{pn} chipi chipi chapa chapa",
+      ar: "{pn} [<اسم الأغنية>|<رابط الأغنية>]: استخدم هذا الأمر لتحميل صوت من يوتيوب.\n   مثال:\n{pn} despacito"
     }
   },
   langs: {
@@ -27,7 +29,23 @@ module.exports = {
       noAudio: "⭕ Sorry, no audio was found with a size less than 26MB.",
       playing: "🎧 Now playing: %1",
       selectSong: "Select a song by typing the number corresponding to it.",
-      invalidChoice: "❌ Invalid choice. Please enter a number between 1 and 6."
+      invalidChoice: "❌ Invalid choice. Please enter a number between 1 and 6.",
+      title: "🎵 Title",
+      duration: "⏱ Duration",
+      channel: "📺 Channel"
+    },
+    ar: {
+      error: "❌ حدث خطأ: %1",
+      noResult: "⭕ لا توجد نتائج بحث تطابق الكلمة %1. يرجى المحاولة مرة أخرى.",
+      choose: "🎶 اختر أغنية من القائمة أدناه بالرد برقمها أو اكتب أي نص للإلغاء.\n\n%1",
+      audio: "الصوت: ",
+      noAudio: "⭕ عذراً، لم يتم العثور على صوت بحجم أقل من 26 ميجا.",
+      playing: "🎧 يتم تشغيل الآن: %1",
+      selectSong: "اختر أغنية بكتابة الرقم المقابل لها.",
+      invalidChoice: "❌ اختيار غير صالح. يرجى إدخال رقم بين 1 و 6.",
+      title: "🎵 العنوان",
+      duration: "⏱ المدة",
+      channel: "📺 القناة"
     }
   },
   onStart: async function({ args, message, event, commandName, getLang }) {
@@ -58,9 +76,9 @@ module.exports = {
     for (const info of result) {
       thumbnails.push(getStreamFromURL(info.thumbnail));
       msg += `╭────────── ${i++} ──────────╮\n`;
-      msg += `│ 🎵 Title: ${info.title}\n`;
-      msg += `│ ⏱ Duration: ${info.time}\n`;
-      msg += `│ 📺 Channel: ${info.channel.name}\n`;
+      msg += `│ ${getLang("title")}: ${info.title}\n`;
+      msg += `│ ${getLang("duration")}: ${info.time}\n`;
+      msg += `│ ${getLang("channel")}: ${info.channel.name}\n`;
       msg += `╰──────────────────────╯\n\n`;
     }
     

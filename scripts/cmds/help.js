@@ -10,10 +10,14 @@ module.exports = {
     author: "NTKhang // xnil6x",
     countDown: 5,
     role: 0,
-    description: "View command information with enhanced interface",
+    description: {
+      en: "View command information with enhanced interface",
+      ar: "عرض معلومات الأوامر بواجهة محسنة"
+    },
     category: "info",
     guide: {
-      en: "{pn} [command] - View command details\n{pn} all - View all commands\n{pn} c [category] - View commands in category"
+      en: "{pn} [command] - View command details\n{pn} all - View all commands\n{pn} c [category] - View commands in category",
+      ar: "{pn} [أمر] - عرض تفاصيل الأمر\n{pn} all - عرض جميع الأوامر\n{pn} c [فئة] - عرض أوامر الفئة"
     }
   },
 
@@ -48,11 +52,45 @@ module.exports = {
       roleText1: "👑 Group Admins",
       roleText2: "⚡ Bot Admins",
       totalCommands: "📊 Total Commands: {total}\n"
-                  + "xnil"
+                  + "xnil",
+      noCommandsInCategory: "❌ No commands found in category: {category}"
+    },
+    ar: {
+      helpHeader: "╔══════════◇◆◇══════════╗\n"
+                + "      قائمة أوامر البوت\n"
+                + "╠══════════◇◆◇══════════╣",
+      categoryHeader: "\n   ┌────── {category} ──────┐\n",
+      commandItem: "║ │ 🟢 {name}",
+      helpFooter: "║ └─────────────────┘\n"
+                + "╚══════════◇◆◇══════════╝",
+      commandInfo: "╔══════════◇◆◇══════════╗\n"
+                 + "║           معلومات الأمر      \n"
+                 + "╠══════════◇◆◇══════════╣\n"
+                 + "║ 🏷️ الاسم: {name}\n"
+                 + "║ 📝 الوصف: {description}\n"
+                 + "║ 📂 الفئة: {category}\n"
+                 + "║ 🔤 الأسماء البديلة: {aliases}\n"
+                 + "║ 🏷️ الإصدار: {version}\n"
+                 + "║ 🔒 الصلاحيات: {role}\n"
+                 + "║ ⏱️ وقت الانتظار: {countDown}ث\n"
+                 + "║ 🔧 يستخدم بادئة: {usePrefix}\n"
+                 + "║ 👤 المطور: {author}\n"
+                 + "╠══════════◇◆◇══════════╣",
+      usageHeader: "║ 🛠️ دليل الاستخدام",
+      usageBody: " ║ {usage}",
+      usageFooter: "╚══════════◇◆◇══════════╝",
+      commandNotFound: "⚠️ الأمر '{command}' غير موجود!",
+      doNotHave: "لا يوجد",
+      roleText0: "👥 جميع المستخدمين",
+      roleText1: "👑 مشرفو المجموعة",
+      roleText2: "⚡ مشرفو البوت",
+      totalCommands: "📊 إجمالي الأوامر: {total}\n"
+                  + "xnil",
+      noCommandsInCategory: "❌ لا توجد أوامر في الفئة: {category}"
     }
   },
 
-  onStart: async function({ message, args, event, threadsData, role }) {
+  onStart: async function({ message, args, event, threadsData, role, getLang }) {
     const { threadID } = event;
     const prefix = getPrefix(threadID);
     const commandName = args[0]?.toLowerCase();
@@ -71,18 +109,18 @@ module.exports = {
       }
 
       if (commandsInCategory.length === 0) {
-        return message.reply(`❌ No commands found in category: ${categoryArg}`);
+        return message.reply(getLang("noCommandsInCategory").replace(/{category}/g, categoryArg));
       }
 
-      let replyMsg = this.langs.en.helpHeader;
-      replyMsg += this.langs.en.categoryHeader.replace(/{category}/g, categoryArg);
+      let replyMsg = getLang("helpHeader");
+      replyMsg += getLang("categoryHeader").replace(/{category}/g, categoryArg);
 
       commandsInCategory.sort((a, b) => a.name.localeCompare(b.name)).forEach(cmd => {
-        replyMsg += this.langs.en.commandItem.replace(/{name}/g, cmd.name) + "\n";
+        replyMsg += getLang("commandItem").replace(/{name}/g, cmd.name) + "\n";
       });
 
-      replyMsg += this.langs.en.helpFooter;
-      replyMsg += "\n" + this.langs.en.totalCommands.replace(/{total}/g, commandsInCategory.length);
+      replyMsg += getLang("helpFooter");
+      replyMsg += "\n" + getLang("totalCommands").replace(/{total}/g, commandsInCategory.length);
 
       return message.reply(replyMsg);
     }
@@ -101,23 +139,23 @@ module.exports = {
       }
 
       const sortedCategories = [...categories.keys()].sort();
-      let replyMsg = this.langs.en.helpHeader.replace(/{prefix}/g, prefix);
+      let replyMsg = getLang("helpHeader").replace(/{prefix}/g, prefix);
       let totalCommands = 0;
 
       for (const category of sortedCategories) {
         const commandsInCategory = categories.get(category).sort((a, b) => a.name.localeCompare(b.name));
         totalCommands += commandsInCategory.length;
 
-        replyMsg += this.langs.en.categoryHeader.replace(/{category}/g, category);
+        replyMsg += getLang("categoryHeader").replace(/{category}/g, category);
 
         commandsInCategory.forEach(cmd => {
-          replyMsg += this.langs.en.commandItem.replace(/{name}/g, cmd.name) + "\n";
+          replyMsg += getLang("commandItem").replace(/{name}/g, cmd.name) + "\n";
         });
 
-        replyMsg += this.langs.en.helpFooter;
+        replyMsg += getLang("helpFooter");
       }
 
-      replyMsg += "\n" + this.langs.en.totalCommands.replace(/{total}/g, totalCommands);
+      replyMsg += "\n" + getLang("totalCommands").replace(/{total}/g, totalCommands);
 
       try {
         if (fs.existsSync(bannerPath)) {
@@ -136,26 +174,27 @@ module.exports = {
 
     let cmd = commands.get(commandName) || commands.get(aliases.get(commandName));
     if (!cmd) {
-      return message.reply(this.langs.en.commandNotFound.replace(/{command}/g, commandName));
+      return message.reply(getLang("commandNotFound").replace(/{command}/g, commandName));
     }
 
     const config = cmd.config;
-    const description = config.description?.en || config.description || "No description";
-    const aliasesList = config.aliases?.join(", ") || this.langs.en.doNotHave;
+    const lang = global.GoatBot.config.language || "en";
+    const description = config.description?.[lang] || config.description?.en || config.description || "No description";
+    const aliasesList = config.aliases?.join(", ") || getLang("doNotHave");
     const category = config.category?.toUpperCase() || "GENERAL";
 
     let roleText;
     switch(config.role) {
-      case 1: roleText = this.langs.en.roleText1; break;
-      case 2: roleText = this.langs.en.roleText2; break;
-      default: roleText = this.langs.en.roleText0;
+      case 1: roleText = getLang("roleText1"); break;
+      case 2: roleText = getLang("roleText2"); break;
+      default: roleText = getLang("roleText0");
     }
 
-    let guide = config.guide?.en || config.usage || config.guide || "No usage guide available";
+    let guide = config.guide?.[lang] || config.guide?.en || config.usage || config.guide || "No usage guide available";
     if (typeof guide === "object") guide = guide.body;
     guide = guide.replace(/\{prefix\}/g, prefix).replace(/\{name\}/g, config.name).replace(/\{pn\}/g, prefix + config.name);
 
-    let replyMsg = this.langs.en.commandInfo
+    let replyMsg = getLang("commandInfo")
       .replace(/{name}/g, config.name)
       .replace(/{description}/g, description)
       .replace(/{category}/g, category)
@@ -163,12 +202,12 @@ module.exports = {
       .replace(/{version}/g, config.version)
       .replace(/{role}/g, roleText)
       .replace(/{countDown}/g, config.countDown || 1)
-      .replace(/{usePrefix}/g, typeof config.usePrefix === "boolean" ? (config.usePrefix ? "✅ Yes" : "❌ No") : "❓ Unknown")
+      .replace(/{usePrefix}/g, typeof config.usePrefix === "boolean" ? (config.usePrefix ? "✅ نعم" : "❌ لا") : "❓ غير معروف")
       .replace(/{author}/g, config.author || "Unknown");
 
-    replyMsg += "\n" + this.langs.en.usageHeader + "\n" +
-                this.langs.en.usageBody.replace(/{usage}/g, guide.split("\n").join("\n ")) + "\n" +
-                this.langs.en.usageFooter;
+    replyMsg += "\n" + getLang("usageHeader") + "\n" +
+                getLang("usageBody").replace(/{usage}/g, guide.split("\n").join("\n ")) + "\n" +
+                getLang("usageFooter");
 
     return message.reply(replyMsg);
   }

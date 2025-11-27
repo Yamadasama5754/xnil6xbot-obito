@@ -1,6 +1,5 @@
 const axios = require('axios');
 
-// config 
 const apiKey = "";
 const maxTokens = 500;
 const numberGenerateImage = 4;
@@ -22,7 +21,8 @@ module.exports = {
 		role: 0,
 		description: {
 			vi: "GPT chat",
-			en: "GPT chat"
+			en: "GPT chat",
+			ar: "محادثة GPT"
 		},
 		category: "box chat",
 		guide: {
@@ -31,7 +31,10 @@ module.exports = {
 				+ "\n   {pn} <nội dung> - chat với gpt",
 			en: "   {pn} <draw> <content> - create image from content"
 				+ "\n   {pn} <clear> - clear chat history with gpt"
-				+ "\n   {pn} <content> - chat with gpt"
+				+ "\n   {pn} <content> - chat with gpt",
+			ar: "   {pn} <draw> <المحتوى> - إنشاء صورة من المحتوى"
+				+ "\n   {pn} <clear> - مسح سجل المحادثة مع gpt"
+				+ "\n   {pn} <المحتوى> - محادثة مع gpt"
 		}
 	},
 
@@ -53,6 +56,15 @@ module.exports = {
 			invalidContent: "Please enter the content you want to chat",
 			error: "An error has occurred\n%1",
 			clearHistory: "Your chat history with gpt has been deleted"
+		},
+		ar: {
+			apiKeyEmpty: "يرجى توفير مفتاح API لـ OpenAI في ملف scripts/cmds/gpt.js",
+			invalidContentDraw: "يرجى إدخال المحتوى الذي تريد رسمه",
+			yourAreUsing: "أنت تستخدم محادثة GPT، يرجى الانتظار حتى ينتهي الطلب السابق",
+			processingRequest: "جاري معالجة طلبك، قد تستغرق هذه العملية بضع دقائق، يرجى الانتظار",
+			invalidContent: "يرجى إدخال المحتوى الذي تريد التحدث عنه",
+			error: "حدث خطأ\n%1",
+			clearHistory: "تم حذف سجل محادثتك مع GPT"
 		}
 	},
 

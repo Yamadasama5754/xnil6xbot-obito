@@ -9,14 +9,17 @@ module.exports = {
 		role: 0,
 		description: {
 			vi: "Nhận quà hàng ngày",
-			en: "Receive daily gift"
+			en: "Receive daily gift",
+			ar: "استلام الهدية اليومية"
 		},
 		category: "game",
 		guide: {
 			vi: "   {pn}: Nhận quà hàng ngày"
 				+ "\n   {pn} info: Xem thông tin quà hàng ngày",
-			en: "   {pn}"
-				+ "\n   {pn} info: View daily gift information"
+			en: "   {pn}: Receive daily gift"
+				+ "\n   {pn} info: View daily gift information",
+			ar: "   {pn}: استلام الهدية اليومية"
+				+ "\n   {pn} info: عرض معلومات الهدية اليومية"
 		},
 		envConfig: {
 			rewardFirstDay: {
@@ -48,6 +51,17 @@ module.exports = {
 			sunday: "Sunday",
 			alreadyReceived: "You have already received the gift",
 			received: "You have received %1 coin and %2 exp"
+		},
+		ar: {
+			monday: "الإثنين",
+			tuesday: "الثلاثاء",
+			wednesday: "الأربعاء",
+			thursday: "الخميس",
+			friday: "الجمعة",
+			saturday: "السبت",
+			sunday: "الأحد",
+			alreadyReceived: "لقد استلمت الهدية بالفعل",
+			received: "لقد حصلت على %1 عملة و %2 خبرة"
 		}
 	},
 
@@ -72,7 +86,7 @@ module.exports = {
 
 		const dateTime = moment.tz("Asia/Ho_Chi_Minh").format("DD/MM/YYYY");
 		const date = new Date();
-		const currentDay = date.getDay(); // 0: sunday, 1: monday, 2: tuesday, 3: wednesday, 4: thursday, 5: friday, 6: saturday
+		const currentDay = date.getDay();
 		const { senderID } = event;
 
 		const userData = await usersData.get(senderID);

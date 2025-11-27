@@ -4,14 +4,15 @@ const defaultEmojiTranslate = "🌐";
 module.exports = {
 	config: {
 		name: "translate",
-		aliases: ["trans"],
+		aliases: ["trans", "ترجم"],
 		version: "1.5",
 		author: "NTKhang",
 		countDown: 5,
 		role: 0,
 		description: {
 			vi: "Dịch văn bản sang ngôn ngữ mong muốn",
-			en: "Translate text to the desired language"
+			en: "Translate text to the desired language",
+			ar: "ترجمة النص إلى اللغة المطلوبة"
 		},
 		category: "utility",
 		guide: {
@@ -28,7 +29,14 @@ module.exports = {
 				+ "\n   Example:"
 				+ "\n    {pn} hello -> vi"
 				+ "\n   {pn} -r [on | off]: Turn on or off the automatic translation mode when someone reacts to the message"
-				+ "\n   {pn} -r set <emoji>: Set the emoji to translate the message in your chat group"
+				+ "\n   {pn} -r set <emoji>: Set the emoji to translate the message in your chat group",
+			ar: "   {pn} <نص>: ترجمة النص إلى لغة المحادثة أو اللغة الافتراضية للبوت"
+				+ "\n   {pn} <نص> -> <رمز اللغة>: ترجمة النص إلى اللغة المطلوبة"
+				+ "\n   أو يمكنك الرد على رسالة لترجمة محتواها"
+				+ "\n   مثال:"
+				+ "\n    {pn} hello -> ar"
+				+ "\n   {pn} -r [on | off]: تشغيل أو إيقاف الترجمة التلقائية عند التفاعل مع الرسالة"
+				+ "\n   {pn} -r set <إيموجي>: تعيين الإيموجي للترجمة في مجموعتك"
 		}
 	},
 
@@ -49,6 +57,14 @@ module.exports = {
 			turnOffTransWhenReaction: "✅ Turn off translate message when reaction",
 			inputEmoji: "🌀 Please react to this message to set that emoji as emoji to translate message",
 			emojiSet: "✅ Emoji to translate message is set to %1"
+		},
+		ar: {
+			translateTo: "🌐 ترجمة من %1 إلى %2",
+			invalidArgument: "❌ معامل غير صالح، يرجى اختيار on أو off",
+			turnOnTransWhenReaction: `✅ تم تفعيل ترجمة الرسائل عند التفاعل، جرب التفاعل بـ \"${defaultEmojiTranslate}\" على أي رسالة لترجمتها (لا يدعم رسائل البوت)\n يتم ترجمة الرسائل فقط بعد تفعيل هذه الميزة`,
+			turnOffTransWhenReaction: "✅ تم إيقاف ترجمة الرسائل عند التفاعل",
+			inputEmoji: "🌀 يرجى التفاعل مع هذه الرسالة لتعيين هذا الإيموجي للترجمة",
+			emojiSet: "✅ تم تعيين إيموجي الترجمة إلى %1"
 		}
 	},
 

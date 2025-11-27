@@ -10,7 +10,8 @@ module.exports = {
 		role: 1,
 		description: {
 			vi: "Cấm thành viên khỏi box chat",
-			en: "Ban user from box chat"
+			en: "Ban user from box chat",
+			ar: "حظر عضو من المحادثة"
 		},
 		category: "box chat",
 		guide: {
@@ -21,7 +22,11 @@ module.exports = {
 			en: "   {pn} [@tag|uid|fb link|reply] [<reason>|leave blank if no reason]: Ban user from box chat"
 				+ "\n   {pn} check: Check banned members and kick them out of the box chat"
 				+ "\n   {pn} unban [@tag|uid|fb link|reply]: Unban user from box chat"
-				+ "\n   {pn} list: View the list of banned members"
+				+ "\n   {pn} list: View the list of banned members",
+			ar: "   {pn} [@إشارة|uid|رابط fb|رد] [<السبب>|اتركه فارغاً إذا لا يوجد سبب]: حظر عضو من المحادثة"
+				+ "\n   {pn} check: فحص الأعضاء المحظورين وطردهم من المحادثة"
+				+ "\n   {pn} unban [@إشارة|uid|رابط fb|رد]: إلغاء حظر عضو من المحادثة"
+				+ "\n   {pn} list: عرض قائمة الأعضاء المحظورين"
 		}
 	},
 
@@ -61,6 +66,24 @@ module.exports = {
 			content: "%1/ %2 (%3)\nReason: %4\nBan time: %5\n\n",
 			needAdminToKick: "⚠️ | Member %1 (%2) has been banned from box chat, but the bot does not have administrator permission to kick this member, please grant administrator permission to the bot to kick this member",
 			bannedKick: "⚠️ | %1 has been banned from box chat before!\nUID: %2\nReason: %3\nBan time: %4\n\nBot has automatically kicked this member"
+		},
+		ar: {
+			notFoundTarget: "⚠️ | يرجى الإشارة للشخص المراد حظره أو إدخال uid أو رابط fb أو الرد على رسالة الشخص المراد حظره",
+			notFoundTargetUnban: "⚠️ | يرجى الإشارة للشخص المراد إلغاء حظره أو إدخال uid أو رابط fb أو الرد على رسالة الشخص المراد إلغاء حظره",
+			userNotBanned: "⚠️ | الشخص ذو المعرف %1 غير محظور من هذه المحادثة",
+			unbannedSuccess: "✅ | تم إلغاء حظر %1 من المحادثة!",
+			cantSelfBan: "⚠️ | لا يمكنك حظر نفسك!",
+			cantBanAdmin: "❌ | لا يمكنك حظر المشرف!",
+			existedBan: "❌ | هذا الشخص محظور بالفعل!",
+			noReason: "لا يوجد سبب",
+			bannedSuccess: "✅ | تم حظر %1 من المحادثة!",
+			needAdmin: "⚠️ | يحتاج البوت صلاحية مشرف لطرد الأعضاء المحظورين",
+			noName: "مستخدم فيسبوك",
+			noData: "📑 | لا يوجد أعضاء محظورين في هذه المحادثة",
+			listBanned: "📑 | قائمة الأعضاء المحظورين في هذه المحادثة (صفحة %1/%2)",
+			content: "%1/ %2 (%3)\nالسبب: %4\nوقت الحظر: %5\n\n",
+			needAdminToKick: "⚠️ | العضو %1 (%2) محظور من المحادثة، لكن البوت لا يملك صلاحية مشرف لطرد هذا العضو، يرجى منح صلاحية مشرف للبوت لطرد هذا العضو",
+			bannedKick: "⚠️ | %1 محظور من المحادثة من قبل!\nUID: %2\nالسبب: %3\nوقت الحظر: %4\n\nقام البوت بطرد هذا العضو تلقائياً"
 		}
 	},
 

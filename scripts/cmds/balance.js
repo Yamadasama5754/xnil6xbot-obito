@@ -1,12 +1,15 @@
 module.exports = {
   config: {
     name: "balance",
-    aliases: ["bal", "$", "cash"],
+    aliases: ["bal", "$", "cash", "رصيد"],
     version: "3.2",
     author: "xnil6x",
     countDown: 3,
     role: 0,
-    description: "💰 Premium Economy System with Stylish Display",
+    description: {
+      en: "💰 Premium Economy System with Stylish Display",
+      ar: "💰 نظام اقتصادي متميز بعرض أنيق"
+    },
     category: "economy",
     guide: {
       en: "╔════✦ Usage Guide ✦════╗\n"
@@ -14,11 +17,54 @@ module.exports = {
         + "║ ➤ {pn} @user - Check others\n"
         + "║ ➤ {pn} t @user amount - Transfer\n"
         + "║ ➤ {pn} [reply] - Check replied user's balance\n"
+        + "╚══════════════════════╝",
+      ar: "╔════✦ دليل الاستخدام ✦════╗\n"
+        + "║ ➤ {pn} - تحقق من رصيدك\n"
+        + "║ ➤ {pn} @مستخدم - تحقق من رصيد غيرك\n"
+        + "║ ➤ {pn} t @مستخدم المبلغ - تحويل أموال\n"
+        + "║ ➤ {pn} [رد] - تحقق من رصيد المستخدم بالرد\n"
         + "╚══════════════════════╝"
     }
   },
 
-  onStart: async function ({ message, event, args, usersData, prefix }) {
+  langs: {
+    en: {
+      invalidUsage: "Invalid Usage",
+      usageGuide: "Use: {prefix}balance t @user amount",
+      error: "Error",
+      amountPositive: "Amount must be positive.",
+      cantSendSelf: "You can't send money to yourself.",
+      insufficientBalance: "Insufficient Balance",
+      needMore: "You need {amount} more.",
+      transferComplete: "Transfer Complete",
+      to: "To: {name}",
+      sent: "Sent: {amount}",
+      newBalance: "Your New Balance: {amount}",
+      userBalance: "{name}'s Balance",
+      balance: "💰 Balance: {amount}",
+      userBalances: "User Balances",
+      yourBalance: "Your Balance"
+    },
+    ar: {
+      invalidUsage: "استخدام غير صحيح",
+      usageGuide: "استخدم: {prefix}balance t @مستخدم المبلغ",
+      error: "خطأ",
+      amountPositive: "يجب أن يكون المبلغ إيجابياً.",
+      cantSendSelf: "لا يمكنك إرسال أموال لنفسك.",
+      insufficientBalance: "رصيد غير كافٍ",
+      needMore: "تحتاج {amount} إضافية.",
+      transferComplete: "تم التحويل بنجاح",
+      to: "إلى: {name}",
+      sent: "تم إرسال: {amount}",
+      newBalance: "رصيدك الجديد: {amount}",
+      userBalance: "رصيد {name}",
+      balance: "💰 الرصيد: {amount}",
+      userBalances: "أرصدة المستخدمين",
+      yourBalance: "رصيدك"
+    }
+  },
+
+  onStart: async function ({ message, event, args, usersData, prefix, getLang }) {
     const { senderID, messageReply, mentions } = event;
 
     const formatMoney = (amount) => {
@@ -49,13 +95,13 @@ module.exports = {
       const amount = parseFloat(args[args.length - 1]);
 
       if (!targetID || isNaN(amount)) {
-        return message.reply(createFlatDisplay("Invalid Usage", [
-          `Use: ${prefix}balance t @user amount`
+        return message.reply(createFlatDisplay(getLang("invalidUsage"), [
+          getLang("usageGuide").replace(/{prefix}/g, prefix)
         ]));
       }
 
-      if (amount <= 0) return message.reply(createFlatDisplay("Error", ["Amount must be positive."]));
-      if (senderID === targetID) return message.reply(createFlatDisplay("Error", ["You can't send money to yourself."]));
+      if (amount <= 0) return message.reply(createFlatDisplay(getLang("error"), [getLang("amountPositive")]));
+      if (senderID === targetID) return message.reply(createFlatDisplay(getLang("error"), [getLang("cantSendSelf")]));
 
       const [sender, receiver] = await Promise.all([
         usersData.get(senderID),
@@ -63,8 +109,8 @@ module.exports = {
       ]);
 
       if (sender.money < amount) {
-        return message.reply(createFlatDisplay("Insufficient Balance", [
-          `You need ${formatMoney(amount - sender.money)} more.`
+        return message.reply(createFlatDisplay(getLang("insufficientBalance"), [
+          getLang("needMore").replace(/{amount}/g, formatMoney(amount - sender.money))
         ]));
       }
 
@@ -74,10 +120,10 @@ module.exports = {
       ]);
 
       const receiverName = await usersData.getName(targetID);
-      return message.reply(createFlatDisplay("Transfer Complete", [
-        `To: ${receiverName}`,
-        `Sent: ${formatMoney(amount)}`,
-        `Your New Balance: ${formatMoney(sender.money - amount)}`
+      return message.reply(createFlatDisplay(getLang("transferComplete"), [
+        getLang("to").replace(/{name}/g, receiverName),
+        getLang("sent").replace(/{amount}/g, formatMoney(amount)),
+        getLang("newBalance").replace(/{amount}/g, formatMoney(sender.money - amount))
       ]));
     }
 
@@ -85,8 +131,8 @@ module.exports = {
       const targetID = messageReply.senderID;
       const name = await usersData.getName(targetID);
       const money = await usersData.get(targetID, "money");
-      return message.reply(createFlatDisplay(`${name}'s Balance`, [
-        `💰 Balance: ${formatMoney(money)}`
+      return message.reply(createFlatDisplay(getLang("userBalance").replace(/{name}/g, name), [
+        getLang("balance").replace(/{amount}/g, formatMoney(money))
       ]));
     }
 
@@ -97,11 +143,11 @@ module.exports = {
           return `${name.replace('@', '')}: ${formatMoney(money)}`;
         })
       );
-      return message.reply(createFlatDisplay("User Balances", balances));
+      return message.reply(createFlatDisplay(getLang("userBalances"), balances));
     }
 
     const userMoney = await usersData.get(senderID, "money");
-    return message.reply(createFlatDisplay("Your Balance", [
+    return message.reply(createFlatDisplay(getLang("yourBalance"), [
       `💵 ${formatMoney(userMoney)}`,
     ]));
   }
