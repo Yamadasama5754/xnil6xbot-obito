@@ -47,10 +47,15 @@ module.exports.onStart = async function ({ api, event, args, message }) {
 
       const pinterestResponse = await axios.get(
         `https://hiroshi-api.onrender.com/image/pinterest?search=${encodeURIComponent(keySearch)}`,
-        { timeout: 15000 }
+        { 
+          timeout: 30000,
+          headers: {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+          }
+        }
       );
 
-      const data = pinterestResponse.data.data;
+      const data = pinterestResponse.data?.data;
 
       if (!data || data.length === 0) {
         api.setMessageReaction("❌", event.messageID, (err) => {}, true);
