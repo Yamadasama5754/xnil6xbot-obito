@@ -76,10 +76,11 @@ module.exports.onStart = async function ({ api, event, args }) {
 
     api.unsendMessage(sentMessage.messageID);
 
-    api.sendMessage(msg, event.threadID, (error, info) => {
+    await api.sendMessage(msg, event.threadID, (error, info) => {
       if (error) return console.error(error);
 
-      global.client.onReply.set(info.messageID, {
+      if (!global.GoatBot.onReply) global.GoatBot.onReply = new Map();
+      global.GoatBot.onReply.set(info.messageID, {
         author: event.senderID,
         type: "pick",
         name: "يوتيوب",
@@ -95,8 +96,8 @@ module.exports.onStart = async function ({ api, event, args }) {
   }
 };
 
-module.exports.onReply = async function ({ api, event, reply, message }) {
-  if (reply.type !== 'pick') return;
+module.exports.onReply = async function ({ api, event, reply }) {
+  if (!reply || reply.type !== 'pick') return;
 
   const { author, searchResults, downloadType } = reply;
 
@@ -104,7 +105,7 @@ module.exports.onReply = async function ({ api, event, reply, message }) {
     return api.sendMessage("⚠️ | هذا ليس لك.", event.threadID);
   }
 
-  const selectedIndex = parseInt(event.body, 10) - 1;
+  const selectedIndex = parseInt(event.body.trim(), 10) - 1;
 
   if (isNaN(selectedIndex) || selectedIndex < 0 || selectedIndex >= searchResults.length) {
     return api.sendMessage("❌ | الرد غير صالح. يرجى الرد برقم صحيح.", event.threadID);
