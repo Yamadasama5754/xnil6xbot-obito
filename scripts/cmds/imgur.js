@@ -2,10 +2,10 @@ const axios = require('axios');
 
 module.exports = {
   config: {
-    name: "imgur",
-    aliases: ["img", "uploadimg", "رفع"],
+    name: "رابط",
+    aliases: ["img", "imgur", "رفع"],
     version: "1.1",
-    author: "xnil6x",
+    author: "Yamada KJ",
     cooldowns: 5,
     role: 0,
     description: "رفع الصور والفيديوهات على Imgur",
