@@ -20,34 +20,8 @@ module.exports = {
 
     clearTimeout(Reply.unsendTimeout);
 
-    const form = {
-      av: api.getCurrentUserID(),
-      fb_api_caller_class: "RelayModern",
-      variables: {
-        input: {
-          source: "friends_tab",
-          actor_id: api.getCurrentUserID(),
-          client_mutation_id: Math.round(Math.random() * 19).toString()
-        },
-        scale: 3,
-        refresh_num: 0
-      }
-    };
-
     const success = [];
     const failed = [];
-
-    if (args[0] === "قبول" || args[0] === "add") {
-      form.fb_api_req_friendly_name = "FriendingCometFriendRequestConfirmMutation";
-      form.doc_id = "3147613905362928";
-    }
-    else if (args[0] === "رفض" || args[0] === "del") {
-      form.fb_api_req_friendly_name = "FriendingCometFriendRequestDeleteMutation";
-      form.doc_id = "4108254489275063";
-    }
-    else {
-      return api.sendMessage("❌ أمر غير صحيح. الاستخدام: <قبول|رفض> <رقم|جميع>", event.threadID, event.messageID);
-    }
 
     let targetIDs = args.slice(1);
 
@@ -55,8 +29,9 @@ module.exports = {
       targetIDs = Array.from({ length: listRequest.length }, (_, i) => i + 1);
     }
 
-    const newTargetIDs = [];
-    const promiseFriends = [];
+    const isAccepting = args[0] === "قبول" || args[0] === "add";
+    const actionType = isAccepting ? "accept" : "delete";
+    const actionAr = isAccepting ? "قبول" : "رفض";
 
     for (const stt of targetIDs) {
       const user = listRequest[parseInt(stt) - 1];
@@ -64,40 +39,67 @@ module.exports = {
         failed.push(`🚫 لم يتم العثور على الطلب #${stt}`);
         continue;
       }
-      form.variables.input.friend_requester_id = user.node.id;
-      form.variables = JSON.stringify(form.variables);
-      newTargetIDs.push(user);
-      promiseFriends.push(api.httpPost("https://www.facebook.com/api/graphql/", form));
-      form.variables = JSON.parse(form.variables);
-    }
 
-    const results = await Promise.allSettled(promiseFriends);
-    
-    results.forEach((result, index) => {
-      const user = newTargetIDs[index];
-      if (result.status === "fulfilled" && !JSON.parse(result.value).errors) {
-        success.push(`✅ ${user.node.name} (${user.node.id})`);
-      } else {
-        failed.push(`❌ ${user.node.name} (${user.node.id})`);
+      try {
+        const userId = user.node.id;
+        
+        // محاولة استخدام API بسيط مباشر
+        if (isAccepting) {
+          // accept friend request
+          await api.httpPost("https://www.facebook.com/api/graphql/", {
+            av: api.getCurrentUserID(),
+            fb_api_caller_class: "RelayModern",
+            fb_api_req_friendly_name: "FriendingCometFriendRequestConfirmMutation",
+            doc_id: "3147613905362928",
+            variables: JSON.stringify({
+              input: {
+                source: "friends_tab",
+                actor_id: api.getCurrentUserID(),
+                friend_requester_id: userId,
+                client_mutation_id: Math.round(Math.random() * 19).toString()
+              },
+              scale: 3
+            })
+          });
+        } else {
+          // delete friend request
+          await api.httpPost("https://www.facebook.com/api/graphql/", {
+            av: api.getCurrentUserID(),
+            fb_api_caller_class: "RelayModern",
+            fb_api_req_friendly_name: "FriendingCometFriendRequestDeleteMutation",
+            doc_id: "4108254489275063",
+            variables: JSON.stringify({
+              input: {
+                source: "friends_tab",
+                actor_id: api.getCurrentUserID(),
+                friend_requester_id: userId,
+                client_mutation_id: Math.round(Math.random() * 19).toString()
+              },
+              scale: 3
+            })
+          });
+        }
+
+        success.push(`✅ ${user.node.name}`);
+      } catch (err) {
+        failed.push(`❌ ${user.node.name}`);
+        console.error(`Error processing ${user.node.name}:`, err.message);
       }
-    });
+    }
 
     let replyMsg = "";
     if (success.length > 0) {
-      const actionText = (args[0] === "قبول" || args[0] === "add") ? "قبول" : "رفض";
-      replyMsg += `✨ تم بنجاح ${actionText} ${success.length} طلب(طلبات):\n${success.join("\n")}\n\n`;
+      replyMsg += `✨ تم بنجاح ${actionAr} ${success.length} طلب(طلبات):\n${success.join("\n")}\n\n`;
     }
     if (failed.length > 0) {
-      replyMsg += `⚠️ فشل في معالجة ${failed.length} طلب(طلبات):\n${failed.join("\n")}`;
+      replyMsg += `⚠️ لم يتم معالجة ${failed.length} طلب(طلبات):\n${failed.join("\n")}`;
     }
 
-    if (replyMsg) {
-      api.sendMessage(replyMsg, event.threadID, event.messageID);
-    } else {
-      api.unsendMessage(messageID);
-      api.sendMessage("❌ لم يتم معالجة أي طلبات صالحة.", event.threadID);
+    if (!replyMsg) {
+      replyMsg = "❌ أمر غير صحيح. الاستخدام:\n• قبول جميع\n• رفض جميع\n• قبول 1\n• رفض 2";
     }
 
+    api.sendMessage(replyMsg, event.threadID, event.messageID);
     api.unsendMessage(messageID);
   },
 
