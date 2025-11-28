@@ -2,7 +2,7 @@ const { getStreamFromURL, uploadImgbb } = global.utils;
 
 module.exports.config = {
   name: "حماية",
-  version: "1.9",
+  version: "2.0",
   author: "NTKhang",
   countDown: 5,
   role: 0,
@@ -33,7 +33,8 @@ module.exports.langs = {
     antiChangeNameAlreadyOn: "مجموعتك حاليا في وضع مضاد تغيير إسم المجموعة",
     antiChangeNicknameAlreadyOn: "مجموعتك حاليا في وضع مضاد تغيير اللقب بالنسبة للأعضاء",
     antiChangeThemeAlreadyOn: "مجموعتك حاليا في وضع مضاد تغيير السمة",
-    antiChangeEmojiAlreadyOn: "مجموعتك حاليا في وضع مضاد تغيير إيموجي المجموعة"
+    antiChangeEmojiAlreadyOn: "مجموعتك حاليا في وضع مضاد تغيير إيموجي المجموعة",
+    missingEmoji: "أنت لم تقم بضبط إيموجي للمجموعة"
   }
 };
 
@@ -70,8 +71,7 @@ module.exports.onStart = async function ({ message, event, args, threadsData, ge
         const { imageSrc } = threadData || {};
         if (!imageSrc)
           return message.reply(getLang("missingAvt"));
-        const newImageSrc = await uploadImgbb(imageSrc);
-        await checkAndSaveData("avatar", newImageSrc.image.url);
+        await checkAndSaveData("avatar", imageSrc);
         break;
       }
       case "الإسم": {
@@ -97,6 +97,8 @@ module.exports.onStart = async function ({ message, event, args, threadsData, ge
       case "الإيموجي": {
         const threadData = await threadsData.get(threadID);
         const { emoji } = threadData || {};
+        if (!emoji)
+          return message.reply(getLang("missingEmoji"));
         await checkAndSaveData("emoji", emoji);
         break;
       }
@@ -117,7 +119,7 @@ module.exports.onEvent = async function ({ message, event, threadsData, role, ap
     switch (logMessageType) {
       case "log:thread-image": {
         const dataAntiChange = await threadsData.get(threadID, "data.antiChangeInfoBox", {});
-        if (!dataAntiChange.avatar && role < 1)
+        if (!dataAntiChange.avatar)
           return;
         return async function () {
           if (role < 1 && api.getCurrentUserID() !== author) {
@@ -131,8 +133,7 @@ module.exports.onEvent = async function ({ message, event, threadsData, role, ap
             const imageSrc = logMessageData.url;
             if (!imageSrc)
               return await threadsData.set(threadID, "REMOVE", "data.antiChangeInfoBox.avatar");
-            const newImageSrc = await uploadImgbb(imageSrc);
-            await threadsData.set(threadID, newImageSrc.image.url, "data.antiChangeInfoBox.avatar");
+            await threadsData.set(threadID, imageSrc, "data.antiChangeInfoBox.avatar");
           }
         };
       }
