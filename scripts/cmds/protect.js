@@ -1,8 +1,48 @@
-const { getStreamFromURL, uploadImgbb } = global.utils;
+const axios = require("axios");
+const { getStreamFromURL } = global.utils;
+
+/**
+ * Upload image to Imgur using Client ID
+ */
+async function uploadToImgur(imageUrl) {
+  try {
+    const clientId = process.env.IMGUR_CLIENT_ID;
+    if (!clientId) {
+      console.error("[IMGUR] IMGUR_CLIENT_ID not found in environment variables");
+      return null;
+    }
+
+    // Download image stream
+    const response = await axios.get(imageUrl, { responseType: "arraybuffer" });
+    const imageBuffer = Buffer.from(response.data, "utf8");
+
+    // Upload to Imgur
+    const formData = new FormData();
+    formData.append("image", imageBuffer.toString("base64"));
+    formData.append("type", "base64");
+
+    const imgurResponse = await axios.post("https://api.imgur.com/3/upload", formData, {
+      headers: {
+        Authorization: `Client-ID ${clientId}`,
+        ...formData.getHeaders()
+      }
+    });
+
+    if (imgurResponse.data?.success) {
+      return imgurResponse.data.data.link;
+    }
+
+    console.error("[IMGUR] Upload failed:", imgurResponse.data);
+    return null;
+  } catch (error) {
+    console.error("[IMGUR] Upload error:", error.message);
+    return null;
+  }
+}
 
 module.exports.config = {
   name: "حماية",
-  version: "2.0",
+  version: "2.1",
   author: "NTKhang",
   countDown: 5,
   role: 0,
@@ -71,7 +111,12 @@ module.exports.onStart = async function ({ message, event, args, threadsData, ge
         const { imageSrc } = threadData || {};
         if (!imageSrc)
           return message.reply(getLang("missingAvt"));
-        await checkAndSaveData("avatar", imageSrc);
+        
+        // Upload image to Imgur for protection
+        const imgurUrl = await uploadToImgur(imageSrc);
+        const imageToSave = imgurUrl || imageSrc;
+        
+        await checkAndSaveData("avatar", imageToSave);
         break;
       }
       case "الإسم": {
@@ -133,7 +178,12 @@ module.exports.onEvent = async function ({ message, event, threadsData, role, ap
             const imageSrc = logMessageData.url;
             if (!imageSrc)
               return await threadsData.set(threadID, "REMOVE", "data.antiChangeInfoBox.avatar");
-            await threadsData.set(threadID, imageSrc, "data.antiChangeInfoBox.avatar");
+            
+            // Upload new image to Imgur for protection
+            const imgurUrl = await uploadToImgur(imageSrc);
+            const imageToSave = imgurUrl || imageSrc;
+            
+            await threadsData.set(threadID, imageToSave, "data.antiChangeInfoBox.avatar");
           }
         };
       }
