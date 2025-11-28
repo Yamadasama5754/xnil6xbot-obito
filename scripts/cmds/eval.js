@@ -1,220 +1,195 @@
-const { removeHomeDir } = global.utils;
+const { execSync } = require('child_process');
+const fs = require('fs-extra');
+const path = require('path');
 
 module.exports.config = {
   name: "تنفيذ",
-  aliases: ["eval", "كود", "execute"],
-  version: "2.0",
-  author: "Yamada KJ | Enhanced",
+  aliases: ["eval", "كود", "execute", "run"],
+  version: "3.0",
+  author: "Enhanced",
   countDown: 5,
   role: 2,
-  description: "اختبار وتنفيذ الكود بسرعة",
+  description: "تنفيذ الكود بلغات برمجة مختلفة",
   category: "المالك",
-  guide: "{pn} <الكود المراد اختباره>"
+  guide: "{pn} [js/python/go/rust/rb] <الكود>"
 };
 
 module.exports.langs = {
   ar: {
     error: "❌ خطأ:",
-    warning: "⚠️ تحذير:",
     success: "✅ تم التنفيذ بنجاح",
     noCode: "❌ لم تقدم أي كود للتنفيذ!",
-    noOutput: "✅ لا توجد نتيجة (undefined)",
-    typeInfo: "📊 النوع",
-    timeout: "❌ انتهت مهلة الوقت (Timeout) - الكود يستغرق وقتاً طويلاً",
+    noOutput: "✅ لا توجد نتيجة",
+    timeout: "❌ انتهت مهلة الوقت (5 ثوان فقط)",
     info: "ℹ️ معلومات:",
     usage: "💡 الاستخدام",
-    line: "السطر",
-    length: "الطول"
-  },
-  en: {
-    error: "❌ Error:",
-    warning: "⚠️ Warning:",
-    success: "✅ Code executed successfully",
-    noCode: "❌ No code provided to execute!",
-    noOutput: "✅ No output (undefined)",
-    typeInfo: "📊 Type",
-    timeout: "❌ Timeout - Code takes too long",
-    info: "ℹ️ Info:",
-    usage: "💡 Usage",
-    line: "Line",
-    length: "Length"
-  },
-  vi: {
-    error: "❌ Lỗi:",
-    warning: "⚠️ Cảnh báo:",
-    success: "✅ Mã được thực thi thành công",
-    noCode: "❌ Không có mã nào để thực thi!",
-    noOutput: "✅ Không có kết quả (undefined)",
-    typeInfo: "📊 Loại",
-    timeout: "❌ Hết thời gian - Mã mất quá lâu",
-    info: "ℹ️ Thông tin:",
-    usage: "💡 Cách sử dụng",
-    line: "Dòng",
-    length: "Độ dài"
+    execution: "⏱️ الوقت",
+    typeInfo: "📊 النوع",
+    invalidLang: "❌ لغة برمجة غير مدعومة!",
+    supported: "🔧 اللغات المدعومة",
+    syntaxError: "🔴 خطأ في الصيغة",
+    runtime: "🔴 خطأ في التشغيل",
+    unavailable: "❌ اللغة غير متاحة في النظام"
   }
 };
 
-function formatOutput(value) {
+const supportedLanguages = {
+  js: { name: 'JavaScript', ext: '.js', runner: 'node' },
+  python: { name: 'Python', ext: '.py', runner: 'python3' },
+  py: { name: 'Python', ext: '.py', runner: 'python3' },
+  go: { name: 'Go', ext: '.go', runner: 'go run' },
+  rust: { name: 'Rust', ext: '.rs', runner: 'rustc' },
+  rb: { name: 'Ruby', ext: '.rb', runner: 'ruby' },
+  sh: { name: 'Bash', ext: '.sh', runner: 'bash' }
+};
+
+function detectLanguage(arg) {
+  return supportedLanguages[arg?.toLowerCase()] || supportedLanguages.js;
+}
+
+function executeCode(code, language) {
+  const tempDir = path.join(process.cwd(), 'cache', 'eval_temp');
+  fs.ensureDirSync(tempDir);
+  
+  const filename = `eval_${Date.now()}${language.ext}`;
+  const filepath = path.join(tempDir, filename);
+
   try {
-    if (value === null) return "null";
-    if (value === undefined) return "undefined";
-    
-    const type = typeof value;
-    
-    if (type === "string") return value;
-    if (type === "number" || type === "boolean") return String(value);
-    if (type === "function") return `[Function: ${value.name || "anonymous"}]`;
-    
-    if (value instanceof Date) return value.toISOString();
-    if (value instanceof RegExp) return value.toString();
-    if (value instanceof Map) {
-      const obj = {};
-      value.forEach((v, k) => obj[k] = v);
-      return JSON.stringify(obj, null, 2);
+    fs.writeFileSync(filepath, code);
+
+    let command;
+    if (language.runner === 'go run') {
+      command = `cd ${tempDir} && go run ${filename}`;
+    } else if (language.runner === 'rustc') {
+      const outfile = filepath.replace(language.ext, '');
+      command = `rustc ${filepath} -o ${outfile} && ${outfile}`;
+    } else {
+      command = `${language.runner} ${filepath}`;
     }
-    if (value instanceof Set) return JSON.stringify(Array.from(value), null, 2);
-    if (value instanceof Error) return `${value.name}: ${value.message}`;
-    if (Array.isArray(value)) return JSON.stringify(value, null, 2);
-    if (type === "object") return JSON.stringify(value, null, 2);
-    
-    return String(value);
+
+    const result = execSync(command, {
+      timeout: 5000,
+      encoding: 'utf-8',
+      maxBuffer: 10 * 1024 * 1024
+    });
+
+    return { success: true, output: result, error: null };
   } catch (err) {
-    return `[Unable to format: ${err.message}]`;
+    let errorMsg = err.stderr || err.stdout || err.message || String(err);
+    return { success: false, output: null, error: errorMsg };
+  } finally {
+    try {
+      fs.removeSync(filepath);
+    } catch (e) {}
   }
 }
 
-function getTypeInfo(value) {
-  if (value === null) return "null";
-  if (Array.isArray(value)) return `Array[${value.length}]`;
-  if (value instanceof Map) return `Map(${value.size})`;
-  if (value instanceof Set) return `Set(${value.size})`;
-  if (value instanceof Date) return "Date";
-  if (value instanceof RegExp) return "RegExp";
-  if (value instanceof Error) return value.constructor.name;
-  return typeof value;
-}
-
-function truncateString(str, maxLength = 2000) {
+function truncateString(str, maxLength = 1500) {
   if (str.length > maxLength) {
-    return str.substring(0, maxLength) + `\n\n...[مختصر - العدد الكامل: ${str.length} حرف]`;
+    return str.substring(0, maxLength) + `\n\n...[مختصر - الكامل: ${str.length} حرف]`;
   }
   return str;
 }
 
-module.exports.onStart = async function ({ api, args, message, event, getLang }) {
+module.exports.onStart = async function ({ api, args, message, getLang }) {
   try {
-    // التحقق من وجود كود
     if (!args || args.length === 0) {
+      const supported = Object.entries(supportedLanguages)
+        .map(([key, lang]) => `• ${key} → ${lang.name}`)
+        .join('\n');
+      return message.reply(
+        `${getLang("noCode")}\n\n${getLang("supported")}:\n${supported}\n\n${getLang("usage")}:\n.تنفيذ js console.log("مرحبا")`
+      );
+    }
+
+    let language = detectLanguage(args[0]);
+    let codeArgs = args;
+
+    // إذا بدأ بلغة معروفة
+    if (supportedLanguages[args[0]?.toLowerCase()]) {
+      language = supportedLanguages[args[0]?.toLowerCase()];
+      codeArgs = args.slice(1);
+    }
+
+    if (codeArgs.length === 0) {
       return message.reply(getLang("noCode"));
     }
 
-    const code = args.join(" ");
+    const code = codeArgs.join(" ");
     const startTime = Date.now();
 
-    // دالة الإخراج الآمنة
-    let outputs = [];
-    function output(msg) {
-      outputs.push(msg);
-    }
-    function out(msg) {
-      output(msg);
-    }
+    // معالجة خاصة بـ JavaScript
+    if (language.runner === 'node') {
+      let outputs = [];
+      function output(msg) {
+        outputs.push(msg);
+      }
+      function out(msg) {
+        output(msg);
+      }
 
-    // تنفيذ الكود مع timeout
-    const timeoutPromise = new Promise((_, reject) => {
-      setTimeout(() => reject(new Error("TIMEOUT")), 5000);
-    });
-
-    const executePromise = (async () => {
       try {
         const result = await eval(`
           (async () => {
             try {
-              const result = await (async () => {
-                ${code}
-              })();
-              return result;
+              ${code}
             } catch (err) {
               throw err;
             }
           })()
         `);
-        return result;
-      } catch (err) {
-        throw err;
-      }
-    })();
 
-    let result;
-    try {
-      result = await Promise.race([executePromise, timeoutPromise]);
-    } catch (err) {
-      if (err.message === "TIMEOUT") {
-        return message.reply(getLang("timeout"));
+        const executionTime = Date.now() - startTime;
+        let response = `${getLang("success")}\n━━━━━━━━━━━━━━━━━━━━━━\n`;
+
+        if (outputs.length > 0) {
+          outputs.forEach((out, i) => {
+            const formatted = typeof out === 'object' ? JSON.stringify(out, null, 2) : String(out);
+            response += `📌 الإخراج ${i + 1}:\n${truncateString(formatted)}\n`;
+          });
+          response += `━━━━━━━━━━━━━━━━━━━━━━\n`;
+        }
+
+        response += `⏱️ ${getLang("execution")}: ${executionTime}ms\n`;
+        response += `🔧 ${language.name}`;
+
+        return message.reply(response);
+      } catch (err) {
+        const executionTime = Date.now() - startTime;
+        let errorMsg = `${getLang("error")}\n━━━━━━━━━━━━━━━━━━━━━━\n`;
+        errorMsg += `🔴 ${err.name}:\n${err.message}\n`;
+        errorMsg += `━━━━━━━━━━━━━━━━━━━━━━\n`;
+        errorMsg += `⏱️ ${getLang("execution")}: ${executionTime}ms\n`;
+        errorMsg += `🔧 ${language.name}`;
+
+        return message.reply(truncateString(errorMsg, 1500));
       }
-      throw err;
     }
 
+    // تنفيذ لغات أخرى
+    const result = executeCode(code, language);
     const executionTime = Date.now() - startTime;
 
-    // معالجة النتيجة
-    let response = `${getLang("success")}\n`;
-    response += `━━━━━━━━━━━━━━━━━━━━━━━\n`;
-
-    if (outputs.length > 0) {
-      outputs.forEach((out, i) => {
-        const formatted = formatOutput(out);
-        response += `📌 الإخراج ${i + 1}:\n${truncateString(formatted)}\n`;
-      });
+    if (result.success) {
+      let response = `${getLang("success")}\n━━━━━━━━━━━━━━━━━━━━━━\n`;
+      response += `📌 النتيجة:\n${truncateString(result.output)}\n`;
       response += `━━━━━━━━━━━━━━━━━━━━━━\n`;
+      response += `⏱️ ${getLang("execution")}: ${executionTime}ms\n`;
+      response += `🔧 ${language.name}`;
+
+      return message.reply(response);
+    } else {
+      let errorMsg = `${getLang("error")}\n━━━━━━━━━━━━━━━━━━━━━━\n`;
+      errorMsg += `🔴 ${language.name}:\n${truncateString(result.error)}\n`;
+      errorMsg += `━━━━━━━━━━━━━━━━━━━━━━\n`;
+      errorMsg += `⏱️ ${getLang("execution")}: ${executionTime}ms\n`;
+      errorMsg += `🔧 ${language.name}`;
+
+      return message.reply(truncateString(errorMsg, 1500));
     }
-
-    if (result !== undefined) {
-      const formatted = formatOutput(result);
-      const typeInfo = getTypeInfo(result);
-      response += `📌 النتيجة:\n${truncateString(formatted)}\n`;
-      response += `━━━━━━━━━━━━━━━━━━━━━━\n`;
-      response += `${getLang("typeInfo")}: ${typeInfo}\n`;
-    } else if (outputs.length === 0) {
-      response += getLang("noOutput") + "\n";
-      response += `━━━━━━━━━━━━━━━━━━━━━━\n`;
-    }
-
-    response += `⏱️ الوقت: ${executionTime}ms\n`;
-    response += `📊 عدد السطور: ${code.split('\n').length}\n`;
-
-    message.reply(response);
 
   } catch (error) {
-    try {
-      let errorMsg = `${getLang("error")}\n`;
-      errorMsg += `━━━━━━━━━━━━━━━━━━━━━━\n`;
-
-      if (error.name === "SyntaxError") {
-        errorMsg += `🔴 خطأ في الصيغة (Syntax):\n`;
-      } else if (error.name === "ReferenceError") {
-        errorMsg += `🔴 خطأ في المرجع:\n`;
-      } else if (error.name === "TypeError") {
-        errorMsg += `🔴 خطأ في النوع:\n`;
-      } else {
-        errorMsg += `🔴 ${error.name}:\n`;
-      }
-
-      errorMsg += `${error.message}\n`;
-      errorMsg += `━━━━━━━━━━━━━━━━━━━━━━\n`;
-
-      if (error.stack) {
-        const stackLines = error.stack.split('\n').slice(0, 3);
-        errorMsg += `📍 المكان:\n${stackLines.map(line => line.trim()).join('\n')}\n`;
-        errorMsg += `━━━━━━━━━━━━━━━━━━━━━━\n`;
-      }
-
-      errorMsg += `💡 ${getLang("info")} eval.js v2.0`;
-
-      message.reply(truncateString(errorMsg, 1500));
-    } catch (innerError) {
-      console.error("[EVAL] Critical Error:", innerError);
-      message.reply(`${getLang("error")}\n${innerError.message}`);
-    }
+    console.error("[EVAL] Critical Error:", error);
+    return message.reply(`${getLang("error")}\n${error.message}`);
   }
 };
