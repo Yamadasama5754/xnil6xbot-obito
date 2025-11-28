@@ -1,139 +1,198 @@
+const { getPrefix } = global.utils;
+
 module.exports.config = {
   name: "مساعدة",
-  category: "أدوات",
-  author: "Yamada KJ & Alastor",
-  cooldowns: 5,
-  description: "عرض قائمة الأوامر أو معلومات عن أمر معين",
+  version: "1.6",
+  author: "NTKhang",
+  countDown: 5,
   role: 0,
-  aliases: ["help", "اوامر", "أوامر", "الاوامر"]
+  description: {
+    en: "عرض قائمة الأوامر والمساعدة"
+  },
+  category: "أدوات",
+  guide: {
+    en: "{pn}: عرض جميع الأوامر\n{pn} <اسم الأمر>: عرض طريقة استخدام أمر معين"
+  }
 };
 
-module.exports.onStart = async function ({ api, event, args }) {
+module.exports.langs = {
+  ar: {
+    allCommands: "📚 | قائمة جميع الأوامر\n%1",
+    noCommand: "❌ | الأمر '%1' غير موجود",
+    usageGuide: "📖 | طريقة استخدام الأمر\n%1"
+  }
+};
+
+module.exports.onStart = async function ({ message, event, args, getLang, commandName }) {
   try {
     const allCommands = Array.from(global.GoatBot.commands.values());
     const commandList = allCommands.filter(cmd => !cmd.config?.hidden);
-    const commandsPerPage = 20;
-    const totalPages = Math.ceil(commandList.length / commandsPerPage);
-    const totalCommands = commandList.length;
 
-    // بدون arguments - اعرض الصفحة الأولى
+    // عرض جميع الأوامر
     if (args.length === 0) {
-      let msg = `\n•—[قــائــمــة أوامــر ميراي]—•\n`;
-      const commandsToDisplay = commandList.slice(0, commandsPerPage);
-      commandsToDisplay.forEach((command, index) => {
-        msg += `[${index + 1}] ⟻『${command.config?.name || command.name}』\n`;
-      });
-
-      msg += `\n✎﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏✎\n` +
-             `📜 الصفحة: 1/${totalPages}\n` +
-             `🪐 إجمالي عدد الأوامر: ${totalCommands} أمر\n` +
-             `🔖 | اكتب 'مساعدة رقم الصفحة' لرؤية الصفحات الأخرى.\n` +
-             `🧵 | اكتب 'مساعدة الكل' لرؤية جميع الأوامر.`;
-
-      return await api.sendMessage(msg, event.threadID);
-    }
-
-    const pageStr = args[0];
-
-    // اعرض جميع الأوامر
-    if (pageStr === 'الكل') {
-      let allCommandsMsg = "╭───────────────◊\n•——[قائمة جميع الأوامر]——•\n";
+      let msg = `═══════════════════════════\n📚 قائمة جميع الأوامر\n═══════════════════════════\n\n`;
+      let index = 1;
       
-      commandList.forEach((command) => {
-        const commandName = command.config?.name || command.name;
-        allCommandsMsg += `❏ الإسم : 『${commandName}』\n`;
-      });
-
-      allCommandsMsg += `إجمالي عدد الأوامر: ${totalCommands} أمر\n╰───────────────◊`;
-      return await api.sendMessage(allCommandsMsg, event.threadID);
-    }
-
-    // اعرض صفحة معينة (إذا كان رقم)
-    if (!isNaN(pageStr) && parseInt(pageStr) > 0) {
-      const page = parseInt(pageStr);
-      
-      if (page > totalPages) {
-        return api.sendMessage("❌ الصفحة غير موجودة", event.threadID);
+      for (const command of commandList) {
+        const cmdName = command.config?.name || command.name;
+        msg += `[${index}] ${cmdName}\n`;
+        index++;
       }
 
-      const startIndex = (page - 1) * commandsPerPage;
-      const endIndex = page * commandsPerPage;
+      msg += `\n═══════════════════════════\n`;
+      msg += `📊 إجمالي الأوامر: ${commandList.length} أمر\n`;
+      msg += `💡 اكتب: ${getPrefix(event.threadID)}مساعدة <اسم الأمر>\n`;
+      msg += `📌 مثال: ${getPrefix(event.threadID)}مساعدة حماية\n`;
+      msg += `═══════════════════════════`;
 
-      let msg = `\n•—[قــائــمــة أوامــر ميراي]—•\n`;
-      const commandsToDisplay = commandList.slice(startIndex, endIndex);
-      
-      commandsToDisplay.forEach((command, index) => {
-        const commandNumber = startIndex + index + 1;
-        msg += `[${commandNumber}] ⟻『${command.config?.name || command.name}』\n`;
+      return message.reply(msg, (err, info) => {
+        if (info) {
+          global.GoatBot.onReply.set(info.messageID, {
+            commandName,
+            author: event.senderID,
+            messageID: info.messageID
+          });
+        }
       });
-
-      msg += `\n✎﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏✎\n` +
-             `📜 الصفحة: ${page}/${totalPages}\n` +
-             `🪐 إجمالي عدد الأوامر: ${totalCommands} أمر\n` +
-             `🔖 | اكتب 'مساعدة رقم الصفحة' لرؤية الصفحات الأخرى.\n` +
-             `🧵 | اكتب 'مساعدة الكل' لرؤية جميع الأوامر.`;
-
-      return await api.sendMessage(msg, event.threadID);
     }
 
-    // ابحث عن أمر معين
+    // البحث عن أمر معين
     const searchName = args.join(" ");
-    const command = commandList.find(
-      cmd => {
-        const cmdName = cmd.config?.name || cmd.name;
-        const cmdAliases = cmd.config?.aliases || cmd.aliases || [];
-        return cmdName === searchName || 
-                cmdName.toLowerCase() === searchName.toLowerCase() ||
-                cmdAliases.some(alias => 
-                  alias === searchName || 
-                  alias.toLowerCase() === searchName.toLowerCase()
-                );
-      }
-    );
+    const command = commandList.find(cmd => {
+      const cmdName = cmd.config?.name || cmd.name;
+      const cmdAliases = cmd.config?.aliases || [];
+      return cmdName === searchName || 
+             cmdName.toLowerCase() === searchName.toLowerCase() ||
+             cmdAliases.some(alias => 
+               alias === searchName || 
+               alias.toLowerCase() === searchName.toLowerCase()
+             );
+    });
 
     if (!command) {
-      return api.sendMessage(`✨ اكتب: .مساعدة 1`, event.threadID);
+      return message.reply(getLang("noCommand", searchName));
     }
 
     // عرض معلومات الأمر
-    const roleDesc = module.exports.getRoleDescription(command.config?.role || 0);
-    const aliases = (command.config?.aliases || command.aliases) && (command.config?.aliases || command.aliases).length > 0 
-      ? (command.config?.aliases || command.aliases).join(", ") 
-      : "لا توجد";
-    
-    // استخراج الوصف من الكائن
+    const cmdName = command.config?.name || command.name;
     let description = "بلا وصف";
+    
     if (command.config?.description) {
       if (typeof command.config.description === 'object') {
-        description = command.config.description.en || command.config.description.ar || command.config.description.vi || "بلا وصف";
+        description = command.config.description.en || command.config.description.ar || "بلا وصف";
       } else {
         description = command.config.description;
       }
     }
-    
-    let infoMsg = `📖 | معلومات الأمر\n`;
-    infoMsg += `═══════════════════════\n`;
-    infoMsg += `📌 اسم الأمر: ${command.config?.name || command.name}\n`;
-    infoMsg += `ℹ️ الوصف: ${description}\n`;
-    infoMsg += `👤 الدور المطلوب: ${roleDesc}\n`;
-    infoMsg += `⏱️ فترة الانتظار: ${command.config?.cooldowns || 0} ثانية\n`;
-    infoMsg += `🔗 الأسماء البديلة: ${aliases}\n`;
-    infoMsg += `👨‍💻 صاحب الأمر: ${command.config?.author || "غير محدد"}\n`;
-    infoMsg += `═══════════════════════\n`;
 
-    return await api.sendMessage(infoMsg, event.threadID);
+    let guide = "بلا إرشادات";
+    if (command.config?.guide) {
+      if (typeof command.config.guide === 'object') {
+        guide = command.config.guide.en || command.config.guide.ar || "بلا إرشادات";
+      } else {
+        guide = command.config.guide;
+      }
+    }
+
+    // استبدال {pn} بـ prefix
+    const prefix = getPrefix(event.threadID);
+    guide = guide.replace(/{pn}/g, prefix);
+
+    const roleDesc = {
+      0: "👥 للجميع",
+      1: "👑 للأدمن والمطورين",
+      2: "⚙️ للمطورين فقط"
+    }[command.config?.role || 0];
+
+    let infoMsg = `═══════════════════════════\n`;
+    infoMsg += `📌 الأمر: ${cmdName}\n`;
+    infoMsg += `═══════════════════════════\n`;
+    infoMsg += `📝 الوصف:\n${description}\n\n`;
+    infoMsg += `💻 طريقة الاستخدام:\n${guide}\n\n`;
+    infoMsg += `👤 المستوى المطلوب: ${roleDesc}\n`;
+    infoMsg += `⏱️ الانتظار: ${command.config?.cooldowns || 0}s\n`;
+    infoMsg += `👨‍💻 المطور: ${command.config?.author || "غير محدد"}\n`;
+    infoMsg += `═══════════════════════════`;
+
+    return message.reply(infoMsg);
 
   } catch (err) {
-    console.error("❌ خطأ في أمر المساعدة:", err);
-    return api.sendMessage(`❌ خطأ: ${err.message}`, event.threadID);
+    console.error("[HELP] Error:", err.message);
+    message.reply("❌ | حدث خطأ في الأمر");
   }
 };
 
-module.exports.getRoleDescription = function(role) {
-  const roles = {
-    0: "👥 للجميع",
-    1: "👑 للأدمن والمطورين",
-    2: "⚙️ للمطورين فقط"
-  };
-  return roles[role] || "غير محدد";
+module.exports.onReply = async function ({ message, event, getLang, Reply }) {
+  try {
+    const { author } = Reply;
+    if (author != event.senderID)
+      return;
+
+    const allCommands = Array.from(global.GoatBot.commands.values());
+    const commandList = allCommands.filter(cmd => !cmd.config?.hidden);
+    const searchName = event.body || "";
+
+    if (!searchName) {
+      return message.reply("❌ | يرجى إدخال اسم الأمر");
+    }
+
+    const command = commandList.find(cmd => {
+      const cmdName = cmd.config?.name || cmd.name;
+      const cmdAliases = cmd.config?.aliases || [];
+      return cmdName === searchName || 
+             cmdName.toLowerCase() === searchName.toLowerCase() ||
+             cmdAliases.some(alias => 
+               alias === searchName || 
+               alias.toLowerCase() === searchName.toLowerCase()
+             );
+    });
+
+    if (!command) {
+      return message.reply(getLang("noCommand", searchName), () => message.unsend(Reply.messageID));
+    }
+
+    const cmdName = command.config?.name || command.name;
+    let description = "بلا وصف";
+    
+    if (command.config?.description) {
+      if (typeof command.config.description === 'object') {
+        description = command.config.description.en || command.config.description.ar || "بلا وصف";
+      } else {
+        description = command.config.description;
+      }
+    }
+
+    let guide = "بلا إرشادات";
+    if (command.config?.guide) {
+      if (typeof command.config.guide === 'object') {
+        guide = command.config.guide.en || command.config.guide.ar || "بلا إرشادات";
+      } else {
+        guide = command.config.guide;
+      }
+    }
+
+    const prefix = getPrefix(event.threadID);
+    guide = guide.replace(/{pn}/g, prefix);
+
+    const roleDesc = {
+      0: "👥 للجميع",
+      1: "👑 للأدمن والمطورين",
+      2: "⚙️ للمطورين فقط"
+    }[command.config?.role || 0];
+
+    let infoMsg = `═══════════════════════════\n`;
+    infoMsg += `📌 الأمر: ${cmdName}\n`;
+    infoMsg += `═══════════════════════════\n`;
+    infoMsg += `📝 الوصف:\n${description}\n\n`;
+    infoMsg += `💻 طريقة الاستخدام:\n${guide}\n\n`;
+    infoMsg += `👤 المستوى المطلوب: ${roleDesc}\n`;
+    infoMsg += `⏱️ الانتظار: ${command.config?.cooldowns || 0}s\n`;
+    infoMsg += `👨‍💻 المطور: ${command.config?.author || "غير محدد"}\n`;
+    infoMsg += `═══════════════════════════`;
+
+    message.reply(infoMsg, () => message.unsend(Reply.messageID));
+
+  } catch (err) {
+    console.error("[HELP] onReply Error:", err.message);
+  }
 };

@@ -2,7 +2,7 @@ const { getStreamFromURL, uploadImgbb } = global.utils;
 
 module.exports.config = {
   name: "حماية",
-  version: "1.8",
+  version: "1.9",
   author: "NTKhang",
   countDown: 5,
   role: 0,
@@ -39,7 +39,14 @@ module.exports.langs = {
 
 module.exports.onStart = async function ({ message, event, args, threadsData, getLang }) {
   try {
-    if (!args[0] || !["on", "off"].includes(args[1]))
+    if (!args[0])
+      return message.SyntaxError();
+
+    // تحويل الأوامر العربية إلى الإنجليزية
+    if (args[1] === "تشغيل") args[1] = "on";
+    if (args[1] === "إيقاف") args[1] = "off";
+
+    if (!["on", "off"].includes(args[1]))
       return message.SyntaxError();
 
     const { threadID } = event;
