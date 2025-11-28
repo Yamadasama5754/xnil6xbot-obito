@@ -3,7 +3,7 @@ const { getTime, drive } = global.utils;
 module.exports = {
 	config: {
 		name: "leave",
-		version: "1.4",
+		version: "1.5",
 		author: "Yamada KJ",
 		category: "events"
 	},
@@ -16,7 +16,9 @@ module.exports = {
 			session4: "المساء",
 			leaveType1: "غادر",
 			leaveType2: "تم طرده من",
-			defaultLeaveMessage: "{userName} {type} المجموعة"
+			defaultLeaveMessage: "{userName} {type} المجموعة",
+			leaveCustom: "ناقص واحد ناقص مشكلة 😺",
+			kickCustom: "لاتنسى تسكر الباب وراك 🐢"
 		}
 	},
 
@@ -35,7 +37,14 @@ module.exports = {
 				const threadName = threadData.threadName;
 				const userName = await usersData.getName(leftParticipantFbId);
 
-				let { leaveMessage = getLang("defaultLeaveMessage") } = threadData.data;
+				// تحديد نوع المغادرة (طوعية أو إجبارية)
+				const isLeave = leftParticipantFbId == event.author;
+				const reason = isLeave ? "leave" : "kick";
+				
+				// اختيار الرسالة المناسبة
+				const customMessage = reason === "leave" ? getLang("leaveCustom") : getLang("kickCustom");
+				let leaveMessage = threadData.data.leaveMessage || customMessage;
+
 				const form = {
 					mentions: leaveMessage.match(/\{userNameTag\}/g) ? [{
 						tag: userName,
@@ -45,7 +54,7 @@ module.exports = {
 
 				leaveMessage = leaveMessage
 					.replace(/\{userName\}|\{userNameTag\}/g, userName)
-					.replace(/\{type\}/g, leftParticipantFbId == event.author ? getLang("leaveType1") : getLang("leaveType2"))
+					.replace(/\{type\}/g, isLeave ? getLang("leaveType1") : getLang("leaveType2"))
 					.replace(/\{threadName\}|\{boxName\}/g, threadName)
 					.replace(/\{time\}/g, hours)
 					.replace(/\{session\}/g, hours <= 10 ?
