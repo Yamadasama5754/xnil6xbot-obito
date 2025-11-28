@@ -1,145 +1,122 @@
-const { findUid } = global.utils;
 const moment = require("moment-timezone");
 
 module.exports.config = {
   name: "حظر",
-  aliases: ["ban", "طرد", "block"],
-  version: "2.0",
+  aliases: ["ban", "block"],
+  version: "2.1",
   author: "Enhanced",
   countDown: 5,
-  role: 1,
-  description: "حظر عضو من المحادثة بشكل متكامل",
+  role: 0,
+  description: "حظر عضو",
   category: "المجموعة",
-  guide: "{pn} [@منشن|uid|رابط|رد] [السبب]: حظر عضو\n{pn} list: عرض المحظورين\n{pn} unban [@منشن|uid|رابط|رد]: إلغاء حظر\n{pn} check: فحص وطرد المحظورين"
+  guide: "{pn} [@منشن|uid]: حظر عضو\n{pn} list: قائمة المحظورين\n{pn} unban: إلغاء الحظر"
 };
 
 module.exports.langs = {
   ar: {
-    // النجاح
-    bannedSuccess: "🔴 تم حظر {0} بنجاح!\n📝 السبب: {1}\n⏱️ الوقت: {2}",
-    unbannedSuccess: "🟢 تم إلغاء حظر {0} بنجاح!",
-    checkComplete: "✅ تم فحص المحظورين وطرد {0} عضو",
-    
-    // الأخطاء
-    notFoundTarget: "❌ لم أجد الشخص المراد حظره!\n💡 استخدم: @منشن أو uid أو رابط أو رد على رسالته",
-    notFoundTargetUnban: "❌ لم أجد الشخص المراد إلغاء حظره!\n💡 استخدم: @منشن أو uid أو رابط أو رد على رسالته",
-    userNotBanned: "⚠️ الشخص {0} غير محظور في هذه المجموعة",
-    cantSelfBan: "🚫 لا يمكنك حظر نفسك يا عبقري!",
-    cantBanAdmin: "🚫 لا يمكنك حظر المشرف! 👮",
-    cantBanBot: "🚫 لا يمكنك حظر البوت الذكي! 🤖",
-    alreadyBanned: "⚠️ هذا الشخص محظور بالفعل! تم الحظر في: {0}",
-    needAdmin: "⚠️ البوت يحتاج صلاحيات مشرف لطرد الأعضاء",
-    
-    // البيانات
-    noReason: "بدون سبب محدد",
-    noName: "مستخدم فيسبوك",
-    noData: "✅ لا يوجد أعضاء محظورين في هذه المجموعة",
-    
-    // القوائم
-    listHeader: "📋 قائمة المحظورين ({0}/{1})",
-    listItem: "{0}. {1} ({2})\n   📝 السبب: {3}\n   ⏱️ التاريخ: {4}\n",
-    
-    // الأحداث
-    banEventTitle: "🔴 نبيهة حظر",
-    banEventDetected: "تم اكتشاف محظور يحاول الانضمام!",
-    banEventName: "المحظور: {0}",
-    banEventReason: "السبب الأصلي: {0}",
-    banEventTime: "وقت الحظر: {0}",
-    banEventKicked: "✅ تم طرده تلقائياً",
-    banEventFailed: "⚠️ فشل الطرد التلقائي (مفقود الصلاحيات)"
+    groupOnly: "⚠️ هذا الأمر للمجموعات فقط!",
+    noPermission: "🚫 فقط الأدمن يمكنهم حظر الأعضاء!",
+    notFound: "❌ لم أجد الشخص المراد حظره!",
+    cantBanSelf: "🚫 لا يمكنك حظر نفسك!",
+    cantBanAdmin: "🚫 لا يمكنك حظر أدمن!",
+    cantBanBot: "🚫 لا يمكنك حظر البوت!",
+    alreadyBanned: "⚠️ هذا الشخص محظور بالفعل!",
+    needBotAdmin: "🔴 البوت يحتاج صلاحيات أدمن!",
+    bannedSuccess: "🔴 تم حظر {0}\n📝 السبب: {1}\n⏱️ الوقت: {2}",
+    unbannedSuccess: "🟢 تم إلغاء حظر {0}",
+    userNotBanned: "⚠️ الشخص {0} غير محظور!",
+    noData: "✅ لا يوجد محظورين",
+    listHeader: "📋 قائمة المحظورين ({0})",
+    listItem: "{0}. {1} - {2}"
   }
 };
 
+async function getTarget(args, event) {
+  if (Object.keys(event.mentions || {}).length) {
+    return Object.keys(event.mentions)[0];
+  }
+  if (event.messageReply?.senderID) {
+    return event.messageReply.senderID;
+  }
+  if (/^\d+$/.test(args[0])) {
+    return args[0];
+  }
+  return null;
+}
+
 module.exports.onStart = async function ({ message, event, args, threadsData, getLang, usersData, api }) {
   try {
-    const { threadID, senderID, messageID } = event;
-    
-    // التحقق من أن الأمر في مجموعة فقط
+    const { threadID, senderID } = event;
     const threadInfo = await api.getThreadInfo(threadID);
+
     if (!threadInfo.isGroup) {
-      return message.reply("⚠️ | هذا الأمر للمجموعات فقط!");
+      return message.reply(getLang("groupOnly"));
     }
 
-    const dataBanned = await threadsData.get(threadID, "data.banned_list", []);
     const adminIDs = threadInfo.adminIDs || [];
     const botID = api.getCurrentUserID();
+    const isSenderAdmin = adminIDs.includes(senderID);
 
     // === قسم إلغاء الحظر ===
-    if (args[0] === "unban" || args[0] === "الغاء" || args[0] === "إلغاء") {
-      let target = await getTarget(args, event, 1);
-
-      if (!target) {
-        return message.reply(getLang("notFoundTargetUnban"));
+    if (args[0] === "unban" || args[0] === "إلغاء") {
+      if (!isSenderAdmin) {
+        return message.reply(getLang("noPermission"));
       }
 
+      let target = await getTarget(args, event);
+      if (!target) {
+        return message.reply(getLang("notFound"));
+      }
+
+      const dataBanned = await threadsData.get(threadID, "data.banned_list", []);
       const banIndex = dataBanned.findIndex(item => item.id == target);
+      
       if (banIndex === -1) {
         return message.reply(getLang("userNotBanned", target));
       }
 
       dataBanned.splice(banIndex, 1);
       await threadsData.set(threadID, dataBanned, "data.banned_list");
-
-      const targetName = await usersData.getName(target) || getLang("noName");
+      
+      const targetName = await usersData.getName(target) || "مستخدم";
       return message.reply(getLang("unbannedSuccess", targetName));
     }
 
-    // === قسم الفحص والطرد ===
-    if (args[0] === "check" || args[0] === "فحص") {
-      if (!dataBanned.length) {
-        return message.reply(getLang("noData"));
-      }
-
-      let kickedCount = 0;
-      for (const bannedUser of dataBanned) {
-        if (threadInfo.participantIDs?.includes(bannedUser.id)) {
-          try {
-            await api.removeUserFromGroup(bannedUser.id, threadID);
-            kickedCount++;
-          } catch (err) {
-            console.log(`[BAN] Failed to kick ${bannedUser.id}:`, err.message);
-          }
-        }
-      }
-
-      return message.reply(getLang("checkComplete", kickedCount));
-    }
-
-    // === قسم عرض القائمة ===
+    // === قسم القائمة ===
     if (args[0] === "list" || args[0] === "قائمة") {
+      const dataBanned = await threadsData.get(threadID, "data.banned_list", []);
+      
       if (!dataBanned.length) {
         return message.reply(getLang("noData"));
       }
 
-      const limit = 15;
-      const page = Math.max(1, parseInt(args[1]) || 1);
-      const totalPages = Math.ceil(dataBanned.length / limit);
-      const start = (page - 1) * limit;
-      const end = Math.min(page * limit, dataBanned.length);
-
-      let msg = getLang("listHeader", page, totalPages) + "\n━━━━━━━━━━━━━━━━━━━━━━\n";
-
-      for (let i = start; i < end; i++) {
+      let msg = getLang("listHeader", dataBanned.length) + "\n━━━━━━━━━━━━━━━━━━\n";
+      
+      for (let i = 0; i < Math.min(dataBanned.length, 10); i++) {
         const user = dataBanned[i];
-        const userName = await usersData.getName(user.id) || getLang("noName");
-        msg += getLang("listItem", i + 1, userName, user.id, user.reason, user.time);
+        const userName = await usersData.getName(user.id) || "مستخدم";
+        msg += getLang("listItem", i + 1, userName, user.reason || "بدون سبب") + "\n";
       }
 
-      msg += "━━━━━━━━━━━━━━━━━━━━━━";
       return message.reply(msg);
     }
 
-    // === قسم حظر جديد ===
-    let target = await getTarget(args, event, 0);
-    let reason = args.join(" ").replace(Object.values(event.mentions || {})[0] || "", "").trim() || getLang("noReason");
-
-    if (!target) {
-      return message.reply(getLang("notFoundTarget"));
+    // === حظر جديد ===
+    if (!isSenderAdmin) {
+      return message.reply(getLang("noPermission"));
     }
 
-    // === الفحوصات الأمنية ===
+    if (!adminIDs.includes(botID)) {
+      return message.reply(getLang("needBotAdmin"));
+    }
+
+    let target = await getTarget(args, event);
+    if (!target) {
+      return message.reply(getLang("notFound"));
+    }
+
     if (target === senderID) {
-      return message.reply(getLang("cantSelfBan"));
+      return message.reply(getLang("cantBanSelf"));
     }
 
     if (target === botID) {
@@ -150,83 +127,65 @@ module.exports.onStart = async function ({ message, event, args, threadsData, ge
       return message.reply(getLang("cantBanAdmin"));
     }
 
-    const existingBan = dataBanned.find(item => item.id == target);
-    if (existingBan) {
-      return message.reply(getLang("alreadyBanned", existingBan.time));
+    const dataBanned = await threadsData.get(threadID, "data.banned_list", []);
+    
+    if (dataBanned.some(b => b.id == target)) {
+      return message.reply(getLang("alreadyBanned"));
     }
 
-    // === إضافة الحظر ===
+    const reason = args.slice(1).join(" ") || "0";
     const time = moment().tz(global.GoatBot?.config?.timeZone || "Asia/Baghdad").format("HH:mm:ss DD/MM/YYYY");
-    const banData = {
-      id: target,
-      time,
-      reason,
-      bannedBy: senderID
-    };
 
-    dataBanned.push(banData);
+    dataBanned.push({
+      id: target,
+      reason: reason,
+      time: time,
+      bannedBy: senderID
+    });
+
     await threadsData.set(threadID, dataBanned, "data.banned_list");
 
-    const targetName = await usersData.getName(target) || getLang("noName");
-    
-    message.reply(getLang("bannedSuccess", targetName, reason, time));
-
-    // === محاولة الطرد الفوري ===
-    if (threadInfo.participantIDs?.includes(target)) {
-      if (adminIDs.includes(botID)) {
-        try {
-          await api.removeUserFromGroup(target, threadID);
-        } catch (err) {
-          console.log(`[BAN] Kick failed:`, err.message);
-        }
-      }
+    // محاولة الطرد الفوري
+    try {
+      await api.removeUserFromGroup(target, threadID);
+    } catch (err) {
+      console.log("[BAN] Kick error:", err.message);
     }
 
+    const targetName = await usersData.getName(target) || "مستخدم";
+    return message.reply(getLang("bannedSuccess", targetName, reason, time));
+
   } catch (error) {
-    console.error("[BAN] Critical Error:", error.message);
-    message.reply("❌ حدث خطأ في معالجة الأمر: " + error.message);
+    console.error("[BAN] Error:", error.message);
+    message.reply("❌ حدث خطأ");
   }
 };
 
-module.exports.onEvent = async function ({ event, api, threadsData, getLang, message, usersData }) {
+// حدث الانضمام - طرد تلقائي للمحظورين
+module.exports.onEvent = async function ({ event, threadsData, api, usersData, message }) {
   try {
-    // اكتشاف انضمام عضو محظور
-    if (event.logMessageType === "log:subscribe") {
-      const { threadID } = event;
-      const addedUsers = event.logMessageData?.addedParticipants || [];
-      const dataBanned = await threadsData.get(threadID, "data.banned_list", []);
+    if (event.logMessageType !== "log:subscribe") return;
 
-      if (!dataBanned.length) return;
+    const { threadID } = event;
+    const dataBanned = await threadsData.get(threadID, "data.banned_list", []);
 
-      const threadInfo = await api.getThreadInfo(threadID);
-      const botID = api.getCurrentUserID();
-      const isBotAdmin = threadInfo.adminIDs?.includes(botID);
+    if (!dataBanned.length) return;
 
-      for (const addedUser of addedUsers) {
-        const bannedRecord = dataBanned.find(item => item.id == addedUser.userFbId);
+    const addedUsers = event.logMessageData?.addedParticipants || [];
+    const botID = api.getCurrentUserID();
+    const threadInfo = await api.getThreadInfo(threadID);
+    const isBotAdmin = threadInfo.adminIDs?.includes(botID);
 
-        if (bannedRecord) {
-          const userName = addedUser.fullName || await usersData.getName(addedUser.userFbId) || getLang("noName");
-          
-          // رسالة إنذار
-          let alertMsg = `${getLang("banEventTitle")}\n━━━━━━━━━━━━━━━━━━━━━━\n`;
-          alertMsg += `${getLang("banEventDetected")}\n`;
-          alertMsg += `${getLang("banEventName", userName)}\n`;
-          alertMsg += `${getLang("banEventReason", bannedRecord.reason)}\n`;
-          alertMsg += `${getLang("banEventTime", bannedRecord.time)}\n`;
-
-          if (isBotAdmin) {
-            try {
-              await api.removeUserFromGroup(addedUser.userFbId, threadID);
-              alertMsg += `\n${getLang("banEventKicked")} 🚫`;
-            } catch (err) {
-              alertMsg += `\n${getLang("banEventFailed")} ⚠️`;
-            }
-          } else {
-            alertMsg += `\n${getLang("banEventFailed")} ⚠️`;
-          }
-
-          message.send(alertMsg);
+    for (const user of addedUsers) {
+      const banned = dataBanned.find(b => b.id == user.userFbId);
+      
+      if (banned && isBotAdmin) {
+        try {
+          await api.removeUserFromGroup(user.userFbId, threadID);
+          const name = await usersData.getName(user.userFbId) || "مستخدم";
+          message.send(`🚫 تم طرد ${name} (محظور - السبب: ${banned.reason})`);
+        } catch (err) {
+          console.log("[BAN EVENT] Kick failed");
         }
       }
     }
@@ -234,35 +193,3 @@ module.exports.onEvent = async function ({ event, api, threadsData, getLang, mes
     console.error("[BAN EVENT] Error:", error.message);
   }
 };
-
-// === دالة مساعدة: الحصول على المستخدم المستهدف ===
-async function getTarget(args, event, startIndex = 0) {
-  const arg = args[startIndex];
-
-  // التحقق من ID مباشر
-  if (!isNaN(arg) && arg) {
-    return arg;
-  }
-
-  // التحقق من رابط فيسبوك
-  if (arg?.startsWith("https")) {
-    const { findUid } = global.utils;
-    try {
-      return await findUid(arg);
-    } catch {
-      return null;
-    }
-  }
-
-  // التحقق من المنشن
-  if (Object.keys(event.mentions || {}).length) {
-    return Object.keys(event.mentions)[0];
-  }
-
-  // التحقق من الرد على رسالة
-  if (event.messageReply?.senderID) {
-    return event.messageReply.senderID;
-  }
-
-  return null;
-}
