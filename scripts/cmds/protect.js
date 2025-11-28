@@ -1,48 +1,8 @@
-const axios = require("axios");
-const { getStreamFromURL } = global.utils;
-
-/**
- * Upload image to Imgur using Client ID
- */
-async function uploadToImgur(imageUrl) {
-  try {
-    const clientId = process.env.IMGUR_CLIENT_ID;
-    if (!clientId) {
-      console.error("[IMGUR] IMGUR_CLIENT_ID not found in environment variables");
-      return null;
-    }
-
-    // Download image stream
-    const response = await axios.get(imageUrl, { responseType: "arraybuffer" });
-    const imageBuffer = Buffer.from(response.data, "utf8");
-
-    // Upload to Imgur
-    const formData = new FormData();
-    formData.append("image", imageBuffer.toString("base64"));
-    formData.append("type", "base64");
-
-    const imgurResponse = await axios.post("https://api.imgur.com/3/upload", formData, {
-      headers: {
-        Authorization: `Client-ID ${clientId}`,
-        ...formData.getHeaders()
-      }
-    });
-
-    if (imgurResponse.data?.success) {
-      return imgurResponse.data.data.link;
-    }
-
-    console.error("[IMGUR] Upload failed:", imgurResponse.data);
-    return null;
-  } catch (error) {
-    console.error("[IMGUR] Upload error:", error.message);
-    return null;
-  }
-}
+const { getStreamFromURL, uploadImgbb } = global.utils;
 
 module.exports.config = {
   name: "حماية",
-  version: "2.1",
+  version: "1.8",
   author: "NTKhang",
   countDown: 5,
   role: 0,
@@ -73,21 +33,13 @@ module.exports.langs = {
     antiChangeNameAlreadyOn: "مجموعتك حاليا في وضع مضاد تغيير إسم المجموعة",
     antiChangeNicknameAlreadyOn: "مجموعتك حاليا في وضع مضاد تغيير اللقب بالنسبة للأعضاء",
     antiChangeThemeAlreadyOn: "مجموعتك حاليا في وضع مضاد تغيير السمة",
-    antiChangeEmojiAlreadyOn: "مجموعتك حاليا في وضع مضاد تغيير إيموجي المجموعة",
-    missingEmoji: "أنت لم تقم بضبط إيموجي للمجموعة"
+    antiChangeEmojiAlreadyOn: "مجموعتك حاليا في وضع مضاد تغيير إيموجي المجموعة"
   }
 };
 
 module.exports.onStart = async function ({ message, event, args, threadsData, getLang }) {
   try {
-    if (!args[0])
-      return message.SyntaxError();
-
-    // تحويل الأوامر العربية إلى الإنجليزية
-    if (args[1] === "تشغيل") args[1] = "on";
-    if (args[1] === "إيقاف") args[1] = "off";
-
-    if (!["on", "off"].includes(args[1]))
+    if (!args[0] || !["on", "off"].includes(args[1]))
       return message.SyntaxError();
 
     const { threadID } = event;
@@ -111,12 +63,8 @@ module.exports.onStart = async function ({ message, event, args, threadsData, ge
         const { imageSrc } = threadData || {};
         if (!imageSrc)
           return message.reply(getLang("missingAvt"));
-        
-        // Upload image to Imgur for protection
-        const imgurUrl = await uploadToImgur(imageSrc);
-        const imageToSave = imgurUrl || imageSrc;
-        
-        await checkAndSaveData("avatar", imageToSave);
+        const newImageSrc = await uploadImgbb(imageSrc);
+        await checkAndSaveData("avatar", newImageSrc.image.url);
         break;
       }
       case "الإسم": {
@@ -142,8 +90,6 @@ module.exports.onStart = async function ({ message, event, args, threadsData, ge
       case "الإيموجي": {
         const threadData = await threadsData.get(threadID);
         const { emoji } = threadData || {};
-        if (!emoji)
-          return message.reply(getLang("missingEmoji"));
         await checkAndSaveData("emoji", emoji);
         break;
       }
@@ -164,7 +110,7 @@ module.exports.onEvent = async function ({ message, event, threadsData, role, ap
     switch (logMessageType) {
       case "log:thread-image": {
         const dataAntiChange = await threadsData.get(threadID, "data.antiChangeInfoBox", {});
-        if (!dataAntiChange.avatar)
+        if (!dataAntiChange.avatar && role < 1)
           return;
         return async function () {
           if (role < 1 && api.getCurrentUserID() !== author) {
@@ -178,12 +124,8 @@ module.exports.onEvent = async function ({ message, event, threadsData, role, ap
             const imageSrc = logMessageData.url;
             if (!imageSrc)
               return await threadsData.set(threadID, "REMOVE", "data.antiChangeInfoBox.avatar");
-            
-            // Upload new image to Imgur for protection
-            const imgurUrl = await uploadToImgur(imageSrc);
-            const imageToSave = imgurUrl || imageSrc;
-            
-            await threadsData.set(threadID, imageToSave, "data.antiChangeInfoBox.avatar");
+            const newImageSrc = await uploadImgbb(imageSrc);
+            await threadsData.set(threadID, newImageSrc.image.url, "data.antiChangeInfoBox.avatar");
           }
         };
       }
