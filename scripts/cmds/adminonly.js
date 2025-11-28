@@ -16,6 +16,7 @@ module.exports.config = {
 
 module.exports.langs = {
   ar: {
+    groupOnly: "⚠️ | هذا الأمر للمجموعات فقط!",
     turnedOn: "✅ | تم تشغيل الوضع، حيث يمكن لمسؤول المجموعة فقط استخدام البوت",
     turnedOff: "❌ | تم إيقاف تشغيل الوضع، يمكن للجميع استخدام البوت",
     turnedOnNoti: "✅ | تم تشغيل الإشعار عندما لا يكون المستخدم مسؤولاً",
@@ -24,8 +25,14 @@ module.exports.langs = {
   }
 };
 
-module.exports.onStart = async function ({ args, message, event, threadsData, getLang }) {
+module.exports.onStart = async function ({ args, message, event, threadsData, getLang, api }) {
   try {
+    const threadInfo = await api.getThreadInfo(event.threadID);
+    
+    if (!threadInfo.isGroup) {
+      return message.reply(getLang("groupOnly"));
+    }
+
     let isSetNoti = false;
     let value;
     let keySetData = "data.onlyAdminBox";

@@ -15,12 +15,19 @@ module.exports.config = {
 
 module.exports.langs = {
   ar: {
+    groupOnly: "⚠️ | هذا الأمر للمجموعات فقط!",
     syntaxError: "⚠️ | أرجوك قم بالرد على الرسالة التي تريد حذفها، فقط رسائل البوت"
   }
 };
 
 module.exports.onStart = async function ({ message, event, api, getLang }) {
   try {
+    const threadInfo = await api.getThreadInfo(event.threadID);
+    
+    if (!threadInfo.isGroup) {
+      return message.reply(getLang("groupOnly"));
+    }
+
     if (!event.messageReply || event.messageReply.senderID != api.getCurrentUserID())
       return message.reply(getLang("syntaxError"));
     message.unsend(event.messageReply.messageID);

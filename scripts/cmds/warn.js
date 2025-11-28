@@ -90,6 +90,12 @@ module.exports = {
         },
 
         onStart: async function ({ message, api, event, args, threadsData, usersData, prefix, role, getLang }) {
+                const threadInfo = await api.getThreadInfo(event.threadID);
+                
+                if (!threadInfo.isGroup) {
+                        return message.reply("⚠️ | هذا الأمر للمجموعات فقط!");
+                }
+
                 if (!args[0])
                         return message.SyntaxError();
                 const { threadID, senderID } = event;

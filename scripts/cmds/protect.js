@@ -17,6 +17,7 @@ module.exports.config = {
 
 module.exports.langs = {
   ar: {
+    groupOnly: "⚠️ | هذا الأمر للمجموعات فقط!",
     antiChangeAvatarOn: "✅ تم تشغيل مضاد تغيير صورة المجموعة",
     antiChangeAvatarOff: "❌ تم إيقاف مضاد تغيير صورة المجموعة",
     missingAvt: "أنت لم تقم بضبط أفاتار للمجموعة",
@@ -37,8 +38,14 @@ module.exports.langs = {
   }
 };
 
-module.exports.onStart = async function ({ message, event, args, threadsData, getLang }) {
+module.exports.onStart = async function ({ message, event, args, threadsData, getLang, api }) {
   try {
+    const threadInfo = await api.getThreadInfo(event.threadID);
+    
+    if (!threadInfo.isGroup) {
+      return message.reply(getLang("groupOnly"));
+    }
+
     if (!args[0] || !["on", "off"].includes(args[1]))
       return message.SyntaxError();
 
