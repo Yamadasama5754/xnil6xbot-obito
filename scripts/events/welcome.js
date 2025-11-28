@@ -6,7 +6,7 @@ if (!global.temp.welcomeEvent)
 module.exports = {
 	config: {
 		name: "welcome",
-		version: "1.5",
+		version: "1.6",
 		author: "NTKhang",
 		category: "events",
 	},
@@ -30,7 +30,15 @@ module.exports = {
 			welcomeMessage: "✨ مرحبًا بك في عالم السحر والتكنولوجيا! 🚀\n≼━━━━━⌬🌟🧿🌟⌬━━━━━━≽\n🤖 بادئة البوت : %1\n≼━━━━━⌬🌟🧿🌟⌬━━━━━━≽\n💫 **اكتشف السحر بكتابة** `%1مساعدة",
 			multiple1: "بك",
 			multiple2: "بكم يا أصدقاء",
-			defaultWelcomeMessage: `┌────━━❖🧿❖━━─────┐\n⚜️الأسم : 『{userName}』.\n💮________༺🖤༻________💮\n⚜️إسم المجموعة  : 『{boxName}』\n💮________༺🖤༻________💮\n⚜️الوقت : 『{session}』  \n💮________༺🖤༻________💮\n🔖ولا تنسى يا 『{userName}』 اللفظ و إن ضاق بك الرد\n└────━━❖🧿❖━━─────┘`
+			defaultWelcomeMessage: `◆❯━━━━━▣✦▣━━━━━━❮◆
+≪⚠️ إشــعــار بــالإنــضــمــام ⚠️≫
+👥 | الأسـمـاء : 『{userName}』
+🔢 | الـترتـيـب : 『{memberCount}』
+🧭 | إسـم الـمـجـموعـة :『{boxName}』
+📅 | بـتـاريـخ : {date}
+⏰ | عـلـى الـوقـت : {time}
+『🔖 لا تـسـئ الـلـفـظ وإن ضـاق بـك الـرد 🔖』
+◆❯━━━━━▣✦▣━━━━━━❮◆`
 		}
 	},
 
@@ -67,6 +75,9 @@ module.exports = {
 			if (threadData.settings.sendWelcomeMessage === false) return;
 
 			const threadName = threadData.threadName;
+			const threadInfo = await api.getThreadInfo(threadID);
+			const membersCount = threadInfo.participantIDs?.length || "Unknown";
+			
 			const userName = [];
 			const mentions = [];
 			let multiple = false;
@@ -93,6 +104,9 @@ module.exports = {
 						getLang("session3") :
 						getLang("session4");
 
+			const date = new Date().toLocaleDateString("ar-EG");
+			const time = new Date().toLocaleTimeString("ar-EG");
+
 			let welcomeMessage = threadData.data.welcomeMessage || getLang("defaultWelcomeMessage");
 
 			welcomeMessage = welcomeMessage
@@ -100,7 +114,9 @@ module.exports = {
 				.replace(/\{userNameTag\}/g, userName.join(", "))
 				.replace(/\{boxName\}|\{threadName\}/g, threadName)
 				.replace(/\{session\}/g, session)
-				.replace(/\{time\}/g, hours)
+				.replace(/\{time\}/g, time)
+				.replace(/\{date\}/g, date)
+				.replace(/\{memberCount\}/g, membersCount)
 				.replace(/\{multiple\}/g, multiple ? getLang("multiple2") : getLang("multiple1"));
 
 			const form = {
