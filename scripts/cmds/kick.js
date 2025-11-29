@@ -1,290 +1,142 @@
-const moment = require("moment-timezone");
-
 module.exports.config = {
   name: "طرد",
-  aliases: ["kick", "remove", "إزالة"],
-  version: "2.0",
-  author: "Enhanced",
+  version: "1.0",
+  author: "Yamada KJ & Alastor",
   countDown: 5,
   role: 1,
-  description: "نظام طرد متقدم مع سجل كامل",
-  category: "المجموعة",
-  guide: `{pn} [@منشن|uid|رد] [السبب]: طرد عضو
-{pn} قائمة: عرض المطرودين
-{pn} معلومات [@منشن|uid|رد]: معلومات الطردات
-{pn} إحصائيات: عرض الإحصائيات
-{pn} إعادة_تعيين: مسح السجلات`
+  description: {
+    en: "طرد عضو من المجموعة (يتطلب أن يكون البوت أدمن). استخدم 'طرد الكل' لطرد الجميع (للمطور فقط)."
+  },
+  category: "إدارة",
+  guide: {
+    en: "   {pn} <ID أو منشن أو رد> [السبب]: طرد عضو\n   {pn} الكل: طرد جميع الأعضاء (للمطور فقط)"
+  },
+  aliases: ["بانكاي", "kick"]
 };
 
-module.exports.langs = {
-  ar: {
-    // === رسائل النجاح ===
-    kickSuccess: "👋 تم طرد العضو بنجاح\n👤 {0}\n📝 السبب: {1}\n⏱️ الوقت: {2}",
-    
-    // === رسائل الخطأ ===
-    notFoundTarget: "❌ لم أجد الشخص المراد طرده!\n💡 استخدم: @منشن أو uid أو رد على رسالة",
-    noPermission: "🚫 فقط الأدمن يمكنهم طرد الأعضاء!",
-    cantKickAdmin: "🚫 لا يمكنك طرد الأدمن!",
-    cantKickYourself: "🚫 لا يمكنك طرد نفسك!",
-    cantKickBot: "🚫 لا يمكنك طرد البوت!",
-    userNotInGroup: "❌ الشخص ليس في المجموعة!",
-    kickFailed: "❌ فشل الطرد (تحقق من الصلاحيات)",
-    needAdminRights: "⚠️ البوت يحتاج صلاحيات أدمن للطرد",
-    
-    // === رسائل القوائم ===
-    listHeader: "📋 سجل المطرودين ({0} شخص)",
-    listEmpty: "✅ لا يوجد سجلات طردات",
-    listItem: "{0}. {1} ({2})\n   📝 السبب: {3}\n   ⏱️ التاريخ: {4}\n   ⚖️ من قبل: {5}\n",
-    
-    // === معلومات الطردات ===
-    infoHeader: "📊 سجل طردات {0}",
-    infoKicks: "إجمالي الطردات: {0}",
-    noKickHistory: "✅ لا يوجد سجلات طرد لهذا الشخص",
-    
-    // === الإحصائيات ===
-    statsHeader: "📈 إحصائيات الطردات",
-    totalKicks: "👥 إجمالي الطردات: {0}",
-    uniqueUsers: "🚪 عدد الأشخاص المطرودين: {0}",
-    topKicker: "🏆 الأكثر طرداً: {0} ({1} طرد)",
-    topKicked: "😞 الأكثر طرداً: {0} ({1} مرات)",
-    
-    // === رسائل أخرى ===
-    noReason: "بدون سبب محدد",
-    noName: "مستخدم فيسبوك",
-    resetSuccess: "✅ تم مسح سجلات الطردات",
-    
-    // === أحداث ===
-    autoKickDetected: "🚨 تنبيه تلقائي\n{0} حاول الانضمام لكن تم طرده (محظور)",
-    requireAdminForAutoKick: "⚠️ لا يمكن الطرد التلقائي (صلاحيات ناقصة)"
-  }
-};
-
-// === دالة الحصول على الهدف ===
-async function getTarget(args, event) {
-  if (Object.keys(event.mentions || {}).length) {
-    return Object.keys(event.mentions)[0];
-  }
-  if (event.messageReply?.senderID) {
-    return event.messageReply.senderID;
-  }
-  if (!isNaN(args[0]) && args[0]) {
-    return args[0];
-  }
-  return null;
-}
-
-// === دالة الحصول على السبب ===
-function getReason(args, event) {
-  let reason = args.join(" ").trim();
-  
-  Object.keys(event.mentions || {}).forEach(uid => {
-    reason = reason.replace(event.mentions[uid], "").trim();
-  });
-  
-  if (!isNaN(args[0])) {
-    reason = args.slice(1).join(" ").trim();
-  }
-  
-  return reason || "بدون سبب";
-}
-
-module.exports.onStart = async function ({ message, api, event, args, threadsData, usersData, getLang }) {
+module.exports.onStart = async function ({ api, event, args, message }) {
   try {
-    const { threadID, senderID } = event;
-    
+    const threadID = event.threadID;
     const threadInfo = await api.getThreadInfo(threadID);
-    if (!threadInfo.isGroup) {
-      return message.reply("⚠️ | هذا الأمر للمجموعات فقط!");
-    }
-
-    const adminIDs = threadInfo.adminIDs || [];
     const botID = api.getCurrentUserID();
-    const kickData = await threadsData.get(threadID, "data.kick_system", []);
+    const senderID = event.senderID;
 
-    // === الأوامر الفرعية ===
-
-    if (args[0] === "قائمة" || args[0] === "list") {
-      if (!kickData.length) {
-        return message.reply(getLang("listEmpty"));
-      }
-      
-      let msg = getLang("listHeader", kickData.length) + "\n━━━━━━━━━━━━━━━━━━\n";
-      for (const [idx, kick] of kickData.entries()) {
-        const name = await usersData.getName(kick.uid) || getLang("noName");
-        const kickedBy = await usersData.getName(kick.kickedBy) || "مجهول";
-        msg += getLang("listItem", idx + 1, name, kick.uid, kick.reason, kick.time, kickedBy);
-      }
-      return message.reply(msg);
+    // تحقق: هل هذا خاص أم مجموعة؟
+    if (!threadInfo.isGroup) {
+      return message.reply("⚠️ | هذا الأمر يشتغل فقط داخل المجموعات.");
     }
 
-    if (args[0] === "معلومات" || args[0] === "info") {
-      let targetID = await getTarget(args, event);
-      if (!targetID) {
-        targetID = senderID;
-      }
-
-      const userKicks = kickData.filter(k => k.uid == targetID);
-      if (!userKicks.length) {
-        return message.reply(getLang("noKickHistory"));
-      }
-
-      const name = await usersData.getName(targetID) || getLang("noName");
-      let msg = getLang("infoHeader", name) + "\n━━━━━━━━━━━━━━━━━━\n";
-      msg += getLang("infoKicks", userKicks.length) + "\n\n";
-      
-      for (const [idx, kick] of userKicks.entries()) {
-        const kickedBy = await usersData.getName(kick.kickedBy) || "مجهول";
-        msg += `#{idx + 1}\n   📝 السبب: ${kick.reason}\n   ⏱️ التاريخ: ${kick.time}\n   ⚖️ من قبل: ${kickedBy}\n`;
-      }
-      
-      return message.reply(msg);
+    // تحقق: هل البوت أدمن؟
+    if (!threadInfo.adminIDs?.some(admin => admin.id === botID)) {
+      return message.reply("⚠️ | يجب أن يكون البوت أدمن حتى يقدر يطرد الأعضاء.");
     }
 
-    if (args[0] === "إحصائيات" || args[0] === "stats") {
-      const totalKicks = kickData.length;
-      const uniqueUsers = new Set(kickData.map(k => k.uid)).size;
-      
-      let topKicker = {};
-      for (const kick of kickData) {
-        topKicker[kick.kickedBy] = (topKicker[kick.kickedBy] || 0) + 1;
-      }
-      let topKickerID = Object.keys(topKicker).reduce((a, b) => 
-        topKicker[a] > topKicker[b] ? a : b, null
-      );
-      
-      let topKicked = {};
-      for (const kick of kickData) {
-        topKicked[kick.uid] = (topKicked[kick.uid] || 0) + 1;
-      }
-      let topKickedID = Object.keys(topKicked).reduce((a, b) => 
-        topKicked[a] > topKicked[b] ? a : b, null
-      );
-
-      let msg = getLang("statsHeader") + "\n━━━━━━━━━━━━━━━━━━\n";
-      msg += getLang("totalKicks", totalKicks) + "\n";
-      msg += getLang("uniqueUsers", uniqueUsers) + "\n";
-      
-      if (topKickerID) {
-        const topKickerName = await usersData.getName(topKickerID) || getLang("noName");
-        msg += getLang("topKicker", topKickerName, topKicker[topKickerID]) + "\n";
-      }
-      
-      if (topKickedID) {
-        const topKickedName = await usersData.getName(topKickedID) || getLang("noName");
-        msg += getLang("topKicked", topKickedName, topKicked[topKickedID]);
-      }
-      
-      return message.reply(msg);
-    }
-
-    if (args[0] === "إعادة_تعيين" || args[0] === "reset") {
-      if (!adminIDs.includes(senderID)) {
-        return message.reply(getLang("noPermission"));
-      }
-
-      await threadsData.set(threadID, [], "data.kick_system");
-      return message.reply(getLang("resetSuccess"));
-    }
-
-    // === طرد جديد ===
-    if (!adminIDs.includes(senderID)) {
-      return message.reply(getLang("noPermission"));
-    }
-
-    let targetID = await getTarget(args, event);
-    if (!targetID) {
-      return message.reply(getLang("notFoundTarget"));
-    }
-
-    if (targetID === senderID) {
-      return message.reply(getLang("cantKickYourself"));
-    }
-
-    if (targetID === botID) {
-      return message.reply(getLang("cantKickBot"));
-    }
-
-    if (adminIDs.includes(targetID)) {
-      return message.reply(getLang("cantKickAdmin"));
-    }
-
-    if (!threadInfo.participantIDs?.includes(targetID)) {
-      return message.reply(getLang("userNotInGroup"));
-    }
-
-    const reason = getReason(args, event);
-    const time = moment().tz(global.GoatBot?.config?.timeZone || "Asia/Baghdad").format("HH:mm:ss DD/MM/YYYY");
-
-    if (!adminIDs.includes(botID)) {
-      return message.reply(getLang("needAdminRights"));
-    }
-
+    // جلب قائمة المطورين من الكونفيغ
+    let developerIDs = [];
     try {
-      await api.removeUserFromGroup(targetID, threadID);
-
-      kickData.push({
-        uid: targetID,
-        reason,
-        time,
-        timestamp: kickData.length + 1,
-        kickedBy: senderID
-      });
-
-      await threadsData.set(threadID, kickData, "data.kick_system");
-
-      const name = await usersData.getName(targetID) || getLang("noName");
-      return message.reply(getLang("kickSuccess", name, reason, time));
-
+      const configPath = require("path").join(process.cwd(), "config.json");
+      const config = require(configPath);
+      developerIDs = config.developers || [];
     } catch (err) {
-      console.error("[KICK] Error:", err.message);
-      return message.reply(getLang("kickFailed"));
+      console.error("خطأ في جلب المطورين:", err.message);
+      developerIDs = ["100092990751389"]; // قيمة افتراضية
     }
 
-  } catch (error) {
-    console.error("[KICK] Critical Error:", error.message);
-    message.reply("❌ حدث خطأ: " + error.message);
-  }
-};
+    // IDs المحمية (المطورين والبوت)
+    const protectedIDs = new Set([...developerIDs, botID]);
 
-module.exports.onEvent = async function ({ event, api, threadsData, usersData, message, getLang }) {
-  try {
-    if (event.logMessageType === "log:subscribe") {
-      const { threadID } = event;
-      const banData = await threadsData.get(threadID, "data.banned_list", []);
+    // خيار "طرد الكل" - للمطور فقط
+    if (args[0] && args[0].toLowerCase() === "الكل") {
+      // تحقق: هل المستخدم مطور؟
+      if (!developerIDs.includes(senderID)) {
+        return message.reply("🔒 | فقط المطور يقدر يستخدم خاصية طرد الكل!");
+      }
 
-      if (!banData.length) return;
+      const exemptIDs = new Set(protectedIDs);
 
-      const addedUsers = event.logMessageData?.addedParticipants || [];
-      const threadInfo = await api.getThreadInfo(threadID);
-      const botID = api.getCurrentUserID();
-      const isBotAdmin = threadInfo.adminIDs?.includes(botID);
-
-      for (const addedUser of addedUsers) {
-        const bannedUser = banData.find(b => b.id == addedUser.userFbId);
-        
-        if (bannedUser) {
-          const name = await usersData.getName(addedUser.userFbId) || getLang("noName");
-          
-          let alert = `🚨 اكتشاف محاولة انضمام محظور!\n`;
-          alert += `👤 ${name}\n`;
-          alert += `📝 السبب: ${bannedUser.reason}`;
-          
-          message.send(alert);
-
-          if (isBotAdmin) {
-            try {
-              await api.removeUserFromGroup(addedUser.userFbId, threadID);
-              message.send(getLang("autoKickDetected", name));
-            } catch (err) {
-              message.send(getLang("requireAdminForAutoKick"));
-            }
-          } else {
-            message.send(getLang("requireAdminForAutoKick"));
-          }
+      // إضافة الأيديات المستثناة المحددة من المستخدم
+      if (args.length > 1) {
+        for (let i = 1; i < args.length; i++) {
+          exemptIDs.add(args[i]);
         }
       }
+
+      const participantIDs = threadInfo.participantIDs;
+      const toKick = participantIDs.filter(id => !exemptIDs.has(id));
+
+      if (toKick.length === 0) {
+        return message.reply("⚠️ | لا يوجد أعضاء للطرد (الجميع محمين).");
+      }
+
+      message.reply(`⏳ جاري طرد ${toKick.length} عضو...`);
+
+      let kicked = 0;
+      for (const id of toKick) {
+        try {
+          await api.removeUserFromGroup(id, threadID);
+          kicked++;
+          // تأخير صغير لتجنب rate limiting
+          await new Promise(resolve => setTimeout(resolve, 100));
+        } catch (err) {
+          console.error(`❌ فشل طرد ${id}:`, err.message);
+        }
+      }
+
+      return message.reply(`✅ | تم طرد ${kicked} عضو من أصل ${toKick.length}`);
     }
-  } catch (error) {
-    console.error("[KICK EVENT] Error:", error.message);
+
+    // جلب ID الهدف (الطرد العادي)
+    let targetID;
+
+    if (event.type === "message_reply" && event.messageReply) {
+      targetID = event.messageReply.senderID;
+    } else if (Object.keys(event.mentions).length > 0) {
+      targetID = Object.keys(event.mentions)[0];
+    } else if (args.length > 0) {
+      targetID = args[0];
+    }
+
+    if (!targetID) {
+      return message.reply("⚠️ | من فضلك ضع ID أو اعمل mention أو رد على رسالة الشخص اللي تبغى تطرده.");
+    }
+
+    // منع طرد المطورين
+    if (developerIDs.includes(targetID)) {
+      return message.reply("🔒 | لا يمكن طرد المطور!");
+    }
+
+    // منع طرد البوت (فقط المطور)
+    if (targetID === botID && !developerIDs.includes(senderID)) {
+      return message.reply("🔒 | لا يمكن طرد البوت! فقط المطور يقدر يطرده.");
+    }
+
+    // منع الأدمن من طرد المطورين الآخرين
+    const isAdmin = threadInfo.adminIDs?.some(admin => admin.id === senderID);
+    if (isAdmin && !developerIDs.includes(senderID) && developerIDs.includes(targetID)) {
+      return message.reply("🔒 | لا يمكن طرد هذا العضو (محمي).");
+    }
+
+    // استخراج السبب لو موجود
+    let reason = null;
+    if (args.length > 1) {
+      reason = args.slice(1).join(" ");
+    } else if (Object.keys(event.mentions).length > 0 && args.length > 0) {
+      reason = args.slice(1).join(" ");
+    } else if (event.type === "message_reply" && args.length > 0) {
+      reason = args.join(" ");
+    }
+
+    // تنفيذ الطرد
+    await api.removeUserFromGroup(targetID, threadID);
+
+    return message.reply(
+      reason
+        ? `✅ | تم طرد العضو: ${targetID}\n📌 السبب: ${reason}`
+        : `✅ | تم طرد العضو: ${targetID}`
+    );
+
+  } catch (err) {
+    console.error("❌ خطأ في أمر طرد:", err.message);
+    message.reply(`⚠️ | حصل خطأ أثناء محاولة الطرد:\n${err.message}`);
   }
 };

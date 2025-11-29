@@ -1,38 +1,19 @@
+const allOnEvent = global.GoatBot.onEvent;
+
 module.exports = {
-  config: {
-    name: "onEvent",
-    version: "1.0",
-    author: "Enhanced",
-    category: "events",
-    isBot: false
-  },
+	config: {
+		name: "onEvent",
+		version: "1.1",
+		author: "NTKhang",
+		description: "Loop to all event in global.GoatBot.onEvent and run when have new event",
+		category: "events"
+	},
 
-  langs: {
-    ar: {
-      eventError: "❌ حدث خطأ في معالجة الحدث: {0}"
-    },
-    en: {
-      eventError: "❌ Error processing event: {0}"
-    },
-    vi: {
-      eventError: "❌ Lỗi xử lý sự kiện: {0}"
-    }
-  },
-
-  onStart: async (params) => {
-    try {
-      const { event, api, getLang } = params;
-      
-      if (!event) return;
-      
-      // معالجة الأحداث العامة
-      if (event.logMessageType) {
-        // تسجيل الأحداث
-        console.log(`[EVENT] ${event.logMessageType} at thread ${event.threadID}`);
-      }
-      
-    } catch (error) {
-      console.error("[ON_EVENT] Error:", error.message);
-    }
-  }
+	onStart: async ({ api, args, message, event, threadsData, usersData, dashBoardData, threadModel, userModel, dashBoardModel, role, commandName }) => {
+		for (const item of allOnEvent) {
+			if (typeof item === "string")
+				continue; // Skip if item is string, because it is the command name and is executed at ../../bot/handler/handlerEvents.js
+			item.onStart({ api, args, message, event, threadsData, usersData, threadModel, dashBoardData, userModel, dashBoardModel, role, commandName });
+		}
+	}
 };

@@ -1,35 +1,46 @@
 module.exports = {
-  config: {
-    name: "checkwarn",
-    version: "1.0",
-    author: "Enhanced",
-    category: "events"
-  },
+	config: {
+		name: "checkwarn",
+		version: "1.3",
+		author: "Yamada KJ",
+		category: "events"
+	},
 
-  langs: {
-    ar: {
-      checkWarn: "⚠️ تنبيه: لديك {0} تحذيرات"
-    },
-    en: {
-      checkWarn: "⚠️ Warning: You have {0} warnings"
-    },
-    vi: {
-      checkWarn: "⚠️ Cảnh báo: Bạn có {0} cảnh báo"
-    }
-  },
+	langs: {
+		ar: {
+			warn: "تم تحذير العضو %1 3 مرات وتم حظره من المجموعة\n- الاسم: %1\n- المعرف: %2\n- لإزالة الحظر استخدم: \"%3warn unban <uid>\"",
+			needPermission: "البوت يحتاج صلاحيات مشرف لطرد العضو المحظور"
+		}
+	},
 
-  onStart: async ({ event, threadsData, usersData, message, getLang }) => {
-    try {
-      if (!event.senderID) return;
-      
-      const warns = await threadsData.get(event.threadID, `data.warns.${event.senderID}`, []);
-      if (!warns || warns.length === 0) return;
-      
-      if (warns.length >= 3) {
-        message.send(getLang("checkWarn", warns.length));
-      }
-    } catch (error) {
-      console.error("[CHECKWARN] Error:", error.message);
-    }
-  }
+	onStart: async ({ threadsData, message, event, api, client, getLang }) => {
+		if (event.logMessageType == "log:subscribe")
+			return async function () {
+				const { threadID } = event;
+				const { data } = await threadsData.get(event.threadID);
+				const { warn: warnList } = data;
+				if (!warnList)
+					return;
+				const { addedParticipants } = event.logMessageData;
+				for (const user of addedParticipants) {
+					const findUser = warnList.find(user => user.userID == user.userID);
+					if (findUser && findUser.list >= 3) {
+						const userName = user.fullName;
+						const uid = user.userFbId;
+						message.send({
+							body: getLang("warn", userName, uid, client.getPrefix(threadID)),
+							mentions: [{
+								tag: userName,
+								id: uid
+							}]
+						}, function () {
+							api.removeUserFromGroup(uid, threadID, (err) => {
+								if (err)
+									return message.send(getLang("needPermission"));
+							});
+						});
+					}
+				}
+			};
+	}
 };

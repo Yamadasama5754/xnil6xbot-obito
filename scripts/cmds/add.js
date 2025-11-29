@@ -1,6 +1,5 @@
 const fs = require("fs-extra");
 const path = require("path");
-const moment = require("moment-timezone");
 
 const bansFile = path.join(process.cwd(), "database/bans.json");
 
@@ -15,128 +14,105 @@ const getBans = (threadID) => {
 
 module.exports.config = {
   name: "ادخل",
-  aliases: ["add", "invite", "join"],
-  version: "2.0",
-  author: "Enhanced",
-  countDown: 10,
+  version: "1.0",
+  author: "Yamada KJ & Alastor",
+  countDown: 5,
   role: 0,
-  description: "إضافة عضو إلى المجموعة",
+  description: {
+    en: "إضافة عضو إلى المجموعة (متاح للجميع)"
+  },
   category: "المجموعة",
-  guide: `{pn} [ID|رابط|@منشن]: إضافة عضو`
+  guide: {
+    en: "   {pn} <ID أو رابط أو منشن>: إضافة عضو إلى المجموعة"
+  },
+  aliases: ["join"]
 };
 
 module.exports.langs = {
   ar: {
-    groupOnly: "⚠️ هذا الأمر للمجموعات فقط!",
-    needTarget: "❌ لازم تحدد الشخص: ايدي أو رابط أو @منشن أو رد على رسالة",
-    invalidLink: "⚠️ الرابط غير صحيح",
-    userBanned: "🚫 هذا الشخص مبان من المجموعة!",
-    alreadyInGroup: "ℹ️ هذا الشخص موجود بالفعل في المجموعة",
-    notAdmin: "🔴 البوت لازم يكون أدمن لإضافة أعضاء!",
-    blocked: "🚫 الشخص محظور أو حظر المجموعة",
-    cannotAdd: "⚠️ فيسبوك منع إضافة هذا الشخص",
-    apiError: "❌ خطأ في الاتصال",
-    addSuccess: "✅ تم إضافة العضو بنجاح!",
-    invalidID: "❌ ايدي غير صحيح"
+    notGroup: "⚠️ | هذا الأمر يشتغل فقط داخل المجموعات.",
+    needTarget: "⚠️ | لازم تكتب أيدي الشخص أو تعمل mention أو رد على رسالته أو رابط فيسبوك.",
+    invalidLink: "⚠️ | الرابط غير صالح. لازم يكون فيه ID رقمي.",
+    userBanned: "❌ | هذا الشخص مبان من المجموعة! لا يمكن إضافته.",
+    alreadyInGroup: "ℹ️ | هذا الشخص موجود بالفعل في المجموعة.",
+    addFailed: "❌ | فشل إضافة الشخص.",
+    notAdmin: "⚠️ | لازم البوت يصبح أدمن في المجموعة لإضافة أعضاء!",
+    alreadyMember: "ℹ️ | هذا الشخص موجود بالفعل في المجموعة.",
+    blocked: "🔍 | هذا الشخص محظور أو قد حظر المجموعة.",
+    addSuccess: "✅ | تم إدخال العضو ({0}) إلى المجموعة بنجاح!",
+    error: "⚠️ | حصل خطأ غير متوقع:\n{0}"
   }
 };
 
-module.exports.onStart = async function ({ api, event, args, message, usersData, threadsData, getLang }) {
+module.exports.onStart = async function ({ api, event, args, message }) {
   try {
-    const { threadID, senderID, messageReply } = event;
-    const threadInfo = await api.getThreadInfo(threadID);
+    const threadInfo = await api.getThreadInfo(event.threadID);
 
+    // تحقق: هل هذا خاص أم مجموعة؟
     if (!threadInfo.isGroup) {
-      return message.reply(getLang("groupOnly"));
+      return message.reply("⚠️ | هذا الأمر يشتغل فقط داخل المجموعات.");
     }
 
+    // تحديد الشخص (ID أو رابط فيسبوك أو mention أو رد على رسالة)
     let targetID;
-    let targetName = "مجهول";
 
-    if (event.type === "message_reply" && messageReply) {
-      targetID = messageReply.senderID;
-    } else if (Object.keys(event.mentions || {}).length > 0) {
+    // لو الأمر جاء كرد على رسالة
+    if (event.type === "message_reply" && event.messageReply) {
+      targetID = event.messageReply.senderID;
+    }
+    // لو فيه mention
+    else if (Object.keys(event.mentions).length > 0) {
       targetID = Object.keys(event.mentions)[0];
-    } else if (args && args[0]) {
-      targetID = args[0].trim();
+    }
+    // لو فيه ID أو رابط
+    else if (args.length > 0) {
+      targetID = args[0];
+
+      // لو الرابط فيسبوك → حاول استخراج الـ ID
       if (targetID.includes("facebook.com")) {
-        const match = targetID.match(/facebook\.com\/(?:profile\.php\?id=)?(\d+)/);
+        const match = targetID.match(/facebook\.com\/(\d+)/);
         if (match) {
           targetID = match[1];
         } else {
-          return message.reply(getLang("invalidLink"));
+          return message.reply("⚠️ | الرابط غير صالح. لازم يكون فيه ID رقمي.");
         }
       }
     }
 
     if (!targetID) {
-      return message.reply(getLang("needTarget"));
+      return message.reply("⚠️ | لازم تكتب أيدي الشخص أو تعمل mention أو رد على رسالته أو رابط فيسبوك.");
     }
 
-    if (!/^\d+$/.test(targetID)) {
-      return message.reply(getLang("invalidID"));
+    // تحقق: هل الشخص مبان؟
+    const bans = getBans(event.threadID);
+    if (bans.find(b => b.userID === targetID)) {
+      return message.reply("❌ | هذا الشخص مبان من المجموعة! لا يمكن إضافته.");
     }
 
-    if (targetID === senderID) {
-      return message.reply("😅 لا تستطيع إضافة نفسك!");
-    }
+    // محاولة الإضافة (حتى لو كان الشخص موجود، ربما غادر وبنحاول نضيفه مرة أخرى)
+    api.addUserToGroup(targetID, event.threadID, (err) => {
+      if (err) {
+        let errorMsg = "❌ | فشل إضافة الشخص.\n";
+        const errorStr = (err.message || "").toLowerCase();
 
-    const botID = api.getCurrentUserID();
-    if (targetID === botID) {
-      return message.reply("😅 لا تستطيع إضافة البوت!");
-    }
-
-    const bans = getBans(threadID);
-    const banRecord = bans.find(b => b.userID === targetID);
-    if (banRecord) {
-      return message.reply(getLang("userBanned"));
-    }
-
-    try {
-      const userInfo = await api.getUserInfo(targetID);
-      targetName = userInfo[targetID]?.name || "مجهول";
-    } catch (e) {
-      console.log("[ADD] User fetch failed");
-    }
-
-    api.addUserToGroup(targetID, threadID, async (err) => {
-      try {
-        const stats = await threadsData.get(threadID, "data.add_stats", {
-          success: 0,
-          failed: 0
-        });
-        const timeStr = moment().tz(global.GoatBot?.config?.timeZone || "Asia/Baghdad").format("HH:mm:ss");
-
-        if (err) {
-          const errorMsg = (err.message || "").toLowerCase();
-          let response = getLang("apiError");
-
-          if (errorMsg.includes("not admin") || errorMsg.includes("not authorized") || errorMsg.includes("permission")) {
-            response = getLang("notAdmin");
-          } else if (errorMsg.includes("already") || errorMsg.includes("member")) {
-            response = getLang("alreadyInGroup");
-          } else if (errorMsg.includes("blocked") || errorMsg.includes("block")) {
-            response = getLang("blocked");
-          } else if (errorMsg.includes("cannot")) {
-            response = getLang("cannotAdd");
-          }
-
-          stats.failed++;
-          await threadsData.set(threadID, stats, "data.add_stats");
-          return message.reply(response);
+        // تحليل نوع الخطأ
+        if (errorStr.includes("not admin") || errorStr.includes("not authorized") || errorStr.includes("permission") || errorStr.includes("admin")) {
+          errorMsg = "⚠️ | لازم البوت يصبح أدمن في المجموعة لإضافة أعضاء!";
+        } else if (errorStr.includes("already") || errorStr.includes("member")) {
+          errorMsg = "ℹ️ | هذا الشخص موجود بالفعل في المجموعة.";
+        } else if (errorStr.includes("blocked") || errorStr.includes("block")) {
+          errorMsg = "🔍 | هذا الشخص محظور أو قد حظر المجموعة أو Facebook منع الإضافة.";
+        } else if (errorStr.includes("cannot add") || errorStr.includes("cannot invite")) {
+          errorMsg = "🔍 | Facebook منع إضافة هذا الشخص. قد يكون محظور أو غادر المجموعة ولا يمكن إضافته من جديد.";
+        } else {
+          errorMsg += `🔍 السبب: ${err.message || "خطأ غير معروف"}`;
         }
 
-        stats.success++;
-        await threadsData.set(threadID, stats, "data.add_stats");
-        message.reply(getLang("addSuccess"));
-
-      } catch (statError) {
-        console.error("[ADD] Stats error:", statError.message);
+        return message.reply(errorMsg);
       }
+      message.reply(`✅ | تم إدخال العضو (${targetID}) إلى المجموعة بنجاح!`);
     });
-
-  } catch (error) {
-    console.error("[ADD] Error:", error.message);
-    message.reply("❌ خطأ في الاتصال");
+  } catch (err) {
+    return message.reply("⚠️ | حصل خطأ غير متوقع:\n" + err.message);
   }
 };
