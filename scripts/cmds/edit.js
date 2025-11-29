@@ -1,7 +1,6 @@
 const axios = require('axios');
 const fs = require('fs-extra');
 const path = require('path');
-const Jimp = require('jimp');
 
 module.exports.config = {
   name: "تعديل",
@@ -39,40 +38,50 @@ function extractEditPrompt(rawArgs, imageUrl) {
   return prompt || "تحسين الجودة";
 }
 
-// Image enhancement using Jimp
-async function enhanceImageWithJimp(imagePath, enhancementType = "enhance") {
-  try {
-    const image = await Jimp.read(imagePath);
-    
-    // Different enhancement options
-    switch(enhancementType.toLowerCase()) {
-      case "brightness":
-        image.brightness(0.1);
-        break;
-      case "contrast":
-        image.contrast(0.2);
-        break;
-      case "sharpen":
-        image.sharpen();
-        break;
-      case "normalize":
-        image.normalize();
-        break;
-      default:
-        // Default enhancement: improve quality
-        image.brightness(0.05);
-        image.contrast(0.15);
-        image.sharpen();
-        break;
+// Try multiple APIs for image enhancement
+async function enhanceImageViaAPI(imageUrl, prompt) {
+  const apis = [
+    {
+      name: "tawsif",
+      url: `https://tawsif.is-a.dev/gemini/nano-banana?prompt=${encodeURIComponent(prompt)}&image=${encodeURIComponent(imageUrl)}`
+    },
+    {
+      name: "direct-download",
+      url: imageUrl
     }
+  ];
 
-    const outputPath = imagePath.replace('.png', '_enhanced.png').replace('.jpg', '_enhanced.jpg');
-    await image.write(outputPath);
-    return outputPath;
-  } catch (err) {
-    console.error("[EDIT] Jimp enhancement error:", err);
-    throw err;
+  for (const api of apis) {
+    try {
+      console.log(`[EDIT] Trying API: ${api.name}`);
+      const response = await axios.get(api.url, {
+        timeout: 10000,
+        headers: {
+          "User-Agent": "Mozilla/5.0"
+        },
+        responseType: api.name === "direct-download" ? 'arraybuffer' : 'json'
+      });
+
+      if (api.name === "direct-download") {
+        return { data: response.data, source: "direct" };
+      }
+
+      if (response.data && response.data.imageUrl) {
+        // Download the processed image
+        const imgResponse = await axios.get(response.data.imageUrl, {
+          timeout: 10000,
+          responseType: 'arraybuffer',
+          headers: { "User-Agent": "Mozilla/5.0" }
+        });
+        return { data: imgResponse.data, source: "tawsif" };
+      }
+    } catch (err) {
+      console.log(`[EDIT] API ${api.name} failed:`, err.message);
+      continue;
+    }
   }
+
+  throw new Error("فشلت جميع محاولات تحسين الصورة");
 }
 
 module.exports.onStart = async function ({ api, event, args, message }) {
@@ -93,44 +102,30 @@ module.exports.onStart = async function ({ api, event, args, message }) {
     console.log(`[EDIT] Processing image with prompt: ${editPrompt}`);
     console.log(`[EDIT] Image URL: ${imageUrl}`);
 
-    // Download the original image
-    const imageDownloadResponse = await axios.get(imageUrl, {
-      responseType: 'arraybuffer',
-      timeout: 15000,
-      headers: {
-        "User-Agent": "Mozilla/5.0"
-      }
-    });
+    // Try to enhance via API
+    const { data: imageData, source } = await enhanceImageViaAPI(imageUrl, editPrompt);
 
     const cacheDir = path.join(process.cwd(), "cache");
     await fs.ensureDir(cacheDir);
 
-    const originalImagePath = path.join(cacheDir, `original_${Date.now()}.png`);
-    await fs.writeFile(originalImagePath, imageDownloadResponse.data);
+    const imagePath = path.join(cacheDir, `edited_${Date.now()}.png`);
+    await fs.writeFile(imagePath, imageData);
 
-    console.log(`[EDIT] Original image saved to: ${originalImagePath}`);
-
-    // Enhance the image
-    const enhancedImagePath = await enhanceImageWithJimp(originalImagePath, editPrompt);
-    
-    console.log(`[EDIT] Enhanced image saved to: ${enhancedImagePath}`);
+    console.log(`[EDIT] Image saved from ${source} to: ${imagePath}`);
 
     // Send the edited image
     api.sendMessage({
-      body: `✅ تم تعديل الصورة بنجاح\n📝 النوع: ${editPrompt}`,
-      attachment: fs.createReadStream(enhancedImagePath)
+      body: `✅ تم تحسين الصورة بنجاح\n📝 الطلب: ${editPrompt}`,
+      attachment: fs.createReadStream(imagePath)
     }, event.threadID, (err) => {
       // Clean up after message is sent
       setTimeout(() => {
         try {
-          if (fs.existsSync(originalImagePath)) {
-            fs.unlinkSync(originalImagePath);
-          }
-          if (fs.existsSync(enhancedImagePath)) {
-            fs.unlinkSync(enhancedImagePath);
+          if (fs.existsSync(imagePath)) {
+            fs.unlinkSync(imagePath);
           }
         } catch (e) {
-          console.error("[EDIT] Error cleaning temp files:", e.message);
+          console.error("[EDIT] Error cleaning temp file:", e.message);
         }
       }, 2000);
     });
@@ -144,11 +139,11 @@ module.exports.onStart = async function ({ api, event, args, message }) {
     let errorMessage = "حدث خطأ أثناء تعديل الصورة";
     if (error.response) {
       console.error("[EDIT] API Response Error:", error.response.status);
-      errorMessage = `خطأ: ${error.response.status}`;
+      errorMessage = `خطأ API: ${error.response.status}`;
     } else if (error.code === 'ECONNABORTED') {
-      errorMessage = "انتهت مهلة الانتظار - قد تكون الصورة كبيرة جداً";
+      errorMessage = "انتهت مهلة الانتظار - حاول لاحقاً";
     } else if (error.code === 'ENOTFOUND') {
-      errorMessage = "خطأ في الاتصال بالإنترنت";
+      errorMessage = "خطأ في الاتصال - تحقق من الإنترنت";
     } else if (error.message) {
       errorMessage = error.message;
     }
